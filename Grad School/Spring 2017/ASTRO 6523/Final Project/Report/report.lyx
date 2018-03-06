@@ -1,0 +1,1801 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 3cm
+\topmargin 3cm
+\rightmargin 3cm
+\bottommargin 5cm
+\headheight 1cm
+\headsep 1cm
+\footskip 2cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Calculation of Kepler-75b's Radius and Orbital Period Using Kepler Data
+\end_layout
+
+\begin_layout Date
+May 24th, 2017
+\end_layout
+
+\begin_layout Author
+Gianfranco Grillo
+\end_layout
+
+\begin_layout Abstract
+The Kepler spacecraft, launched on March 7, 2009, has been responsible for
+ the detection of thousands of exoplanets by monitoring the brightness of
+ stars, thus constructing light curves that can be analyzed to search for
+ regular dips in brightness due to planet transits.
+ The transit method can be used to determine an exoplanet's orbital period
+ and, if the corresponding star's radius is known, it's radius.
+ Here we aim to use a combination of short and long cadence 
+\emph on
+Kepler
+\emph default
+ data for the star Kepler-75 in order to determine the orbital period and
+ planetary radius of Kepler-75b.
+ The approach relies mainly on the implementation of Lomb-Scargle whitening
+ techniques and matched filtering.
+ We find values for the parameters in agreement with those obtained by others
+ using more sophisticated procedures.
+ Using the long cadence data, the radius was calculated as 
+\begin_inset Formula $1.11\pm0.05\,R_{J}$
+\end_inset
+
+ and the orbital period as 
+\begin_inset Formula $8.885\pm0.001$
+\end_inset
+
+ days, whereas using the short cadence data, the radius was estimated as
+\begin_inset Formula $1.08\pm0.02\,R_{J}$
+\end_inset
+
+ and the orbital period as 
+\begin_inset Formula $8.884\pm0.001$
+\end_inset
+
+ days.
+ 
+\end_layout
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout Standard
+The detection of the first exoplanet in 1992 opened up a new field in astronomy
+ that has grown ever since, aided by the tremendous advances made with regards
+ to observing power and computational processing power.
+ As of this writing, the astronomical community has detected 3,611 exoplanets
+ in 2,705 planetary systems, with many more awaiting confirmation.
+ Key to this success has been the deployment of space telescopes, starting
+ with the 
+\emph on
+Hubble
+\emph default
+ Space telescope in 1990, and continuing with the 
+\emph on
+CoRoT
+\emph default
+ space observatory in 2006, and the 
+\emph on
+Kepler
+\emph default
+ spacecraft in 2009.
+ The latter has been responsible for the discovery of more than a thousand
+ exoplanets, via the continued study of more than 156,000 stars with apparent
+ magnitudes ranging from 9 to 16.
+ Its observations have not only been able to determine the existence of
+ these exoplanets, but also have allowed us to study some of their characteristi
+cs, especially when the transit observations can be combined with radial
+ velocity observations from other telescopes such as SOPHIE.
+\end_layout
+
+\begin_layout Standard
+This is precisely what Hebrard et al.
+ (2013), and Bonomo et al.
+ (2014) have done with exoplanet Kepler-75b, after its discovery by Batalha
+ et al.
+ in 2013.
+ This provides a good opportunity to develop and implement whitening and
+ matched filtering algorithms and check their performance, as the results
+ of the analysis can be compared with previous results.
+ The parameters found in these earlier studies are shown in Table 1, and
+ the characteristics of the planet's host star Kepler-75 are reported in
+ Table 2.
+ The idea of this work is to find out how well these results can be replicated
+ using more primitive data reduction techniques than those used in more
+ sophisticated studies such as the ones mentioned.
+\end_layout
+
+\begin_layout Standard
+This paper is divided as follows.
+ Section 2 describes the general observational history of the target star,
+ in order to provide a better characterization of the data that was analyzed.
+ Section 3 describes the methods used for data reduction, starting with
+ the analysis performed using the long cadence data, followed by a description
+ of the approach used to reduce the short cadence data.
+ We present and analyze the results in Section 4, and develop general conclusion
+s in Section 5.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Planetary parameters from previous analyses
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="3" columns="3">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Hebrard et al.
+ (2013)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Bonomo et al.
+ (2014)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Orbital period (days)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $8.884924\pm0.000002$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $8.8849116\pm0.0000034$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Planetary radius (
+\begin_inset Formula $R_{J}$
+\end_inset
+
+)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1.03\pm0.06$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1.05\pm0.03$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Parameters for host star Kepler-75 (from Hebrard et al.
+ (2013))
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="9" columns="2">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell multicolumn="1" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Kepler-75
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Kepler ID
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+757450
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+RA (J2000)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+19:24:33.0
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Dec (J2000)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
++36:34:39
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Spectral type
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+G8V
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Effective temperature (K)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+5330.0 (
+\begin_inset Formula $\pm$
+\end_inset
+
+120.0)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Distance (pc)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1140.0 (
+\begin_inset Formula $_{-160.0}{}^{+250.0}$
+\end_inset
+
+)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Mass (
+\begin_inset Formula $M_{sun}$
+\end_inset
+
+)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.88 (
+\begin_inset Formula $\pm$
+\end_inset
+
+0.06)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Radius (
+\begin_inset Formula $R_{sun}$
+\end_inset
+
+)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.88 (
+\begin_inset Formula $\pm$
+\end_inset
+
+0.04)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Observations
+\end_layout
+
+\begin_layout Standard
+Kepler-75 was observed by the 
+\emph on
+Kepler
+\emph default
+ spacecraft starting with the launch of the mission in May 2009, and ending
+ four years later in May 2013.
+ The publicly available data, hosted at the Mikulski Archive for Space Telescope
+s (MAST) consists of 17 quarters of long cadence data, each spanning approximate
+ly 30 days, with a sampling interval of ~ 30 minutes, and 18 quarters of
+ short cadence data, each also spanning about 30 days, but with a sampling
+ interval of ~ 1 minute.
+ Both the long cadence data and the short cadence data are in the form of
+ two sets of time series: one with raw simple aperture photometry (SAP)
+ and another with preprocessed data intended to be used for data validation
+ (DV).
+ The analysis performed in this work used the long cadence DV time series
+ and the short cadence SAP time series.
+ The long cadence DV time series was used to estimate the parameters in
+ a very simple, crude manner, whereas the short cadence SAP time series
+ was subjected to a more sophisticated analysis involving whitening through
+ an iterative Lomb-Scargle approach, and localization of the planetary transits
+ via matched filtering.
+\end_layout
+
+\begin_layout Section
+Data reduction
+\end_layout
+
+\begin_layout Subsection
+Long cadence data
+\end_layout
+
+\begin_layout Standard
+Figure 1 shows a scatter plot of the complete long cadence light curve,
+ which was previously quarter-stitched and normalized by the 
+\emph on
+Kepler
+\emph default
+ science team.
+ The transits are easy to see.
+ The procedure used to analyze this data went as follows.
+ The period was calculated by simply finding the location of the normalized
+ flux minima, finding the time differences between each of these minima,
+ and averaging over all the values.
+ An estimate of the uncertainty 
+\begin_inset Formula $\Delta t$
+\end_inset
+
+ was made by taking the standard deviation of the time differences and dividing
+ by the square root of the number of time differences, 
+\begin_inset Formula 
+\begin{equation}
+\Delta t=\sqrt{\frac{\sum_{i=0}^{N-1}(t_{i}-\bar{t})^{2}}{N(N-1)}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/completelc.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Complete long cadence light curve
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Short cadence data
+\end_layout
+
+\begin_layout Standard
+The raw SAP data is of course much harder to analyze properly.
+ As can be seen in Figures 2-5, each of the quarters contains underlying
+ trend lines that essentially rule out the possibility of directly implementing
+ matched filtering to locate the transits, so it is necessary to first remove
+ these trends if such a procedure is to be carried out.
+ There were a few other issues that were dealt with first.
+ One, it became apparent that there are some erroneous data points, as they
+ lied very far away from their neighbors; this was fixed by using an algorithm
+ that calculated the flux difference between one data point and the next,
+ and deleted those data points that were more than 100 units of flux away
+ from the preceding one (this was done before producing the light curves
+ shown, which is why these points cannot be seen).
+ Two, the flux intensity clearly differs from one quarter to the next, so
+ the flux was normalized on a per quarter basis.
+ Finally, there are some plots like the one shown in Figure 5 that have
+ some kind of anomaly that needs more work to be properly fixed.
+ These plots were simply removed from the analysis.
+ Specifically, the ninth observation quarter (Q9) and the seventeenth observatio
+n quarter (Q17) were removed from the data pool at this point in the reduction
+ process.
+\end_layout
+
+\begin_layout Standard
+The removal of those outlying data points, together with the fact that some
+ data points were simply missing for certain observation times, implies
+ that performing a straightforward Fourier spectral analysis of the time
+ series is not possible: one must either fill in those missing data points
+ via some kind of procedure, or perform some kind of spectral analysis that
+ applies to data sampled at uneven intervals.
+ In this work, we follow the second approach and use a Lomb-Scargle algorithm
+ to calculate the power spectrum.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename sclc1.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+SC light curve for Q1
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename sclc8.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+SC light curve for Q8
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename sclc10.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+SC light curve for Q10
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename sclc17.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+SC light curve for Q17
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Lomb-Scargle Analysis
+\end_layout
+
+\begin_layout Standard
+What follows is a brief overview of the mathematics underlying the Lomb-Scargle
+ analysis of a time series.
+ As mentioned above, Lomb-Scargle spectral analysis differs from the more
+ common Fourier spectral analysis because it can be applied to unevenly
+ spaced data points.
+ The method evaluates data to calculate the spectrum only at the times 
+\begin_inset Formula $t_{i}$
+\end_inset
+
+ at which the points are actually measured.
+ More technically, given 
+\begin_inset Formula $N$
+\end_inset
+
+ data points 
+\begin_inset Formula $h_{i}\equiv h(t_{i}),\,i=0,\ldots,\,N-1$
+\end_inset
+
+, the Lomb-Scargle algorithm first finds the mean and the variance of the
+ data via the usual definitions,
+\begin_inset Formula 
+\begin{eqnarray}
+\bar{h} & \equiv & \frac{1}{N}\sum_{i=0}^{N-1}h_{i}\\
+\sigma^{2} & \equiv & \frac{1}{N-1}\sum_{i=0}^{N-1}(h_{i}-\bar{h})^{2}
+\end{eqnarray}
+
+\end_inset
+
+And proceeds to calculate a normalized periodogram (spectral power as a
+ function of angular frequency 
+\begin_inset Formula $\omega$
+\end_inset
+
+), which is defined by
+\begin_inset Formula 
+\begin{equation}
+P_{N}(\omega)=\frac{1}{2\sigma^{2}}\left\{ \frac{\left[\sum_{j}(h_{j}-\bar{h})\cos(\omega(t_{j}-\tau))\right]^{2}}{\sum_{j}\cos^{2}(\omega(t_{j}-\tau))}+\frac{\left[\sum_{j}(h_{j}-\bar{h})\sin(\omega(t_{j}-\tau))\right]^{2}}{\sum_{j}\sin^{2}(\omega(t_{j}-\tau))}\right\} 
+\end{equation}
+
+\end_inset
+
+Where 
+\begin_inset Formula $\tau$
+\end_inset
+
+ is given by
+\begin_inset Formula 
+\begin{equation}
+\tan(2\omega\tau)=\frac{\sum_{j}\sin(2\omega t_{j})}{\sum_{j}\cos(2\omega t_{j})}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This quantity, 
+\begin_inset Formula $\tau$
+\end_inset
+
+, acts as an offset that effectively renders 
+\begin_inset Formula $P_{N}(\omega)$
+\end_inset
+
+ independent to a constant shift in all the 
+\begin_inset Formula $t_{j}$
+\end_inset
+
+'s, and implies that 
+\begin_inset Formula $(4)$
+\end_inset
+
+ is identical to the equation governing the least-squares fitting to a sinusoida
+l model ie.
+ one described by the equation
+\begin_inset Formula 
+\begin{equation}
+h(t)=A\cos(\omega t)+B\sin(\omega t)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The Lomb-Scargle approach is convenient when one does not want to artificially
+ close the gaps in the available data, but implementations of the algorithm
+ are significantly slower than the Fast Fourier Transform.
+\end_layout
+
+\begin_layout Subsubsection
+Data whitening
+\end_layout
+
+\begin_layout Standard
+The data whitening procedure was performed by iteratively implementing the
+ Lomb-Scargle algorithm, substracting the calculated fit over each iteration,
+ as shown in Figures 6-7 for the case of quarters 1 and 8.
+ The initial Lomb-Scargle periodograms for the corresponding quarters shown
+ in Figures 6-7 are displayed in Figures 8-9.
+ The fit was performed by calculating the Lomb-Scargle periodogram, finding
+ the peak of the periodogram, and using the location of the peak to establish
+ the frequency of the fitting sinusoid, which can be inserted into the algorithm
+ in order to find the best fitting values for parameters 
+\begin_inset Formula $A$
+\end_inset
+
+ and 
+\begin_inset Formula $B$
+\end_inset
+
+ from equation 
+\begin_inset Formula $(6)$
+\end_inset
+
+.
+ The number of iterations was adjusted manually; after a certain point,
+ to continue iterating would result in dewhitening.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/white1.png
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Whitening procedure for Q1
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/white8.png
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Whitening procedure for Q8
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "49col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/periodogram1.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Periodogram for Q1
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "49col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/periodogram8.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Periodogram for Q8
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Matched filtering
+\end_layout
+
+\begin_layout Standard
+Matched filtering involves the construction of a template, followed by cross-cor
+relating that template with the data in order to localize the points in
+ which the data most resembles the template.
+ In this work, we use an inverted Gaussian as our model.
+ This is an imperfect way of characterizing a planetary transit, since transit
+ curves are not exactly Gaussian, but it is good enough as an approximation.
+ The template was constructed as follows.
+ An estimate of the location of the transit points was first found by finding
+ the quarter's minima, similar to what was done for the case of the long
+ cadence data.
+ Then the width of the transit was estimated by searching for the neighboring
+ points whose magnitude was greater than half of the magnitude at the correspond
+ing minimum.
+ The widths found across the quarter were then averaged, with that average
+ used as the FWHM for the Gaussian.
+ The rough amplitudes of the dips, given by the value of the minima, were
+ averaged and used as the template amplitude.
+\end_layout
+
+\begin_layout Standard
+Figures 10 and 11 show the results of performing the matched filtering procedure
+ on Q1 and Q5.
+ Notice that the procedure works well for Q5, with the peaks of the CCF
+ corresponding to the transit points, but for Q1 the procedure does not
+ work so well, because the whitening algorithm used was unable to remove
+ all trends, and as a result the CCF shows an extra peak at the beginning
+ that does not correspond to a transit.
+ This could potentially be fixed by dividing the original quarter data into
+ smaller pieces and performing the Lomb-Scargle whitening separately on
+ them, but this was not attempted here, and instead we discarded problematic
+ quarters like Q1.
+ In the end, we perform the analysis using only 9 of the original 18 quarters.
+\end_layout
+
+\begin_layout Standard
+Using the updated values for the transit points, a better estimate of the
+ transit amplitude was found by averaging over flux values neighboring the
+ transit center.
+ This was followed by recalculating the transit width using the updated
+ value of the amplitude.
+ Figures 12 and 13 show the resulting transit fittings for quarters 5 and
+ 10.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "49col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/ccf1.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+CCF for Q1
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "49col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/ccf5.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+CCF for Q5
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The orbital period was then calculated by looking at the difference between
+ transit times within each individual quarter, with the uncertainty calculated
+ in the same way as for the long cadence data, using equation 
+\begin_inset Formula $(1)$
+\end_inset
+
+.
+ The planetary radius was calculated using the average value of the dip
+ amplitudes 
+\begin_inset Formula $A_{av}$
+\end_inset
+
+ across each quarter, using the relationship
+\begin_inset Formula 
+\begin{equation}
+R=R_{s}\sqrt{A_{av}}
+\end{equation}
+
+\end_inset
+
+Where
+\begin_inset Formula 
+\begin{equation}
+R_{s}=(0.88\pm0.04)R_{sun}=(0.88\pm0.04)\times9.951R_{J}=(8.8\pm0.4)R_{J}
+\end{equation}
+
+\end_inset
+
+The uncertainty in 
+\begin_inset Formula $R$
+\end_inset
+
+ was calculated by propagating the initial error in the flux as given by
+ the original data.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "49col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/transits5.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Fitted transit points for Q5
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "49col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/transits10.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Fitted transit points for Q10
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Results
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Parameters for Kepler-75b
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="3">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0pt">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top" width="0pt">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Work
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Orbital period (days)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Planetary radius (
+\begin_inset Formula $R_{J}$
+\end_inset
+
+)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Hebrard et al.
+ (2013)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $8.884924\pm0.000002$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1.03\pm0.06$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Bonomo et al.
+ (2015)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $8.8849116\pm0.0000034$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1.05\pm0.03$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+This work (LC data)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $8.885\pm0.001$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1.11\pm0.05$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+This work (SC data)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $8.884\pm0.001$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1.08\pm0.02$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Table 3 shows the results of the analysis.
+ There is excellent agreement between the calculated orbital period using
+ both the long cadence and short cadence data with the results of previous
+ analyses, although the uncertainty obtained is larger.
+ This makes sense given the crude method for calculating the orbital period
+ using the LC data and the fact that only half of the SC data was ultimately
+ used.
+ The values for the planetary radius obtained are also in agreement with
+ previous works, although the nominal values found are slightly larger.
+ Still, the agreement is quite good considering that a simple Gaussian template
+ was used to model the transits, and the calculation of the amplitude was
+ performed in a relatively simple manner.
+ Improved agreement would probably we reached by using a more sophisticated
+ data reduction procedure with whitening techniques that can be applied
+ to all the data quarters, a more accurate transit template, and a more
+ sophisticated way of finding the dip amplitude.
+\end_layout
+
+\begin_layout Section
+Conclusion
+\end_layout
+
+\begin_layout Standard
+The purpose of this work was to apply whitening and matched filtering techniques
+ to 
+\emph on
+Kepler
+\emph default
+ data in order to calculate the orbital period and planetary radius of Kepler-75
+b.
+ Even though the analysis performed was not very sophisticated in comparison
+ to other studies of the same object, the results obtained were similar,
+ and show that reasonable estimates for exoplanet parameters from transit
+ data can be obtained relatively easily.
+ Furthermore, it is reasonable to think that even better results can be
+ obtained with relatively small changes in the data reduction methods.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-2"
+
+\end_inset
+
+Batalha, N.
+ M., Rowe, J.
+ F., Bryson, S.
+ T., et al.
+ 
+\emph on
+Planetary Candidates Observed by Kepler.
+ III.
+ Analysis of the First 16 Months of Data
+\emph default
+, 2013, ApJS, 204, 24.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-3"
+
+\end_inset
+
+Hebrard, G., Almenara, J.-M., Santerne, A., et al.
+ 
+\emph on
+KOI-200 b and KOI-889 b: Two transiting exoplanets detected and characterized
+ with Kepler, SOPHIE, and HARPS-N
+\emph default
+, 2013, A&A, 554, A114.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-4"
+
+\end_inset
+
+Bonomo, A.
+ S., Sozzetti, A., Santerne, A., et al.
+ 
+\emph on
+Improved parameters of seven Kepler giant companions characterized with
+ SOPHIE and HARPS-N
+\emph default
+, 2015, A&A, 575, A85.
+ 
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-5"
+
+\end_inset
+
+W.
+ H.
+ Press, S.
+ A.
+ Teukolsky, W.
+ T.
+ Vetterling and B.
+ P.
+ Flannery 
+\emph on
+Numerical Recipes, The Art of Scientific Computing, 3rd edit.
+\emph default
+, Camb.
+ Univ.
+ Press 2007.
+
+\emph on
+ 
+\end_layout
+
+\end_body
+\end_document
