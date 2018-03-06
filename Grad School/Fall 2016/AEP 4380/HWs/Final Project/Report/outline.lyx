@@ -1,0 +1,300 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 2cm
+\topmargin 3cm
+\rightmargin 2cm
+\bottommargin 3cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Final Project Outline: Solving the Equations of Stellar Structure
+\end_layout
+
+\begin_layout Author
+Gianfranco Grillo
+\end_layout
+
+\begin_layout Standard
+The structure of stars can be described by a set of five differential equations:
+\begin_inset Formula 
+\begin{eqnarray}
+\frac{\partial r}{\partial m} & = & \frac{1}{4\pi r^{2}\rho}\\
+\frac{\partial P}{\partial m} & = & -\frac{Gm}{4\pi r^{4}}\\
+\frac{\partial L}{\partial m} & = & \epsilon_{n}-\epsilon_{\nu}-c_{P}\frac{\partial T}{\partial t}+\frac{\delta}{\rho}\frac{\partial P}{\partial t}\\
+\frac{\partial T}{\partial m} & = & -\frac{GmT}{4\pi r^{4}P}\nabla\\
+\frac{\partial X_{i}}{\partial t} & = & \frac{m_{i}}{\rho}\left(\sum_{j}r_{ji}-\sum_{k}r_{ik}\right),\,\:i=1,...,I\,.
+\end{eqnarray}
+
+\end_inset
+
+Equation (1) is a consequence of conservation of mass, equation (2) is the
+ equation of hydrostatic equilibrium, equation (3) is conservation of energy,
+ (4) describes energy transport, and (5) describes the star's change in
+ composition as a function of time, as it burns certain elements via nuclear
+ fusion.
+ A few other definitions are in order:
+\begin_inset Formula 
+\begin{eqnarray}
+\delta & = & -\left(\frac{\partial\ln\rho}{\partial\ln T}\right)_{P}\\
+\nabla & = & \frac{d\ln T}{d\ln P}
+\end{eqnarray}
+
+\end_inset
+
+When the energy transport is due to radiation, 
+\begin_inset Formula 
+\begin{equation}
+\nabla=\nabla_{rad}=\frac{3}{16\pi ac}\frac{\kappa LP}{mT^{4}}
+\end{equation}
+
+\end_inset
+
+When the energy is carried by convection, we say that 
+\begin_inset Formula $\nabla=\nabla_{ad}$
+\end_inset
+
+, which is a function of 
+\begin_inset Formula $P,\,T$
+\end_inset
+
+, and 
+\begin_inset Formula $X_{i}$
+\end_inset
+
+.
+ In general, we can find equations for the other parameters (
+\begin_inset Formula $\rho,\,\epsilon_{n},\,\epsilon_{\nu},\,\kappa,$
+\end_inset
+
+ and 
+\begin_inset Formula $r_{ij}$
+\end_inset
+
+), that also depend on 
+\begin_inset Formula $P,\,T$
+\end_inset
+
+, and 
+\begin_inset Formula $X_{i}$
+\end_inset
+
+, the latter of which is a function of 
+\begin_inset Formula $m$
+\end_inset
+
+ and 
+\begin_inset Formula $t$
+\end_inset
+
+.
+ This gives the same number of equations as there are unknown variables.
+\end_layout
+
+\begin_layout Standard
+There is more than one choice of boundary conditions for this problem.
+ In general, however, we have that at the center, 
+\begin_inset Formula $m=L=r=0$
+\end_inset
+
+.
+ A common approximation for the surface conditions is the so-called 
+\begin_inset Quotes eld
+\end_inset
+
+radiative zero
+\begin_inset Quotes erd
+\end_inset
+
+ conditions, where we have that at the surface, 
+\begin_inset Formula $m=M,\,P=0,$
+\end_inset
+
+ and 
+\begin_inset Formula $T=0$
+\end_inset
+
+.
+ In any case, since we only know two boundary conditions at the surface,
+ and two at the center, this problem is a two-point boundary value problem,
+ and needs to solved using numerical methods.
+ The most popular way for solving this equation is known as the Henyey method,
+ after American astronomer Louis G.
+ Henyey, which involves using relaxation to solve the equations after these
+ have been transformed into a set of difference equations.
+ Section 18.3 of [1] describes relaxation methods for solving two-point boundary
+ value problems in general, and [2], [3], and [4] go deeper on the physics
+ of stellar structure and evolution and the Henyey method in particular.
+ My goal would be to implement Henyey's method and eventually time evolve
+ a star of a given mass across a certain phase of its lifetime, tracing
+ its evolution on an HR diagram.
+ This would be a joint project with ASTRO 6560, taught by Prof.
+ David Chernoff.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "1"
+key "key-1"
+
+\end_inset
+
+W.
+ H.
+ Press, S.
+ A.
+ Teukolsky, W.
+ T.
+ Vetterling, and B.
+ P.
+ Flannery 
+\emph on
+Numerical Recipes, The Art of Scientific Computing, 3rd edit.
+\emph default
+, Camb.
+ Univ.
+ Press, 2007.
+
+\emph on
+ 
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "2"
+key "key-2"
+
+\end_inset
+
+R.
+ Kippenhahn, A.
+ Weigert, and A.
+ Weiss 
+\emph on
+Stellar Structure and Evolution, 2nd edit.,
+\emph default
+ Springer-Verlag Berlin Heidelberg, 2012.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "3"
+key "key-4"
+
+\end_inset
+
+R.
+ Kippenhahn, A.
+ Weigert, and E.
+ Hofmeister: 
+\begin_inset Quotes eld
+\end_inset
+
+Methods for Calculating Stellar Evolution,
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\emph on
+Methods in Computational Physics
+\emph default
+, vol.
+ 7 (Eds.: B.
+ Adler, S.
+ Fernbach, and M.
+ Rotenberg), Academic, New York, 1967, pp.
+ 129-190.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "4"
+key "key-3"
+
+\end_inset
+
+G.
+ W.
+ Collins, 
+\emph on
+The Fundamentals of Stellar Astrophysics, 
+\emph default
+W.
+ H.
+ Freeman and Company, 1989.
+\end_layout
+
+\end_body
+\end_document

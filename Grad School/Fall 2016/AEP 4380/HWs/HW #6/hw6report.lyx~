@@ -1,0 +1,697 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+\usepackage{listings}
+\lstset{breaklines=true}
+\end_preamble
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 2cm
+\topmargin 3cm
+\rightmargin 2cm
+\bottommargin 3cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+AEP 4380 HW#6: Boundary Value Problems and Relaxation
+\end_layout
+
+\begin_layout Author
+Gianfranco Grillo
+\end_layout
+
+\begin_layout Date
+October 26, 2016
+\end_layout
+
+\begin_layout Section
+Background
+\end_layout
+
+\begin_layout Subsection
+Solving Laplace's Equation Using Gauss-Seidel Iteration and SOR
+\end_layout
+
+\begin_layout Standard
+The method of Gauss-Seidel iteration with successive over-relaxation (SOR)
+ is a method in numerical linear algebra used to solve a system of linear
+ equations.
+ It can be used in order to numerically solve boundary value problems in
+ mathematics and physics.
+ A boundary value problem is a differential equation coupled with a set
+ of conditions, or boundaries, upon which the solution will depend.
+ Gauss-Seidel iteration works by elaborating the original problem in the
+ form of a finite difference matrix that is then solved by repeteadly iterating
+ over the matrix and changing the values of each of the matrix components
+ based on the values of each of the components neighbors, starting from
+ an initial guess.
+ After a certain number of iterations, depending on the particular characteristi
+cs of the problem, the components in the matrix will converge towards stable
+ values that will correspond to the problem's solution.
+ This algorithm is useful in the field of electrostatics, where it is often
+ necessary to calculate the value of potentials and electric fields throughout
+ a certain region of space, and it might prove difficult or impossible to
+ do so using analytical methods.
+ This homework will use Gauss-Seidel iteration in this context.
+\end_layout
+
+\begin_layout Standard
+The potential 
+\begin_inset Formula $V=\phi(z,\,r)$
+\end_inset
+
+ at a certain point in empty space must satisfy the Laplace equation, given
+ by
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\nabla^{2}\phi=0
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In cylindrical coordinates, and assuming azimuthal independence, (1) becomes
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\nabla^{2}\phi=\left(\frac{\partial^{2}}{\partial z^{2}}+\frac{\partial^{2}}{\partial r^{2}}+\frac{1}{r}\frac{\partial}{\partial r}\right)\phi(z,\,r)=0
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using a finite difference grid with 
+\begin_inset Formula $z=ih$
+\end_inset
+
+ and 
+\begin_inset Formula $r=jh$
+\end_inset
+
+, where 
+\begin_inset Formula $h$
+\end_inset
+
+ corresponds to the grid spacing, the components of the finite difference
+ matrix used to solve (2) are given by
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{eqnarray}
+\phi_{i,j} & = & \frac{1}{4}[\phi_{i,j+1}+\phi_{i,j-1}+\phi_{i-1,j}+\phi_{i+1,j}]+\frac{1}{8j}[\phi_{i,j+1}-\phi_{i,j-1}]\,;\,j>0\\
+\phi_{i,j} & = & \frac{1}{6}[4\phi_{i,j=1}+\phi_{i+1,j=0}+\phi_{i-1,j=0}]\,;\,j=0
+\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where the 
+\begin_inset Formula $c$
+\end_inset
+
+'s and 
+\begin_inset Formula $a$
+\end_inset
+
+'s are coefficients known as the Dormund-Prince coefficients.
+ The higher order solution is then given by
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\vec{x_{n+1}}=\vec{x_{n}}+b_{1}\vec{k_{1}}+b_{2}\vec{k_{2}}+b_{3}\vec{k_{3}}+b_{4}\vec{k_{4}}+b_{5}\vec{k_{5}}+b_{6}\vec{k_{6}}+\mathcal{O}(h^{6})
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Whereas the lower order order solution is
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\vec{x_{n+1}^{'}}=\vec{x_{n}}+b_{1}^{'}\vec{k_{1}}+b_{2}^{'}\vec{k_{2}}+b_{3}^{'}\vec{k_{3}}+b_{4}^{'}\vec{k_{4}}+b_{5}^{'}\vec{k_{5}}+b_{6}^{'}\vec{k_{6}}+b_{7}^{'}h\vec{f}(t_{n}+h,\,\vec{x_{n+1}})+\mathcal{O}(h^{5})
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where 
+\begin_inset Formula $b_{n}$
+\end_inset
+
+ and 
+\begin_inset Formula $b_{n}^{'}$
+\end_inset
+
+ are also Dormund-Prince coefficients.
+ The error in the current step is then given by
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\epsilon_{n+1}^{(i)}=\left|x_{n+1}^{(i)}-x_{n+1}^{'(i)}\right|
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where 
+\begin_inset Formula $i=1,\,2,\,3,...,\,N$
+\end_inset
+
+.
+ The error is then scaled in order to adjust for the different magnitudes
+ and units of the variables using a scale given by
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+scale^{(i)}=\left|x_{n}^{(i)}\right|+\left|hf^{(i)}(t_{n},y_{n}^{(i)}(t))\right|
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This is used to find the maximum (relative) error 
+\begin_inset Formula $\Delta_{max}$
+\end_inset
+
+ in the series, via
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\Delta_{max}=max\left[\frac{\epsilon_{n+1}^{(i)}}{scale^{(i)}}\right]
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Given a predetermined maximum allowed error 
+\begin_inset Formula $\epsilon_{max}$
+\end_inset
+
+, the algorithm changes the step size 
+\begin_inset Formula $h$
+\end_inset
+
+ in two cases.
+ When 
+\begin_inset Formula $\Delta_{max}\ll\epsilon_{max}$
+\end_inset
+
+, 
+\begin_inset Formula $h$
+\end_inset
+
+ is increased via
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+h_{new}=h_{old}\left(\frac{\epsilon_{max}}{\Delta_{max}}\right)^{\nicefrac{1}{5}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+And when 
+\begin_inset Formula $\Delta_{max}>\epsilon_{max}$
+\end_inset
+
+, 
+\begin_inset Formula $h$
+\end_inset
+
+ is reduced by an arbitrary factor 
+\begin_inset Formula $n$
+\end_inset
+
+, giving
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+h_{new}=\frac{h_{old}}{n}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In the last case, the current iteration step is repeated.
+ The final 
+\begin_inset Formula $\vec{x_{n+1}}$
+\end_inset
+
+ corresponds to the next value of the solution.
+\end_layout
+
+\begin_layout Subsection
+N-Body Gravitational Problem
+\end_layout
+
+\begin_layout Standard
+Isaac Newton famously claimed that the stable orbits of the planets in our
+ solar system were very hard to explain without assuming that providence
+ intervenes now and then in order to preserve stability; that the gravitational
+ interactions between the planets would necessarily destabilize their orbits
+ given a sufficiently long period of time.
+ He had no way of knowing this, however, since he didn't know how to analyticall
+y solve the N-body problem involving all of the planet interactions.
+ French mathematical physicist Pierre-Simon Laplace would later show that
+ it was indeed possible for the solar system to be stable without requiring
+ any kind of divine intervention, but the problem is conclusively regarded
+ as analytically unsolvable, and so we have to rely on approximations in
+ order to describe the motions of the planets over time.
+ Each planet's motion is governed by the following set of coupled ODEs (assuming
+ all objects are in the same plane):
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{eqnarray}
+\frac{d\vec{v_{i}}}{dt} & = & \frac{\vec{F_{i}}}{m_{i}}=G\sum m_{j}\frac{\vec{x_{j}}-\vec{x_{i}}}{\left\Vert \vec{x_{j}}-\vec{x_{i}}\right\Vert ^{3}}\\
+\frac{d\vec{x_{i}}}{dt} & = & \vec{v_{i}}
+\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Given the initial positions and velocities, we can use Runge-Kutta-Fehlberg
+ in order to plot the trajectories of the planets over a certain period
+ of time.
+ The goal of this homework is to plot the trajectories of the Earth, Mars,
+ Jupiter, and the Sun over a period of 15 years given two different sets
+ of initial conditions.
+\end_layout
+
+\begin_layout Section
+Results
+\end_layout
+
+\begin_layout Subsection
+Task 1
+\end_layout
+
+\begin_layout Standard
+The resulting trajectory plot for the first set of initial conditions is
+ shown in Figure 1.
+ This was obtained by running hw5a.cpp, which uses Runge-Kutta-Fehlberg to
+ output the coordinates of each planet over a period of 15 years to a file.
+ Figure 2 shows an amplification of the Sun's motion for the same setup.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename stableorbits.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Solar system trajectories over 15 year period for first set of initial condition
+s
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename sunwobble.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Sun's motion for first set of initial conditions.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Task 2
+\end_layout
+
+\begin_layout Standard
+Figure 3 shows the resulting trajectory for the second set of initial conditions
+, which is different from the first one in that the velocity of Jupiter
+ has been increased by a factor of 
+\begin_inset Formula $\sqrt{4.7}$
+\end_inset
+
+ and its initial x-coordinate has been increased by a factor of 4.7.
+ Figure 4 is the equivalent of Figure 2 for this set of initial conditions
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename unstableorbit.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Solar system trajectories over 15 year period for second set of initial
+ conditions.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename sunwobble2.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Sun's motion for second set of initial conditions.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Analysis
+\end_layout
+
+\begin_layout Standard
+What the results show are that the first set of initial conditions result
+ in a stable system with almost perfectly circular orbits, whereas the second
+ set of initial conditions produce an unstable system with spiral orbits
+ and potentially chaotic motion, in particular in the case of the motions
+ of Mars and the Earth, which have smaller masses and therefore are easier
+ to be upset by gravitational interactions.
+ For the case of the Sun, we can see that it moves much less in the first
+ case than in the second case, basically due to the fact that in the first
+ case Jupiter is farther away, and as such exerts less gravitational force
+ and also takes longer to complete a full orbit, while in the second case
+ Jupiter's period decreases and its gravitational pull on the Sun increases,
+ as it is much closer to it.
+ Because the Earth and Mars are not big enough to significantly upset the
+ Sun's motion, we see that the way the Sun moves is much more sensitive
+ on Jupiter's gravitational attraction than on Earth and Mars's.
+\end_layout
+
+\begin_layout Section
+Source code
+\end_layout
+
+\begin_layout Subsection
+hw5a.cpp
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinputlisting[language=C++]{hw5a.cpp}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+hw5b.cpp
+\end_layout
+
+\begin_layout Standard
+Identical to hw4a.cpp but main() is
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinputlisting[language=C++]{main2.cpp}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "1"
+key "key-1"
+
+\end_inset
+
+Gillespie, C.
+ C.
+ 
+\emph on
+Pierre Simon Laplace 1749–1827: A Life in Exact Science
+\emph default
+, Princeton: Princeton University Press (1997)
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "2"
+key "key-2"
+
+\end_inset
+
+Newton, I.
+ 
+\emph on
+Opticks (2nd Edition)
+\emph default
+ (1706), quoted in H.
+ G.
+ Alexander (ed): 
+\emph on
+The Leibniz-Clarke correspondence
+\emph default
+, University of Manchester Press (1957).
+\end_layout
+
+\end_body
+\end_document

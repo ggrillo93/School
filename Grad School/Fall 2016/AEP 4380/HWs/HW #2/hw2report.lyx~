@@ -1,0 +1,2026 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+\usepackage{capt-of}
+\end_preamble
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 2cm
+\topmargin 3cm
+\rightmargin 2cm
+\bottommargin 3cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+AEP 4380 HW#2: Numerical Integration
+\end_layout
+
+\begin_layout Author
+Gianfranco Grillo
+\end_layout
+
+\begin_layout Date
+September 14, 2016
+\end_layout
+
+\begin_layout Section
+Background
+\end_layout
+
+\begin_layout Subsection
+Physics
+\end_layout
+
+\begin_layout Standard
+In optics, Fresnel diffraction corresponds to the diffraction of electromagnetic
+ waves in the near field, that is, at distances that are small compared
+ to the diffracting object and/or the electromagnetic wavelength.
+ Purely symbolical analysis based on classical electromagnetism leads to
+ the Fresnel integral, which is given by:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+I(x_{0}) & =const.\times\left|\int_{0}^{+\infty}exp\left[\frac{i\pi}{\lambda z}(x_{0}−x)^{2}\right]dx\right|^{2}\nonumber \\
+ & =\frac{I_{0}}{\lambda z}\left|\int_{−\infty}^{x_{0}}exp\left(\frac{i\pi x^{2}}{\lambda z}\right)dx\right|^{2}
+\end{align}
+
+\end_inset
+
+where 
+\begin_inset Formula $I_{0}$
+\end_inset
+
+ is the incident intensity of the wave, 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ its wavelength, 
+\begin_inset Formula $z$
+\end_inset
+
+ the distance between the edge of the object and the viewing screen, and
+ 
+\begin_inset Formula $x_{0}$
+\end_inset
+
+the position in the viewing plane.
+ Thus the integral describes the intensity of the light 
+\begin_inset Formula $I$
+\end_inset
+
+ at the viewing screen as a function of distance from the viewing plane
+ 
+\begin_inset Formula $x_{0}$
+\end_inset
+
+ and the incident intensity 
+\begin_inset Formula $I_{0}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+In general, it is not possible to solve this integral analytically, so it
+ is necessary to rely on numerical methods to estimate its value.
+ This can be done by expressing it in terms of the integrals 
+\begin_inset Formula $S(u)$
+\end_inset
+
+ and 
+\begin_inset Formula $C(u)$
+\end_inset
+
+, and the dimensionless value 
+\begin_inset Formula $u_{0}$
+\end_inset
+
+, as follows:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+I(u_{0}) & =\frac{1}{2}I_{0}\left\{ \left[C(u_{0})−C(−\infty)\right]^{2}+\left[S(u_{0})−S(−\infty)\right]^{2}\right\} \\
+C(u_{0}) & =\int_{0}^{u_{0}}\cos\left(\frac{\pi}{2}u^{2}\right)du\\
+S(u_{0}) & =\int_{0}^{u_{0}}\sin\left(\frac{\pi}{2}u^{2}\right)du\\
+u_{0} & =x_{0}\sqrt{\frac{2}{\lambda z}}\\
+C(\text{−}\infty) & =S(\text{−}\infty)=\text{−}0.5
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The goal of this homework is to use estimate 
+\begin_inset Formula $(1)$
+\end_inset
+
+ by making use of 
+\begin_inset Formula $(2)-(6)$
+\end_inset
+
+ and the trapezoidal rule for numerical integration.
+\end_layout
+
+\begin_layout Subsection
+The Trapezoidal Rule
+\end_layout
+
+\begin_layout Standard
+The given a function 
+\begin_inset Formula $f(x)$
+\end_inset
+
+, the value of the integral 
+\begin_inset Formula $I$
+\end_inset
+
+ of that function 
+\begin_inset Formula $I=\int_{x_{a}}^{x_{b}}f(x)\:dx$
+\end_inset
+
+ is equivalent to the area under the curve of a plot of 
+\begin_inset Formula $f(x)$
+\end_inset
+
+ bounded by the upper limit 
+\begin_inset Formula $x=x_{b}$
+\end_inset
+
+ and the lower limit 
+\begin_inset Formula $x=x_{a}$
+\end_inset
+
+.
+ This suggests a method for estimating the value of the integral: divide
+ the curve into a certain number of intervals and calculate and estimate
+ the area of each interval by approximating its shape as a geometric figure.
+ In this particular case, the geometric figure to be used is a trapezoid.
+ The area 
+\begin_inset Formula $A$
+\end_inset
+
+ of a trapezoid is given by:
+\begin_inset Formula 
+\begin{equation}
+A=\frac{a+b}{2}\times h
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $a$
+\end_inset
+
+ and 
+\begin_inset Formula $b$
+\end_inset
+
+ are the lengths of the trapezoid's parallel sides and 
+\begin_inset Formula $h$
+\end_inset
+
+ is the perpendicular distance between them.
+ Dividing 
+\begin_inset Formula $f(x)$
+\end_inset
+
+ into 
+\begin_inset Formula $n\text{−}1$
+\end_inset
+
+ trapezoids bounded by 
+\begin_inset Formula $n$
+\end_inset
+
+ evenly spaced points, the area 
+\begin_inset Formula $A_{n}$
+\end_inset
+
+ of each of the trapezoids will now be given by:
+\begin_inset Formula 
+\begin{equation}
+A_{n}=\frac{f(x_{i})−f(x_{i+1})}{2}\times\frac{x_{b}−x_{a}}{n−1}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $i=1,\,2,\,3,...,\,n\text{−}1$
+\end_inset
+
+ and
+\begin_inset Formula 
+\begin{equation}
+x_{i}=\frac{i(x_{b}−x_{a})}{i−1}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus an approximate value of the total area under the curve will simply
+ be the sum of all the trapezoidal areas, which implies that the integral
+ 
+\begin_inset Formula $I$
+\end_inset
+
+ can be approximated as:
+\begin_inset Formula 
+\begin{equation}
+I\approx\sum_{i=1}^{n−1}A_{n}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This means that 
+\begin_inset Formula $(3)$
+\end_inset
+
+ and 
+\begin_inset Formula $(4)$
+\end_inset
+
+ can be approximated by the trapezoidal rule as follows:
+\begin_inset Formula 
+\begin{align}
+C(u_{0}) & \approx\sum_{i=1}^{n−1}\left(\frac{\cos\left(\frac{\pi}{2}u_{i}^{2}\right)+\cos\left(\frac{\pi}{2}u_{i+1}^{2}\right)}{2}\times\frac{u_{0}}{n−1}\right)\\
+S(u_{0}) & \approx\sum_{i=1}^{n\text{−}1}\left(\frac{\sin\left(\frac{\pi}{2}u_{i}^{2}\right)+\sin\left(\frac{\pi}{2}u_{i+1}^{2}\right)}{2}\times\frac{u_{0}}{n−1}\right)\\
+u_{i} & =\frac{(i-1)u_{0}}{n−1}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The attached program hw2a.cpp 
+\begin_inset Formula $(6),\,(11)-(13)$
+\end_inset
+
+ to approximate 
+\begin_inset Formula $\nicefrac{I}{I_{0}}$
+\end_inset
+
+ as given by 
+\begin_inset Formula $(2)$
+\end_inset
+
+ for a given 
+\begin_inset Formula $u_{0}$
+\end_inset
+
+, and for 
+\begin_inset Formula $n=4,\,8,\,16,\,32,...,\,8192$
+\end_inset
+
+, and outputs a table with the corresponding values of 
+\begin_inset Formula $\nicefrac{I}{I_{0}}$
+\end_inset
+
+ for each value of 
+\begin_inset Formula $n$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+The other attached program, hw2b.cpp, uses similar algorithms as hw2a.cpp
+ but additionally makes use of 
+\begin_inset Formula $(5)$
+\end_inset
+
+ in order to calculate 
+\begin_inset Formula $\nicefrac{I}{I_{0}}$
+\end_inset
+
+ at 201 evenly spaced values of 
+\begin_inset Formula $x_{0}$
+\end_inset
+
+, ranging from 
+\begin_inset Formula $x_{0}=\text{−}1\,micron$
+\end_inset
+
+ to 
+\begin_inset Formula $x_{0}=4\,microns$
+\end_inset
+
+, with a fixed 
+\begin_inset Formula $n=16384$
+\end_inset
+
+.
+ 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ and 
+\begin_inset Formula $z$
+\end_inset
+
+ are also fixed at 
+\begin_inset Formula $0.5\,microns$
+\end_inset
+
+ and 
+\begin_inset Formula $1.0\:microns$
+\end_inset
+
+, respectively (in practice, this means that 
+\begin_inset Formula $u_{0}=\frac{2x_{0}}{micron}$
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Section
+Results
+\end_layout
+
+\begin_layout Subsection
+Task 1
+\end_layout
+
+\begin_layout Standard
+Task 1 consisted in running hw2a.cpp for 
+\begin_inset Formula $u_{0}=3.0$
+\end_inset
+
+ and 
+\begin_inset Formula $u_{0}=0.5$
+\end_inset
+
+.
+ Table 1 shows the results for the first case and Table 2 shows the result
+ of the second case.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "49col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="13" columns="2">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $n$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\nicefrac{I}{I_{0}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+4
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+4
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+8
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.92268
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+16
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.07147
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+32
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.09942
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+64
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.10566
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+128
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.10714
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+256
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.10751
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+512
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.10760
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1024
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.10762
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2048
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.10763
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+4096
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.10763
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+8192
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.10763
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset Formula $n$
+\end_inset
+
+ vs 
+\begin_inset Formula $\nicefrac{I}{I_{0}}$
+\end_inset
+
+, 
+\begin_inset Formula $u_{0}=3.0$
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "48col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="13" columns="2">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $n$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\nicefrac{I}{I_{0}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+4
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.652376
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+8
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.651931
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+16
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.651856
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+32
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.651840
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+64
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.651836
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+128
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.651835
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+256
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.651835
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+512
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.651835
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1024
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.651835
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2048
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.651835
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+4096
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.651835
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+8192
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.651835
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset Formula $n$
+\end_inset
+
+ vs 
+\begin_inset Formula $\nicefrac{I}{I_{0}}$
+\end_inset
+
+, 
+\begin_inset Formula $u_{0}=0.5$
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+It can be seen that in both cases, the results become more accurate with
+ increasing 
+\begin_inset Formula $n$
+\end_inset
+
+, and after a certain point the value of the integral becomes the same no
+ matter what 
+\begin_inset Formula $n$
+\end_inset
+
+ is (at least for this level of precision).
+ However, this occurs at an earlier point in the first case (when 
+\begin_inset Formula $n=2048$
+\end_inset
+
+) than in the second case (when 
+\begin_inset Formula $n=128$
+\end_inset
+
+).
+ This is because the first case has a larger 
+\begin_inset Formula $u_{0}$
+\end_inset
+
+than the second, meaning that the horizontal axis length to be divided is
+ larger in the first case than in the second, so there is space for the
+ integral to oscillate more.
+ The curious value of 
+\begin_inset Formula $\nicefrac{I}{I_{0}}=4$
+\end_inset
+
+ for 
+\begin_inset Formula $n=4$
+\end_inset
+
+ in the first case is due to the fact that the Fresnel integrals are trigonometr
+ic, and 
+\begin_inset Formula $n=4$
+\end_inset
+
+ gives values of 1 and 0 for each evaluation of 
+\begin_inset Formula $f(u_{i})$
+\end_inset
+
+, producing a wildly erroneous approximation.
+\end_layout
+
+\begin_layout Subsection
+Task 2
+\end_layout
+
+\begin_layout Standard
+Running hw2b.cpp produced 201 values for 
+\begin_inset Formula $\nicefrac{I}{I_{0}}$
+\end_inset
+
+as a function of 
+\begin_inset Formula $x_{0}$
+\end_inset
+
+, with 
+\begin_inset Formula $x_{0_{min}}=\text{−}1\,micron$
+\end_inset
+
+ and 
+\begin_inset Formula $x_{0_{max}}=4\,microns$
+\end_inset
+
+.
+ Figure 1 shows a plot of the results, generated using the matplotlib package
+ in Python.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename plot.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset Formula $\nicefrac{I}{I_{0}}$
+\end_inset
+
+ vs 
+\begin_inset Formula $x_{0}$
+\end_inset
+
+ for 
+\begin_inset Formula $x_{0}$
+\end_inset
+
+ in range 
+\begin_inset Formula $\Bigl[\text{−}1;4\Bigr]$
+\end_inset
+
+ microns
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The plot can be divided into two parts: from 
+\begin_inset Formula $x_{0}=\text{−}1\,micron$
+\end_inset
+
+ to 
+\begin_inset Formula $x_{0}\approx0.6\,microns$
+\end_inset
+
+, there is an exponential increase in 
+\begin_inset Formula $\nicefrac{I}{I_{0}}$
+\end_inset
+
+, whereas starting from there the plot resembles the displacement vs time
+ plot of a damped oscillator with increasing frequency, i.e.
+ a sinusoidal function of slowly decreasing period and amplitude.
+ In this case, the sinusoid converges to a value of 
+\begin_inset Formula $\nicefrac{I}{I_{0}}=1$
+\end_inset
+
+ as 
+\begin_inset Formula $x_{0}\rightarrow\infty$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section
+Analysis
+\end_layout
+
+\begin_layout Standard
+The diffraction of the waves due to the edge implies that even though the
+ light is striking the edge perpendicularly, it is to be expected that we
+ can observe some light even at the inside of edge, that is, when 
+\begin_inset Formula $x_{0}<0$
+\end_inset
+
+.
+ At large 
+\begin_inset Formula $x_{0}$
+\end_inset
+
+, we would expect diffraction effects to be negligible, and as such the
+ intensity of light should simply be equal to 
+\begin_inset Formula $I_{0}$
+\end_inset
+
+.
+ Thus we should expect the plot to converge to 
+\begin_inset Formula $\nicefrac{I}{I_{0}}=1$
+\end_inset
+
+.
+ In between 
+\begin_inset Formula $x_{0}=0$
+\end_inset
+
+ and 
+\begin_inset Formula $x_{0}\rightarrow\infty$
+\end_inset
+
+, we expect to see constructive and destructive interference due to the
+ diffraction.
+ All of these expectations are consistent with the above plot.
+\end_layout
+
+\begin_layout Section
+Source code
+\end_layout
+
+\begin_layout Subsection
+hw2a.cpp
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "language={C++},numbers=left,numberstyle={\small},breaklines=true"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+/* AEP 4380 HW#2a
+\end_layout
+
+\begin_layout Plain Layout
+
+Numerical Integration of Fresnel Integrals
+\end_layout
+
+\begin_layout Plain Layout
+
+Run on core i7 with g++ 5.4.0 (Ubuntu)
+\end_layout
+
+\begin_layout Plain Layout
+
+Gianfranco Grillo, 09/12/2016
+\end_layout
+
+\begin_layout Plain Layout
+
+*/
+\end_layout
+
+\begin_layout Plain Layout
+
+#include <cstdlib>
+\end_layout
+
+\begin_layout Plain Layout
+
+#include <cmath>
+\end_layout
+
+\begin_layout Plain Layout
+
+#include <iostream>
+\end_layout
+
+\begin_layout Plain Layout
+
+#include <fstream>
+\end_layout
+
+\begin_layout Plain Layout
+
+#include <iomanip>
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+using namespace std;
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+int main() {
+\end_layout
+
+\begin_layout Plain Layout
+
+	double u0, I;
+\end_layout
+
+\begin_layout Plain Layout
+
+	int n;
+\end_layout
+
+\begin_layout Plain Layout
+
+	cout << "u0 = "; // ask for user input
+\end_layout
+
+\begin_layout Plain Layout
+
+	cin >> u0;
+\end_layout
+
+\begin_layout Plain Layout
+
+	double iint(double,int);
+\end_layout
+
+\begin_layout Plain Layout
+
+	ofstream fp;
+\end_layout
+
+\begin_layout Plain Layout
+
+	fp.open( "fresnelintegral.dat"); // open new file for output
+\end_layout
+
+\begin_layout Plain Layout
+
+	if( fp.fail() ) { // in case of error
+\end_layout
+
+\begin_layout Plain Layout
+
+		cout << "cannot open file" << endl;
+\end_layout
+
+\begin_layout Plain Layout
+
+		return( EXIT_SUCCESS );
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+	for (n = 4; n < 8193; n = n*2) { // loop until n = 8192
+\end_layout
+
+\begin_layout Plain Layout
+
+		I = iint(u0,n);
+\end_layout
+
+\begin_layout Plain Layout
+
+		fp << setw(15) << n << setw(15) << I << endl; // output columns to file
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+	fp.close(); 
+\end_layout
+
+\begin_layout Plain Layout
+
+	return( EXIT_SUCCESS );
+\end_layout
+
+\begin_layout Plain Layout
+
+} // end main
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+double iint(double u0, int n) { // function that calculates I/I0
+\end_layout
+
+\begin_layout Plain Layout
+
+	double cint(double,int), C;
+\end_layout
+
+\begin_layout Plain Layout
+
+	double sint(double,int), S;
+\end_layout
+
+\begin_layout Plain Layout
+
+	C = cint(u0,n); // call functions that calculate C(u0), S(u0)
+\end_layout
+
+\begin_layout Plain Layout
+
+	S = sint(u0,n);
+\end_layout
+
+\begin_layout Plain Layout
+
+	return 0.5*(pow((C+0.5),2.0)+pow((S+0.5),2.0));
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+double cint(double u0, int n) { // calculates C(u0) with n points using
+ trapezoidal rule
+\end_layout
+
+\begin_layout Plain Layout
+
+	double sum = 0.0, i;
+\end_layout
+
+\begin_layout Plain Layout
+
+	double sqrun(int,int,double), sq1, sq2;
+\end_layout
+
+\begin_layout Plain Layout
+
+	double halfpi = 2.0 * atan(1.0), ci;
+\end_layout
+
+\begin_layout Plain Layout
+
+	for (i = 1; i < n; i++) {
+\end_layout
+
+\begin_layout Plain Layout
+
+		sq1 = sqrun(i,n,u0);
+\end_layout
+
+\begin_layout Plain Layout
+
+		sq2 = sqrun(i+1,n,u0);
+\end_layout
+
+\begin_layout Plain Layout
+
+		ci = 0.5*(cos(halfpi*sq1)+cos(halfpi*sq2))*u0/(n-1);
+\end_layout
+
+\begin_layout Plain Layout
+
+		sum=sum+ci;
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+	return sum;
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+double sint(double u0, int n) { // calculates S(u0) with n points using
+ trapezoidal rule
+\end_layout
+
+\begin_layout Plain Layout
+
+	double sum = 0.0, i;
+\end_layout
+
+\begin_layout Plain Layout
+
+	double sqrun(int,int,double), sq1, sq2;
+\end_layout
+
+\begin_layout Plain Layout
+
+	double halfpi = 2.0 * atan(1.0), si;
+\end_layout
+
+\begin_layout Plain Layout
+
+	for (i = 1; i < n; i++) {
+\end_layout
+
+\begin_layout Plain Layout
+
+		sq1 = sqrun(i,n,u0);
+\end_layout
+
+\begin_layout Plain Layout
+
+		sq2 = sqrun(i+1,n,u0);
+\end_layout
+
+\begin_layout Plain Layout
+
+		si = 0.5*(sin(halfpi*sq1)+sin(halfpi*sq2))*u0/(n-1);
+\end_layout
+
+\begin_layout Plain Layout
+
+		sum=sum+si;
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+	return sum;
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+double sqrun(int i, int n, double u0) { // returns value of point ui
+\end_layout
+
+\begin_layout Plain Layout
+
+	return pow((i-1)*u0/(n-1),2);
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+hw2b.cpp
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "language={C++},numbers=left,numberstyle={\small},breaklines=true"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+/* AEP 4380 HW#2b
+\end_layout
+
+\begin_layout Plain Layout
+
+Numerical Integration of Fresnel Integrals
+\end_layout
+
+\begin_layout Plain Layout
+
+Run on core i7 with g++ 5.4.0 (Ubuntu)
+\end_layout
+
+\begin_layout Plain Layout
+
+Gianfranco Grillo, 09/12/2016
+\end_layout
+
+\begin_layout Plain Layout
+
+*/
+\end_layout
+
+\begin_layout Plain Layout
+
+#include <cstdlib>
+\end_layout
+
+\begin_layout Plain Layout
+
+#include <cmath>
+\end_layout
+
+\begin_layout Plain Layout
+
+#include <iostream>
+\end_layout
+
+\begin_layout Plain Layout
+
+#include <fstream>
+\end_layout
+
+\begin_layout Plain Layout
+
+#include <iomanip>
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+using namespace std;
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+int main() {
+\end_layout
+
+\begin_layout Plain Layout
+
+	double x0, I, u0;
+\end_layout
+
+\begin_layout Plain Layout
+
+	int n = 16384;
+\end_layout
+
+\begin_layout Plain Layout
+
+	double iint(double,int);
+\end_layout
+
+\begin_layout Plain Layout
+
+	ofstream fp;
+\end_layout
+
+\begin_layout Plain Layout
+
+	fp.open( "ivsx0.dat"); // open new file for output
+\end_layout
+
+\begin_layout Plain Layout
+
+	if( fp.fail() ) { // in case of error
+\end_layout
+
+\begin_layout Plain Layout
+
+		cout << "cannot open file" << endl;
+\end_layout
+
+\begin_layout Plain Layout
+
+		return( EXIT_SUCCESS );
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+	for (x0=-1.0; x0 < 4.0; x0 = x0 + 0.025) { // loop until x0 = 4, starting
+ at x0 = -1, step = 0.025
+\end_layout
+
+\begin_layout Plain Layout
+
+		u0 = 2.0*x0;
+\end_layout
+
+\begin_layout Plain Layout
+
+		I = iint(u0,n);
+\end_layout
+
+\begin_layout Plain Layout
+
+		fp << setw(15) << x0 << setw(15) << I << endl; // output columns to file
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+	fp.close(); 
+\end_layout
+
+\begin_layout Plain Layout
+
+	return( EXIT_SUCCESS );
+\end_layout
+
+\begin_layout Plain Layout
+
+} // end main
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+double iint(double u0, int n) { // function that calculates I/I0
+\end_layout
+
+\begin_layout Plain Layout
+
+	double cint(double,int), C;
+\end_layout
+
+\begin_layout Plain Layout
+
+	double sint(double,int), S;
+\end_layout
+
+\begin_layout Plain Layout
+
+	C = cint(u0,n); // call functions that calculate C(u0), S(u0)
+\end_layout
+
+\begin_layout Plain Layout
+
+	S = sint(u0,n);
+\end_layout
+
+\begin_layout Plain Layout
+
+	return 0.5*(pow((C+0.5),2.0)+pow((S+0.5),2.0));
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+double cint(double u0, int n) { // calculates C(u0) with n points using
+ trapezoidal rule
+\end_layout
+
+\begin_layout Plain Layout
+
+	double sum = 0.0, i;
+\end_layout
+
+\begin_layout Plain Layout
+
+	double sqrun(int,int,double), sq1, sq2;
+\end_layout
+
+\begin_layout Plain Layout
+
+	double halfpi = 2.0 * atan(1.0), ci;
+\end_layout
+
+\begin_layout Plain Layout
+
+	for (i = 1; i < n; i++) {
+\end_layout
+
+\begin_layout Plain Layout
+
+		sq1 = sqrun(i,n,u0);
+\end_layout
+
+\begin_layout Plain Layout
+
+		sq2 = sqrun(i+1,n,u0);
+\end_layout
+
+\begin_layout Plain Layout
+
+		ci = 0.5*(cos(halfpi*sq1)+cos(halfpi*sq2))*u0/(n-1);
+\end_layout
+
+\begin_layout Plain Layout
+
+		sum=sum+ci;
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+	return sum;
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+double sint(double u0, int n) { // calculates S(u0) with n points using
+ trapezoidal rule
+\end_layout
+
+\begin_layout Plain Layout
+
+	double sum = 0.0, i;
+\end_layout
+
+\begin_layout Plain Layout
+
+	double sqrun(int,int,double), sq1, sq2;
+\end_layout
+
+\begin_layout Plain Layout
+
+	double halfpi = 2.0 * atan(1.0), si;
+\end_layout
+
+\begin_layout Plain Layout
+
+	for (i = 1; i < n; i++) {
+\end_layout
+
+\begin_layout Plain Layout
+
+		sq1 = sqrun(i,n,u0);
+\end_layout
+
+\begin_layout Plain Layout
+
+		sq2 = sqrun(i+1,n,u0);
+\end_layout
+
+\begin_layout Plain Layout
+
+		si = 0.5*(sin(halfpi*sq1)+sin(halfpi*sq2))*u0/(n-1);
+\end_layout
+
+\begin_layout Plain Layout
+
+		sum=sum+si;
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+	return sum;
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+double sqrun(int i, int n, double u0) { // returns value of point ui
+\end_layout
+
+\begin_layout Plain Layout
+
+	return pow((i-1)*u0/(n-1),2);
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+References
+\end_layout
+
+\begin_layout Standard
+This homework was completed using material from the lectures and my own
+ understanding of integrals and the trapezoidal rule.
+ No bibliographical material was explicitly used.
+\end_layout
+
+\end_body
+\end_document

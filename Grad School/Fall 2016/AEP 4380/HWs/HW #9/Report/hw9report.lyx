@@ -1,0 +1,817 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+\usepackage{listings}
+\lstset{breaklines=true}
+\end_preamble
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 2cm
+\topmargin 3cm
+\rightmargin 2cm
+\bottommargin 3cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+AEP 4380 HW#9: Monte Carlo Calculations
+\end_layout
+
+\begin_layout Author
+Gianfranco Grillo
+\end_layout
+
+\begin_layout Date
+November 23, 2016
+\end_layout
+
+\begin_layout Section
+Background
+\end_layout
+
+\begin_layout Subsection
+Random Number Generator and Monte Carlo
+\end_layout
+
+\begin_layout Standard
+Certain problems that arise in the physical sciences are based on processes
+ whose complexity is too overwhelming for humans to be able to tackle them
+ analytically.
+ Although the underlying principles are deterministic, they may combine
+ in ways that result in behavior that is far too complex for us to be able
+ to perfectly model.
+ Many such problems are instead tackled via the use of random number generators.
+ The authors of 
+\emph on
+Numerical Recipes
+\emph default
+ point out that it seems counterintuitive that we are able to use completely
+ deterministic machines like computers in order to generate sequences of
+ random numbers, and yet relatively simple algorithms work as RNG without
+ causing the universe to implode.
+ It seems to me that this intuition is misguided: it is generally agreed
+ that the macroscopic laws of nature are also deterministic, and yet we
+ constantly observe randomness in nature, even in the case of simple processes.
+ Thus, it doesn't seem surprising that computers can produce random output.
+\end_layout
+
+\begin_layout Standard
+Numerical algorithms that rely on some kind of random data in order to solve
+ problems in the sciences are known as Monte Carlo methods.
+ They are usually used as a last resort, in order to attempt to numerically
+ solve problems that are so intractable that we are not capable of solving
+ via any other means.
+ Monte Carlo simulations are essential in field like biophysics, where we
+ are often confronted with problems containing multiple coupled degrees
+ of freedom that are far to complex to model analytically.
+ This homework deals with one such problem, protein folding, the process
+ in which proteins are assembled on the basis of long chains of aminoacids.
+ 
+\end_layout
+
+\begin_layout Subsection
+Protein Folding
+\end_layout
+
+\begin_layout Standard
+Proteins are an essential component of living organisms.
+ They are a type of macromolecule that can be modeled as series of interconnecte
+d amino acids.
+ The particular way in which the sequence of amino acids is arranged, as
+ well as the types of amino acids involved, determine the specific characteristi
+cs that the protein will have.
+ The process through which proteins are assembled, starting from an amino
+ acid chain, is known as protein folding.
+ This process can be modeled via a Monte Carlo simulation.
+ Assuming the proteins are confined to Edward Abbott's world of Flatland,
+ that is, they are two dimensional (although they can use the third dimension
+ to fold themselvelves up), we can make use of random procedures to look
+ at how the protein will fold itself over time, by making sure the system
+ follows certain rules related to its total energy and the way different
+ configurations relate to this total energy.
+ Amino acids on the chain that are close to each other experience Van der
+ Waals forces.
+ This implies that the system has a certain amount of energy associated
+ to it.
+ This energy 
+\begin_inset Formula $E_{total}$
+\end_inset
+
+ is given by
+\begin_inset Formula 
+\begin{equation}
+E_{total}=\sum_{all\,pairs}E_{t(i),t(j)}\delta_{ij}=\frac{1}{2}\sum_{j\neq i}E_{t(i),t(j)}\delta_{ij}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $t(i)$
+\end_inset
+
+ and 
+\begin_inset Formula $t(j)$
+\end_inset
+
+ are two different amino acids, and 
+\begin_inset Formula $\delta_{ij}$
+\end_inset
+
+ is the Kronecker delta.
+ We have ignored the energies bonding each of the amino acids together since
+ it is assumed that this energy stays constant (that linked amino acids
+ are always separated by the same distance).
+ Thus the energies in (1) arise from Van der Waals forces between amino
+ acids that are close to each other (more specifically, that are separated
+ by one square in our model's two dimensional grid) and not from the forces
+ linking the amino acids together.
+ The value of each interaction energy 
+\begin_inset Formula $E_{t(i),t(j)}$
+\end_inset
+
+ is determined randomly at the start from a preset range, and it changes
+ depending on the types of amino acids involved, which are also determined
+ at the start of each simulation.
+ At each time step, an amino acid is picked at random and attempts to fold
+ in a random direction that keeps the integrity of the chain intact.
+ If the energy of the new configuration is less or equal than the energy
+ of the configuration at the beginning of the time step, then the folding
+ step is performed.
+ If it is not, then the step has a probability of being accepted 
+\begin_inset Formula $p(\Delta E)$
+\end_inset
+
+ given by
+\begin_inset Formula 
+\begin{equation}
+p(\Delta E)=\exp\left(\frac{-\Delta E}{k_{B}T}\right)
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $k_{B}$
+\end_inset
+
+ is the Boltzmann constant, 
+\begin_inset Formula $T$
+\end_inset
+
+ is the temperature of the environment, and 
+\begin_inset Formula $\Delta E=E_{new}-E_{old}$
+\end_inset
+
+.
+ This procedure can be repeated any number of times.
+ In this homework, the allowed range for the energy interactions was between
+ -7 and -2 (in arbitrary units), 20 different types of amino acids were
+ used, 
+\begin_inset Formula $k_{B}T$
+\end_inset
+
+ is set equal to 1, and the procedure was performed over 10 million time
+ steps, starting with a horizontally straight chain of 45 amino acids.
+\end_layout
+
+\begin_layout Section
+Results
+\end_layout
+
+\begin_layout Subsection
+Task 1
+\end_layout
+
+\begin_layout Standard
+Task 1 consisted in testing the RNG that was used later in the simulation.
+ Figure 1 shows an histogram of 100,000 random numbers generated by the
+ generator in the range between 0 and 1.
+ Figure 2 shows a plot of 10,000 pairs of random numbers generated in the
+ same range, where each pair of numbers corresponded to an x and y coordinate.
+ The code used to generate the data used to produce the plots is shows in
+ section 4.1.
+ The RNG used is from [1].
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename histogram.png
+	scale 60
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Histogram of 100,000 randomly generated numbers
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename pairs.png
+	scale 60
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Plot of 10,000 randomly generated number pairs
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Task 2
+\end_layout
+
+\begin_layout Standard
+The second task involved performing the simulation described in section
+ 1.2 and plotting the end-to-end distance as a function of time step, as
+ well as the system energy as a function of time step, which are shown in
+ Figure 3 and Figure 4, respectively.
+ Actual plots of the amino acid chain shape are shown in Figures 5-8 at
+ time steps 
+\begin_inset Formula $t_{1}=10^{4}$
+\end_inset
+
+, 
+\begin_inset Formula $t_{2}=10^{5}$
+\end_inset
+
+, 
+\begin_inset Formula $t_{3}=10^{6}$
+\end_inset
+
+, and 
+\begin_inset Formula $t_{4}=10^{7}$
+\end_inset
+
+, respectively.
+ The code used is given in 4.2.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename tvsd.png
+	scale 60
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+End-to-end chain distance vs time step
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename tvsE.png
+	scale 60
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+System energy vs time step
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename t=1e4.png
+	scale 60
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Amino acid chain shape at 
+\begin_inset Formula $t_{1}=10^{4}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename t=1e5.png
+	scale 60
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Amino acid chain shape at 
+\begin_inset Formula $t_{2}=10^{5}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename t=1e6.png
+	scale 60
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Amino acid chain shape at 
+\begin_inset Formula $t_{3}=10^{6}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename t=1e7.png
+	scale 60
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Amino acid chain shape at 
+\begin_inset Formula $t_{7}=10^{7}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Analysis
+\end_layout
+
+\begin_layout Standard
+As can be seen, the energy and the end-to-end distance decrease more or
+ less exponentially as a function of time step, and the shape of the chain
+ deviates more and more from its starting shape as time goes on.
+ There are some random deviations from this trend that are caused by the
+ random components underlying the system.
+ The trend is simply a result of the rules regarding what would occur at
+ each time step, as set forward at the outset: it is more likely than not
+ that the movement of the amino acids results in a decrease in energy in
+ the system, and the more convoluted the shape is, the less energy the system
+ has, so it is to be expected that, starting from a perfectly straight shape,
+ we end up with a chain that basically folds back upon itself.
+ It is also the case that it becomes harder and harder for the energy of
+ the system to keep decreasing as we reach lower and lower energies, simply
+ because there are less moves available to the chain that are energetically
+ advantageous.
+ This simulation is a good demonstration that specific 
+\begin_inset Quotes eld
+\end_inset
+
+environmental
+\begin_inset Quotes erd
+\end_inset
+
+ impulses are able to shape the way a random system evolves over time, and
+ that very small alterations in a system's structure are often able to slowly
+ accumulate, in such a way that the end product is completely different
+ than the starting product.
+ Important developments in the sciences, like the theory of evolution by
+ natural selection, for instance, rely on the truth of this notion.
+ Figures 9-11 are meant to illustrate this concept.
+ I ran the simulation again using a different seed for the RNG, and even
+ though the final shape produced is different, the trends in the system's
+ energy and end-to-end distance are the same as before.
+ This results from the fact that the rules governing the system's evolution
+ are insensitive to the specific shape of the chain; what matters in the
+ end is whether the shape reduces the system's energy, and there are many
+ different shapes that are able to do that.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename tvsdb.png
+	scale 60
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+End-to-end distance vs time step for simulation #2
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename tvsEb.png
+	scale 60
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+System energy vs time step for simulation #2
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename t=1e7b.png
+	scale 60
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Amino acid chain shape at 
+\begin_inset Formula $t=10^{7}$
+\end_inset
+
+ for simulation #2
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Source code
+\end_layout
+
+\begin_layout Subsection
+hw9a.cpp
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinputlisting[language=C++]{hw9a.cpp}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+hw9b.cpp
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinputlisting[language=C++]{hw9b.cpp}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-1"
+
+\end_inset
+
+W.
+ H.
+ Press, S.
+ A.
+ Teukolsky, W.
+ T.
+ Vetterling and B.
+ P.
+ Flannery 
+\emph on
+Numerical Recipes, The Art of Scientific Computing, 3rd edit.
+\emph default
+, Camb.
+ Univ.
+ Press 2007.
+
+\emph on
+ 
+\end_layout
+
+\end_body
+\end_document

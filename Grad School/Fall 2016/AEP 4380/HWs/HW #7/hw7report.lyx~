@@ -1,0 +1,1029 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+\usepackage{listings}
+\lstset{breaklines=true}
+\end_preamble
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 2cm
+\topmargin 3cm
+\rightmargin 2cm
+\bottommargin 3cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+AEP 4380 HW#7: Time Dependent Schrödinger Equation
+\end_layout
+
+\begin_layout Author
+Gianfranco Grillo
+\end_layout
+
+\begin_layout Date
+November 2, 2016
+\end_layout
+
+\begin_layout Section
+Background
+\end_layout
+
+\begin_layout Subsection
+Solving the Time Dependent Schrödinger Equation Using Crank-Nicholson
+\end_layout
+
+\begin_layout Standard
+The central element of the wave formulation of quantum mechanics is the
+ time dependent Schrödinger equation (SE), a partial differential equation
+ that governs the time evolution of the wavefunction 
+\begin_inset Formula $\psi$
+\end_inset
+
+ associated to an object.
+ The 1D SE for a particle of mass 
+\begin_inset Formula $m$
+\end_inset
+
+ moving in a potential energy 
+\begin_inset Formula $V(x,\,t)$
+\end_inset
+
+ is
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+i\hbar\frac{\partial}{\partial t}\psi(x,\,t)=\frac{\hbar^{2}}{2m}\frac{\partial^{2}}{\partial t^{2}}\psi(x,\,t)+V(x\,t)\psi(x,\,t)
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $\hbar=6.5821\times10^{-16}\,eV\cdot sec$
+\end_inset
+
+ is the reduced Planck constant.
+\end_layout
+
+\begin_layout Standard
+Starting with a given 
+\begin_inset Formula $\psi(x,\,t=0)$
+\end_inset
+
+ and 
+\begin_inset Formula $V(x,\,t)$
+\end_inset
+
+, it is possible to solve this equation numerically via the Crank-Nicholson
+ algorithm.
+ The algorithm works by writing the equation in terms of a finite difference
+ matrix and then solving this matrix in order to give the state of the wavefunct
+ion at the next time step.
+ Succesively applying Crank-Nicholson over several time steps allows us
+ to track the evolution of the wave function over a desired period of time.
+ In the case of the SE, its finite difference form (with 
+\begin_inset Formula $V=V(x)$
+\end_inset
+
+ time independent) is given by
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{multline}
+\psi(x-\Delta x,\,t+\Delta t)+\left[\frac{2m\omega i}{\hbar}-2-\frac{2m\Delta x^{2}}{\hbar^{2}}V(x)\right]\psi(x,\,t+\Delta t)+\psi(x+\Delta x,\,t+\Delta t)=-\psi(x-\Delta x,\,t)+\left[\frac{2m\omega i}{\hbar}+2+\frac{2m\Delta x^{2}}{\hbar^{2}}V(x)\right]\psi(x,\,t)-\psi(x+\Delta x,\,t)
+\end{multline}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This can be written in matrix notation as
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+a_{j}\psi(x_{j-1},\,t_{n+1})+b_{j}\psi(x_{j},\,t_{n+1})+c_{j}\psi(x_{j+1},\,t_{n+1})=d_{j}
+\end{equation}
+
+\end_inset
+
+with 
+\begin_inset Formula $a_{j}=c_{j}=1$
+\end_inset
+
+, 
+\begin_inset Formula $b_{j}=\frac{2m\omega i}{\hbar}-2-\frac{2m\Delta x^{2}}{\hbar^{2}}V(x)$
+\end_inset
+
+, and 
+\begin_inset Formula $d_{j}=-\psi(x_{j-1},\,t_{n})+\left[\frac{2m\omega i}{\hbar}+2+\frac{2m\Delta x^{2}}{\hbar^{2}}V(x)\right]\psi(x_{j},\,t_{n})-\psi(x_{j+1},\,t_{n})$
+\end_inset
+
+.
+ Here, 
+\begin_inset Formula $\omega=\frac{2\Delta x^{2}}{\Delta t}$
+\end_inset
+
+, with 
+\begin_inset Formula $\Delta x$
+\end_inset
+
+ and 
+\begin_inset Formula $\Delta t$
+\end_inset
+
+ corresponding to the sampling size in space and the sampling size in time,
+ respectively.
+ This system can be written as a matrix equation, and can be solved using
+ the Crank-Nicholson method by converting the matrix to an upper diagonal
+ form and then using backsubstitution in order to solve for the unknowns.
+ The size of the matrix (and therefore the maximum value of 
+\begin_inset Formula $j$
+\end_inset
+
+) will depend on
+\begin_inset Formula $\Delta x$
+\end_inset
+
+ and the range of 
+\begin_inset Formula $x$
+\end_inset
+
+ that will be taken into consideration in the problem.
+\end_layout
+
+\begin_layout Subsection
+Specific Parameters
+\end_layout
+
+\begin_layout Standard
+In this homework, we are interested in solving the SE for an electron, so
+ 
+\begin_inset Formula $m=m_{e}=5.6990\times10^{-32}\,eV\cdot sec^{2}\cdot\dot{A}^{2}$
+\end_inset
+
+.
+ The initial wavefunction will be given by
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\psi(x,\,t=0)=exp\left[-\left(\frac{x-0.3L}{s}\right)^{2}+ixk_{0}\right]
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $L=1000\,\dot{A}$
+\end_inset
+
+, 
+\begin_inset Formula $s=20\,\dot{A}$
+\end_inset
+
+, and 
+\begin_inset Formula $k_{0}=1\,\dot{A}^{-1}.$
+\end_inset
+
+ The potential energy 
+\begin_inset Formula $V(x)$
+\end_inset
+
+ will be given by
+\begin_inset Formula 
+\[
+V(x)=\frac{V_{0}}{1+exp\left[\left(0.5L-x\right)/\omega_{\upsilon}\right]}
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $V_{0}=4.05\,eV$
+\end_inset
+
+, and 
+\begin_inset Formula $\omega_{\upsilon}=7\,\dot{A}$
+\end_inset
+
+.
+ The region of interest will be the one delimited by 
+\begin_inset Formula $0<x<L$
+\end_inset
+
+, and the time period of interest will be 
+\begin_inset Formula $0<t<5\times10^{-14}\,sec$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section
+Results
+\end_layout
+
+\begin_layout Subsection
+Task 1
+\end_layout
+
+\begin_layout Standard
+The first task consisted in plotting 
+\begin_inset Formula $V(x)$
+\end_inset
+
+ (Figure 1), the real and imaginary parts of 
+\begin_inset Formula $\psi(x,\,t=0)$
+\end_inset
+
+ (Figures 2 and 3), and 
+\begin_inset Formula $|\psi(x,\,t=0)|^{2}$
+\end_inset
+
+ (Figure 4).
+ Given that the average wavenumber 
+\begin_inset Formula $k_{0}$
+\end_inset
+
+ is given as 
+\begin_inset Formula $1\,\dot{A}^{-1}$
+\end_inset
+
+, and 
+\begin_inset Formula $k_{0}=\frac{2\pi}{\lambda_{0}}$
+\end_inset
+
+, the average wavelength is 
+\begin_inset Formula $\lambda_{0}=2\pi\,\dot{A}$
+\end_inset
+
+, so I have used a 
+\begin_inset Formula $\Delta x$
+\end_inset
+
+ of 
+\begin_inset Formula $0.1\,\dot{A}$
+\end_inset
+
+, in order to make sure that 
+\begin_inset Formula $\Delta x$
+\end_inset
+
+ is at least 10 times less than the smallest 
+\begin_inset Formula $\lambda$
+\end_inset
+
+.
+ I separated 
+\begin_inset Formula $\psi$
+\end_inset
+
+ into real and imaginary parts as follows, using Euler's identity
+\begin_inset Formula 
+\begin{eqnarray}
+\psi(x,\,t=0) & = & exp\left[-\left(\frac{x-0.3L}{s}\right)^{2}+ixk_{0}\right]\nonumber \\
+ & = & exp\left[-\left(\frac{x-0.3L}{s}\right)^{2}\right]\cdot exp\left[ixk_{0}\right]\nonumber \\
+ & = & exp\left[-\left(\frac{x-0.3L}{s}\right)^{2}\right]\cdot(\cos(xk_{0})+i\sin(xk_{0})
+\end{eqnarray}
+
+\end_inset
+
+Thus the real and imaginary parts of 
+\begin_inset Formula $\psi$
+\end_inset
+
+ at 
+\begin_inset Formula $t=0$
+\end_inset
+
+ are given by
+\begin_inset Formula 
+\begin{eqnarray}
+Re(\psi) & = & exp\left[-\left(\frac{x-0.3L}{s}\right)^{2}\right]\cdot\cos(xk_{0})\\
+Im(\psi) & = & exp\left[-\left(\frac{x-0.3L}{s}\right)^{2}\right]\cdot\sin(xk_{0})
+\end{eqnarray}
+
+\end_inset
+
+The code used for this task is given in section 4.1.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figure1.png
+	scale 70
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Potential 
+\begin_inset Formula $V$
+\end_inset
+
+ as a function of position 
+\begin_inset Formula $x$
+\end_inset
+
+ at 
+\begin_inset Formula $t=0$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figure2.png
+	scale 70
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Real part of the wavefunction 
+\begin_inset Formula $\psi$
+\end_inset
+
+ as a function of position 
+\begin_inset Formula $x$
+\end_inset
+
+ at 
+\begin_inset Formula $t=0$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figure3.png
+	scale 70
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Imaginary part of the wavefunction 
+\begin_inset Formula $\psi$
+\end_inset
+
+ as a function of position 
+\begin_inset Formula $x$
+\end_inset
+
+ at 
+\begin_inset Formula $t=0$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figure4.png
+	scale 70
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Square magnitude of wavefunction 
+\begin_inset Formula $\psi$
+\end_inset
+
+ as a function of position 
+\begin_inset Formula $x$
+\end_inset
+
+ at 
+\begin_inset Formula $t=0$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Task 2
+\end_layout
+
+\begin_layout Standard
+Task 2 consisted in using Crank-Nicholson to evolve the wavefunction in
+ time, in order to be able to plot its square magnitude at 
+\begin_inset Formula $t_{1}=1e-14$
+\end_inset
+
+, 
+\begin_inset Formula $t_{2}=2e-14$
+\end_inset
+
+, 
+\begin_inset Formula $t_{3}=3e-14$
+\end_inset
+
+, 
+\begin_inset Formula $t_{4}=4e-14$
+\end_inset
+
+, and 
+\begin_inset Formula $t_{5}=5e-14$
+\end_inset
+
+.
+ In order to make sure that the value of 
+\begin_inset Formula $\Delta t$
+\end_inset
+
+ was correct, I ran the code using different values of it until the value
+ of 
+\begin_inset Formula $\Delta t$
+\end_inset
+
+ did not affect the shape of the plots.
+ Thus, I used 
+\begin_inset Formula $\Delta t=1e-18\,sec$
+\end_inset
+
+ since the plots for that 
+\begin_inset Formula $\Delta t$
+\end_inset
+
+ look the same as the plots for 
+\begin_inset Formula $\Delta t=5e-18\,sec$
+\end_inset
+
+ (and they make sense in the context of the problem).
+ If I increased 
+\begin_inset Formula $\Delta t$
+\end_inset
+
+ further than that, the curves start to look different.
+ I also checked the value of the integral for each of the plots (using Python)
+ and found it to be constant to 8 significant figures with a value of ~250.66628
+ for each of the plots.
+ These are shown in Figures 5 through 9.
+ The code used is given in section 4.2.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "49col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figure5.png
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset Formula $|\psi|^{2}$
+\end_inset
+
+ vs 
+\begin_inset Formula $x$
+\end_inset
+
+ at 
+\begin_inset Formula $t_{1}=1e-14\,sec$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "49col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figure6.png
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset Formula $|\psi|^{2}$
+\end_inset
+
+ vs 
+\begin_inset Formula $x$
+\end_inset
+
+ at 
+\begin_inset Formula $t_{2}=2e-14\,sec$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "49col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figure7.png
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset Formula $|\psi|^{2}$
+\end_inset
+
+ vs 
+\begin_inset Formula $x$
+\end_inset
+
+ at 
+\begin_inset Formula $t_{3}=3e-14\,sec$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "49col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figure8.png
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset Formula $|\psi|^{2}$
+\end_inset
+
+ vs 
+\begin_inset Formula $x$
+\end_inset
+
+ at 
+\begin_inset Formula $t_{4}=4e-14\,sec$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figure9.png
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset Formula $|\psi|^{2}$
+\end_inset
+
+ vs 
+\begin_inset Formula $x$
+\end_inset
+
+ at 
+\begin_inset Formula $t_{5}=5e-14\,sec$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Analysis
+\end_layout
+
+\begin_layout Standard
+The results make sense.
+ The potential 
+\begin_inset Formula $V(x)$
+\end_inset
+
+ is essentially a step function, and its maximum energy is greater than
+ the particle energy, we expect the particle to be able to propagate from
+ left to right until it reaches the potential barrier, at which point we
+ expect most of its probability amplitude (given by its wavefunction) to
+ be deflected by the potential, and thus start propagating from right to
+ left, while a fraction of the probability amplitude should continue propagating
+ to the right to account for the possibility of tunneling.
+ This is exactly what we see.
+ The particle's wavefunction propagates from left to right with a shape
+ that is unchanged from that with which it started, and then its shape changes
+ once it reaches the potential barrier, dividing up into two pulses, one
+ propagating from left to right, and the other from right to left, with
+ the latter having a greater amplitude than the former.
+\end_layout
+
+\begin_layout Section
+Source code
+\end_layout
+
+\begin_layout Subsection
+hw7a.cpp
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinputlisting[language=C++]{hw7a.cpp}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+hw7b.cpp
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinputlisting[language=C++]{hw7b.cpp}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-1"
+
+\end_inset
+
+W.
+ H.
+ Press, S.
+ A.
+ Teukolsky, W.
+ T.
+ Vetterling and B.
+ P.
+ Flannery 
+\emph on
+Numerical Recipes, The Art of Scientific Computing, 3rd edit.
+\emph default
+, Camb.
+ Univ.
+ Press 2007.
+
+\emph on
+ 
+\end_layout
+
+\end_body
+\end_document

@@ -1,0 +1,2732 @@
+(***********************************************************************
+
+                    Mathematica-Compatible Notebook
+
+This notebook can be used on any computer system with Mathematica 4.0,
+MathReader 4.0, or any compatible application. The data for the notebook 
+starts with the line containing stars above.
+
+To get the notebook into a Mathematica-compatible application, do one of 
+the following:
+
+* Save the data starting with the line of stars above into a file
+  with a name ending in .nb, then open the file inside the application;
+
+* Copy the data starting with the line of stars above to the
+  clipboard, then use the Paste menu command inside the application.
+
+Data for notebooks contains only printable 7-bit ASCII and can be
+sent directly in email or through ftp in text mode.  Newlines can be
+CR, LF or CRLF (Unix, Macintosh or MS-DOS style).
+
+NOTE: If you modify the data for this notebook not in a Mathematica-
+compatible application, you must delete the line below containing the 
+word CacheID, otherwise Mathematica-compatible applications may try to 
+use invalid cache data.
+
+For more information on notebooks and Mathematica-compatible 
+applications, contact Wolfram Research:
+  web: http://www.wolfram.com
+  email: info@wolfram.com
+  phone: +1-217-398-0700 (U.S.)
+
+Notebook reader applications are available free of charge from 
+Wolfram Research.
+***********************************************************************)
+
+(*CacheID: 232*)
+
+
+(*NotebookFileLineBreakTest
+NotebookFileLineBreakTest*)
+(*NotebookOptionsPosition[     92735,       2481]*)
+(*NotebookOutlinePosition[     95921,       2568]*)
+(*  CellTagsIndexPosition[     95848,       2562]*)
+(*WindowFrame->Normal*)
+
+
+
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Making Dimensionless Models", "Title"],
+
+Cell[TextData[{
+  "Anton Antonov\n",
+  StyleBox["IMM at DTU, UNI-C, NERI, Denmark\nAnton.Antonov@uni-c.dk", "Text",
+    
+    FontSize->10,
+    FontSlant->"Plain"]
+}], "Author"],
+
+Cell[CellGroupData[{
+
+Cell["Introduction", "Section 1"],
+
+Cell["\<\
+When are solved problems in physics and chemical engineering, often \
+it is more convenient to transform their model equations in dimensionless \
+form. The package presented here contains some functions that help that \
+process. We will show the package usage by examples.\
+\>", "Text"],
+
+Cell["First we should load the package", "MathCaption"],
+
+Cell[BoxData[
+    \(<< "\<~/MathFiles/dimensionless/DimLessPack.m\>"\)], "Input"],
+
+Cell[TextData[{
+  "The package can be also loaded from the section \"",
+  ButtonBox["The ",
+    ButtonData:>"MFuncs",
+    ButtonStyle->"Hyperlink"],
+  StyleBox[ButtonBox["Mathematica",
+    ButtonData:>"MFuncs",
+    ButtonStyle->"Hyperlink"],
+    FontSlant->"Italic"],
+  ButtonBox[" functions",
+    ButtonData:>"MFuncs",
+    ButtonStyle->"Hyperlink"],
+  "\"at the end of the notebook."
+}], "Text"],
+
+Cell["Notation definitions", "MathCaption"],
+
+Cell[BoxData[
+    \(<< Utilities`Notation`\)], "Input"],
+
+Cell[BoxData[
+    RowBox[{"Notation", "[", 
+      RowBox[{
+        TagBox[\(x_ \[LeftAngleBracket]y___\[RightAngleBracket]\),
+          NotationBoxTag,
+          TagStyle->"NotationTemplateStyle"], " ", 
+        "\[DoubleLongLeftRightArrow]", " ", 
+        TagBox[\(Measure[x_, y___]\),
+          NotationBoxTag,
+          TagStyle->"NotationTemplateStyle"]}], "]"}]], "Input"],
+
+Cell[BoxData[
+    RowBox[{"Notation", "[", 
+      RowBox[{
+        TagBox[\("\<\[DifferentialD]\>" x___\),
+          NotationBoxTag,
+          TagStyle->"NotationTemplateStyle"], " ", 
+        "\[DoubleLongLeftRightArrow]", " ", 
+        TagBox[\(DifferentialD[x___]\),
+          NotationBoxTag,
+          TagStyle->"NotationTemplateStyle"]}], "]"}]], "Input"],
+
+Cell[TextData[{
+  "The notation definitions above define that, for example,  ",
+  Cell[BoxData[
+      \(TraditionalForm\`C \[LeftAngleBracket]M\[RightAngleBracket]\)]],
+  " will be interpreted as M to be the measure of C. We use angle brackets,  \
+so we should type C ",
+  StyleBox["\[AliasIndicator]<", "TR"],
+  StyleBox["\[AliasIndicator]", "MR"],
+  StyleBox[" M \[AliasIndicator]>", "TR"],
+  StyleBox["\[AliasIndicator] .", "MR"],
+  StyleBox[" ", "TR"]
+}], "Text"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["An example equation", "Section"],
+
+Cell[BoxData[
+    \(\(Next\ let\ us\ take\ an\ equation\ from\ the\ book\ \ ' 
+          Applied\ Mathematics\ and\ Modeling\ for\ \ Chemical\ \
+Engineers'\ \ by\ Rice\  &\)\ Do, \ Chapter\ 1, \ page\ 30, \ 
+    problem\ 1.4\_1\)], "Text",
+  FontFamily->"Times"],
+
+Cell[BoxData[
+    \(\(eqn = 
+        m \[LeftAngleBracket]Kilogram\[RightAngleBracket]*\(C\_p\) \
+\[LeftAngleBracket]\(4.1868`  Meter\^2\)\/\(\(Second\^2\)\(\ \)\)\ \
+Temperature\ \[RightAngleBracket]*\((\[DifferentialD]T\/\[DifferentialD]t)\) \
+\[LeftAngleBracket]Temperature\/Second\[RightAngleBracket] \[Equal] 
+          h \[LeftAngleBracket]\(\(Kilogram\)\(\ \ \)\(Temperature\)\(\ \
+\)\)\/\(\(Second\^3\)\(\ \)\)\[RightAngleBracket]*
+            A \[LeftAngleBracket]Meter\^2\[RightAngleBracket]*\((\(T\_f\) \
+\[LeftAngleBracket]Temperature\[RightAngleBracket] - 
+                T \[LeftAngleBracket]Temperature\[RightAngleBracket])\);\)\)],\
+ "Input"],
+
+Cell[TextData[{
+  "It is instructional to see the  ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  " internal presentation of this equation."
+}], "Text"],
+
+Cell[TextData[{
+  "Here is the ",
+  StyleBox["FullForm", "Program"],
+  " of the variable ",
+  StyleBox["eqn", "Program"],
+  " defined above"
+}], "MathCaption"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+    \(eqn // FullForm\)], "Input"],
+
+Cell[BoxData[
+    TagBox[
+      StyleBox[\(Equal[
+          Times[Measure[m, Kilogram], 
+            Measure[Times[Power[DifferentialD[t], \(-1\)], DifferentialD[T]], 
+              Times[Power[Second, \(-1\)], Temperature]], 
+            Measure[Subscript[C, p], 
+              Times[4.1868`, Power[Meter, 2], Power[Second, \(-2\)], 
+                Temperature]]], 
+          Times[Measure[A, Power[Meter, 2]], 
+            Measure[h, Times[Kilogram, Power[Second, \(-3\)], Temperature]], 
+            Plus[Times[\(-1\), Measure[T, Temperature]], 
+              Measure[Subscript[T, f], Temperature]]]]\),
+        ShowStringCharacters->True,
+        NumberMarks->True],
+      FullForm]], "Output"]
+}, Open  ]],
+
+Cell[TextData[{
+  "We can multiply arbitray physical quantities, but we can just add \
+quantities that have the same measure.\.13 Therefore we can extract from the \
+equation the relation imposed on its terms.\.13 This realtion is extracted by \
+the function ",
+  StyleBox["MaxRelation", "Program"],
+  "."
+}], "Text"],
+
+Cell["This transforms an equation to its relational form", "Caption"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+    \(MakeRelation[eqn]\)], "Input"],
+
+Cell[BoxData[
+    \(f[Kilogram\ m, \(Temperature\ \(("\[DifferentialD]" T)\)\)\/\(Second\ \
+\(("\[DifferentialD]" t)\)\), \(4.1868`\ Meter\^2\ Temperature\ \
+C\_p\)\/Second\^2, A\ Meter\^2, \(h\ Kilogram\ Temperature\)\/Second\^3, 
+      T\ Temperature, Temperature\ T\_f]\)], "Output"]
+}, Open  ]],
+
+Cell[TextData[{
+  "We might also want to extract the units used in the equation. This is done \
+by the function ",
+  StyleBox["Units", "Program"],
+  "."
+}], "Text"],
+
+Cell["This gives the units used in the equation", "MathCaption"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+    \(Units[eqn]\)], "Input",
+  CellLabel->"In[8]:="],
+
+Cell[BoxData[
+    \({Kilogram, Meter, Second}\)], "Output",
+  CellLabel->"Out[8]="]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Applying the Pi-theorem", "Section"],
+
+Cell[TextData[{
+  "The Buckingham's Pi theorem states that physical laws are independent of \
+the form of the units. Therefore, acceptable laws of physics are homogeneous \
+in all dimensions. (See Eric Weisstein's ",
+  ButtonBox["http://www.treasure-troves.com/physics/BuckinghamsPiTheorem.\
+html",
+    ButtonData:>{
+      URL[ 
+      "http://www.treasure-troves.com/physics/BuckinghamsPiTheorem.html"], 
+      None},
+    ButtonStyle->"Hyperlink"],
+  ".)"
+}], "Text"],
+
+Cell["\<\
+After the model equations are derived, we can transform them using \
+units inherent for the problem modeled. This \"inherentness\" leads to the \
+dimensionless form of the equations. \
+\>", "Text"],
+
+Cell[TextData[{
+  "One way to look at a transformation of an equation to its dimensionless \
+form is to think that  it is changed the basis in which its relational form \
+is expressed. This algebraic point of view is taken in G. Birkhoff's \
+\"Hydrodynamics: A Study in Logic, Fact and Similitude\". Princeton \
+University Press, \.13Revised edition, 1960. I have used the proof of the \
+Buckingham's Pi theorem to make the function ",
+  StyleBox["DimlessRel",
+    FontFamily->"Courier"],
+  " demonstrated bellow. The theorem states existence of a dimensionless form \
+of an equation, so the Birkhoff's proof, although constructive at large \
+extend, should be made fully constructive in order to be implemented in a \
+computer algebra system. (So, actually, the code of ",
+  StyleBox["DimlessRel",
+    FontFamily->"Courier"],
+  " is another proof of the theorem.)"
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+    \(DimlessRel[MakeRelation[eqn], {A, m, T}]\)], "Input"],
+
+Cell[BoxData[
+    \({{Kilogram \[Rule] 1\/m, Meter \[Rule] 1\/\@A, 
+        Second \[Rule] \(Temperature\ \(("\[DifferentialD]" T)\)\)\/\("\
+\[DifferentialD]" t\)}}\)], "Output"]
+}, Open  ]],
+
+Cell["\<\
+After we have found the new units we can substitute them in the \
+relation form of the equation.\
+\>", "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+    \(\(\((MakeRelation[eqn] /. #1 // Simplify)\) &\) /@ %\)], "Input"],
+
+Cell[BoxData[
+    \({f[1, 
+        1, \(4.1868`\ \(("\[DifferentialD]" t)\)\^2\ C\_p\)\/\(A\ Temperature\
+\ \(("\[DifferentialD]" T)\)\^2\), 
+        1, \(h\ \(("\[DifferentialD]" t)\)\^3\)\/\(m\ Temperature\^2\ \(("\
+\[DifferentialD]" T)\)\^3\), T\ Temperature, Temperature\ T\_f]}\)], "Output"]
+}, Open  ]],
+
+Cell[TextData[{
+  "Following the basis change point of view, we can make the function ",
+  StyleBox["DimlessRel",
+    FontFamily->"Courier"],
+  " to produce several new bases when are passed to it non-independent system \
+of vectors (i.e. units)."
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+    \(DimlessRel[MakeRelation[eqn], {C\_p, T, A, m}]\)], "Input"],
+
+Cell[BoxData[
+    \({{Kilogram \[Rule] 1\/m\^1.`, 
+        Meter \[Rule] \(0.4887186272565186`\ Temperature\^0.5`\ \(("\
+\[DifferentialD]" T)\)\^1.`\)\/\(\(("\[DifferentialD]" t)\)\^1.`\ \
+C\_p\%0.5`\), 
+        Second \[Rule] \(Temperature\^1.`\ \(("\[DifferentialD]" \
+T)\)\^1.`\)\/\(("\[DifferentialD]" t)\)\^1.`}, {Kilogram \[Rule] 1\/m, 
+        Meter \[Rule] 1\/\@A, 
+        Second \[Rule] \(Temperature\ \(("\[DifferentialD]" T)\)\)\/\("\
+\[DifferentialD]" t\)}, {Kilogram \[Rule] 1\/m\^1.`, 
+        Meter \[Rule] 1\/A\^0.5`, 
+        Second \[Rule] \(2.046167148597592`\ Temperature\^0.5`\ \
+C\_p\%0.5`\)\/A\^0.5`}}\)], "Output"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Finding the dimensionless form", "Section"],
+
+Cell[TextData[{
+  "The steps described in the previous sections are packed in the function ",
+  StyleBox["Dimless",
+    FontFamily->"Courier"],
+  ". ",
+  StyleBox["Dimless",
+    FontFamily->"Courier"],
+  " gives the dimensionless form of an equation using a list of units with \
+which to express the units kept the global variable ",
+  StyleBox["FUNDAMENDAL", "Program"],
+  ". So far the package works with CI units i.e. the equation we want to make \
+dimensionless shoud be in CI units."
+}], "Text"],
+
+Cell["Global units variable", "MathCaption"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+    StyleBox["FUNDAMENTAL",
+      "Program"]], "Input"],
+
+Cell[BoxData[
+    \({Ampere, Candela, Kilogram, Meter, Second}\)], "Output"]
+}, Open  ]],
+
+Cell[TextData[{
+  StyleBox["The two equations are derived replacing the CI units, with a set \
+of quantities that contain", "Text"],
+  " subset of ",
+  StyleBox["{T,m}. ", "Program"],
+  StyleBox["Check the result of", "Text"],
+  " ",
+  StyleBox["DimlessRel[MakeRelation[eqn],{T,m}]", "Program"]
+}], "MathCaption"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+    \(Dimless[eqn, {T, m}]\)], "Input"],
+
+Cell[BoxData[
+    \({1.` == \(-\(\(0.23884589662749597`\ A\ h\ \(("\[DifferentialD]" \
+t)\)\^1.`\ \((T - 
+                    T\_f)\)\)\/\(m\^1.`\ \(("\[DifferentialD]" T)\)\^1.`\ \
+C\_p\%1.`\)\)\), \(\(("\[DifferentialD]" t)\)\^2\ \((4.1868`\ m\ \(("\
+\[DifferentialD]" T)\)\ C\_p + A\ h\ \(("\[DifferentialD]" t)\)\ \((T - T\_f)\
+\))\)\)\/\(A\ m\ Temperature\ \(("\[DifferentialD]" T)\)\^3\) == 
+        0}\)], "Output"]
+}, Open  ]],
+
+Cell[TextData[{
+  "The two equations are derived replacing the CI units, with a set of \
+quantities that contain ",
+  Cell[BoxData[
+      \({C\_p}\)]],
+  "."
+}], "Caption"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+    \(Dimless[eqn, {C\_p}]\)], "Input"],
+
+Cell[BoxData[
+    \({1.` == \(-\(\(0.23884589662749597`\ A\ h\ \(("\[DifferentialD]" \
+t)\)\^1.`\ \((T - 
+                    T\_f)\)\)\/\(m\^1.`\ \(("\[DifferentialD]" T)\)\^1.`\ \
+C\_p\%1.`\)\)\), \(0.48871862725651843`\ A\^0.5`\ Temperature\^0.5`\ \(("\
+\[DifferentialD]" T)\)\)\/\(\(("\[DifferentialD]" t)\)\ C\_p\%0.5`\) == \(-\(\
+\(0.11672843872564213`\ A\^1.5`\ h\ Temperature\^0.5`\ \((T - 
+                    T\_f)\)\)\/\(m\^1.`\ C\_p\%1.5`\)\)\), \(1.`\ \
+m\^0.3333333333333333`\ Temperature\^0.6666666666666667`\ \
+\(("\[DifferentialD]" T)\)\)\/\(h\^0.3333333333333333`\ \(("\[DifferentialD]" \
+t)\)\) == \(-\(\(0.23884589662749597`\ A\ h\^0.6666666666666666`\ Temperature\
+\^0.6666666666666666`\ \((T - 
+                    T\_f)\)\)\/\(m\^0.6666666666666666`\ C\_p\%1.`\)\)\), \
+\(1.`\ m\ Temperature\^2.`\ \(("\[DifferentialD]" T)\)\^3.`\)\/\(h\^1.`\ \(("\
+\[DifferentialD]" t)\)\^3.`\) == \(-\(\(0.23884589662749597`\ A\ \
+Temperature\^2.`\ \(("\[DifferentialD]" T)\)\^2.`\ \((T - 
+                    T\_f)\)\)\/\(\(("\[DifferentialD]" t)\)\^2.`\ C\_p\%1.`\)\
+\)\), \(4.186799999999999`\ m\ Temperature\^1.`\ \(("\[DifferentialD]" T)\)\ \
+C\_p\%1.`\)\/\(A\^1.`\ h\^1.`\ \(("\[DifferentialD]" t)\)\) == \
+\(-0.9999999999999998`\)\ T\ Temperature + 
+          0.9999999999999998`\ Temperature\ T\_f}\)], "Output"]
+}, Open  ]],
+
+Cell[TextData[{
+  "All dimensionless forms chosen by the function ",
+  StyleBox["ChooseMinor", "Program"]
+}], "MathCaption"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+    \(Dimless[eqn, {}]\)], "Input"],
+
+Cell[BoxData[
+    \({1.` == \(-\(\(0.23884589662749597`\ A\ h\ \(("\[DifferentialD]" \
+t)\)\^1.`\ \((T - 
+                    T\_f)\)\)\/\(m\^1.`\ \(("\[DifferentialD]" T)\)\^1.`\ \
+C\_p\%1.`\)\)\), \(\(("\[DifferentialD]" t)\)\^2\ \((4.1868`\ m\ \(("\
+\[DifferentialD]" T)\)\ C\_p + A\ h\ \(("\[DifferentialD]" t)\)\ \((T - T\_f)\
+\))\)\)\/\(A\ m\ Temperature\ \(("\[DifferentialD]" T)\)\^3\) == 
+        0, \(0.48871862725651843`\ A\^0.5`\ Temperature\^0.5`\ \(("\
+\[DifferentialD]" T)\)\)\/\(\(("\[DifferentialD]" t)\)\ C\_p\%0.5`\) == \(-\(\
+\(0.11672843872564213`\ A\^1.5`\ h\ Temperature\^0.5`\ \((T - 
+                    T\_f)\)\)\/\(m\^1.`\ C\_p\%1.5`\)\)\), \(1.`\ \
+m\^0.3333333333333333`\ Temperature\^0.6666666666666667`\ \
+\(("\[DifferentialD]" T)\)\)\/\(h\^0.3333333333333333`\ \(("\[DifferentialD]" \
+t)\)\) == \(-\(\(0.23884589662749597`\ A\ h\^0.6666666666666666`\ Temperature\
+\^0.6666666666666666`\ \((T - 
+                    T\_f)\)\)\/\(m\^0.6666666666666666`\ C\_p\%1.`\)\)\), \
+\(4.1868`\ m\ Temperature\ \(("\[DifferentialD]" T)\)\ C\_p\)\/\(A\ h\ \(("\
+\[DifferentialD]" t)\)\) == 
+        Temperature\ \((\(-T\) + 
+              T\_f)\), \(1.`\ m\ Temperature\^2.`\ \(("\[DifferentialD]" T)\)\
+\^3.`\)\/\(h\^1.`\ \(("\[DifferentialD]" t)\)\^3.`\) == \
+\(-\(\(0.23884589662749597`\ A\ Temperature\^2.`\ \(("\[DifferentialD]" \
+T)\)\^2.`\ \((T - 
+                    T\_f)\)\)\/\(\(("\[DifferentialD]" t)\)\^2.`\ C\_p\%1.`\)\
+\)\), \(4.1868`\ m\ Temperature\ \(("\[DifferentialD]" T)\)\ C\_p\)\/\(A\ h\ \
+\(("\[DifferentialD]" t)\)\) == 
+        Temperature\ \((\(-T\) + 
+              T\_f)\), \(4.186799999999999`\ m\ Temperature\^1.`\ \(("\
+\[DifferentialD]" T)\)\ C\_p\%1.`\)\/\(A\^1.`\ h\^1.`\ \(("\[DifferentialD]" \
+t)\)\) == \(-0.9999999999999998`\)\ T\ Temperature + 
+          0.9999999999999998`\ Temperature\ T\_f}\)], "Output"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Choosing the simplest dimensionless equation", "Section"],
+
+Cell["\<\
+We can choose the simplest equations just looking and them as trees \
+and choosing the shortest. The tree for the expression (a+b)*c is\
+\>", "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+    \(\((a + b)\)*c\  // TreeForm\)], "Input"],
+
+Cell[BoxData[
+    InterpretationBox[
+      RowBox[{"\<\"Times\"\>", "[", 
+        RowBox[{
+          InterpretationBox[GridBox[{
+                {"\<\"|\"\>"},
+                {\("Plus"[a, b]\)}
+                },
+              GridBaseline->{Baseline, {1, 1}},
+              ColumnAlignments->{Left}],
+            ColumnForm[ {"|", 
+              "Plus"[ a, b]}],
+            Editable->False], ",", "c"}], "]"}],
+      TreeForm[ 
+        Times[ 
+          Plus[ a, b], c]],
+      Editable->False]], "Output"]
+}, Open  ]],
+
+Cell["\<\
+and the number of nodes in that tree is 5  (Times, \
+Plus,a,b,c)\
+\>", "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+    \(\((a + b)\)*c\  // LeafCount\)], "Input"],
+
+Cell[BoxData[
+    \(5\)], "Output"]
+}, Open  ]],
+
+Cell["This is the same as the last evaluation above", "MathCaption"],
+
+Cell[BoxData[
+    \(\(dimLessEqs = Dimless[eqn, {}];\)\)], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+    \(Select[dimLessEqs, 
+      Min[LeafCount /@ dimLessEqs] \[Equal] LeafCount[#1] &]\)], "Input"],
+
+Cell[BoxData[
+    \({1.` == \(-\(\(0.23884589662749597`\ A\ h\ \(("\[DifferentialD]" \
+t)\)\^1.`\ \((T - 
+                    T\_f)\)\)\/\(m\^1.`\ \(("\[DifferentialD]" T)\)\^1.`\ \
+C\_p\%1.`\)\)\), \(4.1868`\ m\ Temperature\ \(("\[DifferentialD]" T)\)\ \
+C\_p\)\/\(A\ h\ \(("\[DifferentialD]" t)\)\) == 
+        Temperature\ \((\(-T\) + 
+              T\_f)\), \(4.1868`\ m\ Temperature\ \(("\[DifferentialD]" T)\)\ \
+C\_p\)\/\(A\ h\ \(("\[DifferentialD]" t)\)\) == 
+        Temperature\ \((\(-T\) + T\_f)\)}\)], "Output"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+  "The ",
+  StyleBox["Mathematica",
+    FontSlant->"Italic"],
+  "  functions"
+}], "Section",
+  FontColor->RGBColor[0, 0, 1],
+  CellTags->"MFuncs"],
+
+Cell[CellGroupData[{
+
+Cell["\<\
+Import[\"~/MathFiles/dimensionless/DimLessPack.ps\",\"EPS\"]//Show;\
+\
+\>", "Program"],
+
+Cell[GraphicsData["PostScript", "\<\
+%!
+%%Creator: Mathematica
+%%AspectRatio: .61803 
+MathPictureStart
+/Mabs {
+Mgmatrix idtransform
+Mtmatrix dtransform
+} bind def
+/Mabsadd { Mabs
+3 -1 roll add
+3 1 roll add
+exch } bind def
+%% Graphics
+%%IncludeResource: font Courier
+%%IncludeFont: Courier
+/Courier findfont 10  scalefont  setfont
+% Scaling calculations
+0.0238095 0.00293929 -0.141479 0.00381967 [
+[ 0 0 0 0 ]
+[ 1 .61803 0 0 ]
+] MathScale
+% Start of Graphics
+1 setlinecap
+1 setlinejoin
+newpath
+0 0 m
+1 0 L
+1 .61803 L
+0 .61803 L
+closepath
+clip
+newpath
+0 g
+.6115 Mabswid
+[ ] 0 Mabsdash
+.56099 .22493 m
+.55924 .2334 L
+.55421 .24129 L
+.54626 .24844 L
+.53573 .25466 L
+.52296 .25979 L
+.5083 .26367 L
+.49211 .26612 L
+.47472 .26697 L
+.45733 .26612 L
+.44114 .26367 L
+.42648 .25979 L
+.41372 .25466 L
+.40318 .24844 L
+.39523 .24129 L
+.3902 .2334 L
+.38845 .22493 L
+.3902 .21646 L
+.39523 .20857 L
+.40318 .20142 L
+.41372 .1952 L
+.42648 .19007 L
+.44114 .18619 L
+.45733 .18374 L
+.47472 .18289 L
+.49211 .18374 L
+.5083 .18619 L
+.52296 .19007 L
+.53573 .1952 L
+.54626 .20142 L
+.55421 .20857 L
+.55924 .21646 L
+.56099 .22493 L
+s
+gsave
+.39936 .21746 -61 -4 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+/MISOfy
+{
+    /newfontname exch def
+    /oldfontname exch def
+
+    oldfontname findfont
+    dup length dict begin
+        {1 index /FID ne {def} {pop pop} ifelse} forall
+        /Encoding ISOLatin1Encoding def
+        currentdict
+    end
+
+    newfontname exch definefont pop
+} def
+
+0 18.25 translate 1 -1 scale
+63.000 11.312 moveto
+%%IncludeResource: font Utopia-Regular
+%%IncludeFont: Utopia-Regular
+%%BeginResource: font Utopia-Regular-MISO
+%%BeginFont: Utopia-Regular-MISO
+/Utopia-Regular /Utopia-Regular-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Utopia-Regular-MISO
+%%IncludeFont: Utopia-Regular-MISO
+/Utopia-Regular-MISO findfont 8.562 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 11.312 moveto
+%%IncludeResource: font Utopia-Regular-MISO
+%%IncludeFont: Utopia-Regular-MISO
+/Utopia-Regular-MISO findfont 8.562 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(DimlessBasis) show
+113.812 11.312 moveto
+%%IncludeResource: font Utopia-Regular-MISO
+%%IncludeFont: Utopia-Regular-MISO
+/Utopia-Regular-MISO findfont 8.562 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+.33812 .05676 m
+.336 .06523 L
+.32993 .07312 L
+.32032 .08026 L
+.30759 .08649 L
+.29216 .09162 L
+.27445 .0955 L
+.25488 .09795 L
+.23387 .0988 L
+.21286 .09795 L
+.19329 .0955 L
+.17559 .09162 L
+.16016 .08649 L
+.14743 .08026 L
+.13782 .07312 L
+.13174 .06523 L
+.12962 .05676 L
+.13174 .04829 L
+.13782 .04039 L
+.14743 .03325 L
+.16016 .02703 L
+.17559 .0219 L
+.19329 .01802 L
+.21286 .01557 L
+.23387 .01472 L
+.25488 .01557 L
+.27445 .01802 L
+.29216 .0219 L
+.30759 .02703 L
+.32032 .03325 L
+.32993 .04039 L
+.336 .04829 L
+.33812 .05676 L
+s
+gsave
+.13776 .04928 -61 -4 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+/MISOfy
+{
+    /newfontname exch def
+    /oldfontname exch def
+
+    oldfontname findfont
+    dup length dict begin
+        {1 index /FID ne {def} {pop pop} ifelse} forall
+        /Encoding ISOLatin1Encoding def
+        currentdict
+    end
+
+    newfontname exch definefont pop
+} def
+
+0 18.25 translate 1 -1 scale
+63.000 11.312 moveto
+%%IncludeResource: font Utopia-Regular
+%%IncludeFont: Utopia-Regular
+%%BeginResource: font Utopia-Regular-MISO
+%%BeginFont: Utopia-Regular-MISO
+/Utopia-Regular /Utopia-Regular-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Utopia-Regular-MISO
+%%IncludeFont: Utopia-Regular-MISO
+/Utopia-Regular-MISO findfont 8.562 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.188 11.312 moveto
+%%IncludeResource: font Utopia-Regular-MISO
+%%IncludeFont: Utopia-Regular-MISO
+/Utopia-Regular-MISO findfont 8.562 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(AtomicExponent) show
+128.188 11.312 moveto
+%%IncludeResource: font Utopia-Regular-MISO
+%%IncludeFont: Utopia-Regular-MISO
+/Utopia-Regular-MISO findfont 8.562 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+.42439 .18989 m
+.39617 .16949 L
+.36441 .14756 L
+.33163 .12519 L
+.30037 .10347 L
+s
+.30037 .11048 m
+.286 .09413 L
+.30397 .0988 L
+.30037 .11048 L
+s
+.30037 .11048 m
+.286 .09413 L
+.30397 .0988 L
+.30037 .11048 L
+F
+.57897 .05676 m
+.57685 .06523 L
+.57078 .07312 L
+.56117 .08026 L
+.54844 .08649 L
+.53301 .09162 L
+.5153 .0955 L
+.49573 .09795 L
+.47472 .0988 L
+.45371 .09795 L
+.43414 .0955 L
+.41643 .09162 L
+.40101 .08649 L
+.38828 .08026 L
+.37866 .07312 L
+.37259 .06523 L
+.37047 .05676 L
+.37259 .04829 L
+.37866 .04039 L
+.38828 .03325 L
+.40101 .02703 L
+.41643 .0219 L
+.43414 .01802 L
+.45371 .01557 L
+.47472 .01472 L
+.49573 .01557 L
+.5153 .01802 L
+.53301 .0219 L
+.54844 .02703 L
+.56117 .03325 L
+.57078 .04039 L
+.57685 .04829 L
+.57897 .05676 L
+s
+gsave
+.38095 .04928 -61 -4 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+/MISOfy
+{
+    /newfontname exch def
+    /oldfontname exch def
+
+    oldfontname findfont
+    dup length dict begin
+        {1 index /FID ne {def} {pop pop} ifelse} forall
+        /Encoding ISOLatin1Encoding def
+        currentdict
+    end
+
+    newfontname exch definefont pop
+} def
+
+0 18.25 translate 1 -1 scale
+63.000 11.312 moveto
+%%IncludeResource: font Utopia-Regular
+%%IncludeFont: Utopia-Regular
+%%BeginResource: font Utopia-Regular-MISO
+%%BeginFont: Utopia-Regular-MISO
+/Utopia-Regular /Utopia-Regular-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Utopia-Regular-MISO
+%%IncludeFont: Utopia-Regular-MISO
+/Utopia-Regular-MISO findfont 8.562 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.188 11.312 moveto
+%%IncludeResource: font Utopia-Regular-MISO
+%%IncludeFont: Utopia-Regular-MISO
+/Utopia-Regular-MISO findfont 8.562 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(AtomicVariables) show
+126.438 11.312 moveto
+%%IncludeResource: font Utopia-Regular-MISO
+%%IncludeFont: Utopia-Regular-MISO
+/Utopia-Regular-MISO findfont 8.562 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+.47472 .18289 m
+.47472 .12216 L
+s
+.47113 .12216 m
+.47472 .0988 L
+.48011 .12216 L
+.47113 .12216 L
+s
+.47113 .12216 m
+.47472 .0988 L
+.48011 .12216 L
+.47113 .12216 L
+F
+.78746 .05676 m
+.78567 .06523 L
+.78054 .07312 L
+.77242 .08026 L
+.76167 .08649 L
+.74863 .09162 L
+.73368 .0955 L
+.71714 .09795 L
+.69939 .0988 L
+.68164 .09795 L
+.66511 .0955 L
+.65015 .09162 L
+.63712 .08649 L
+.62636 .08026 L
+.61824 .07312 L
+.61311 .06523 L
+.61132 .05676 L
+.61311 .04829 L
+.61824 .04039 L
+.62636 .03325 L
+.63712 .02703 L
+.65015 .0219 L
+.66511 .01802 L
+.68164 .01557 L
+.69939 .01472 L
+.71714 .01557 L
+.73368 .01802 L
+.74863 .0219 L
+.76167 .02703 L
+.77242 .03325 L
+.78054 .04039 L
+.78567 .04829 L
+.78746 .05676 L
+s
+gsave
+.6212 .04928 -61 -4 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+/MISOfy
+{
+    /newfontname exch def
+    /oldfontname exch def
+
+    oldfontname findfont
+    dup length dict begin
+        {1 index /FID ne {def} {pop pop} ifelse} forall
+        /Encoding ISOLatin1Encoding def
+        currentdict
+    end
+
+    newfontname exch definefont pop
+} def
+
+0 18.25 translate 1 -1 scale
+63.000 11.312 moveto
+%%IncludeResource: font Utopia-Regular
+%%IncludeFont: Utopia-Regular
+%%BeginResource: font Utopia-Regular-MISO
+%%BeginFont: Utopia-Regular-MISO
+/Utopia-Regular /Utopia-Regular-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Utopia-Regular-MISO
+%%IncludeFont: Utopia-Regular-MISO
+/Utopia-Regular-MISO findfont 8.562 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 11.312 moveto
+%%IncludeResource: font Utopia-Regular-MISO
+%%IncludeFont: Utopia-Regular-MISO
+/Utopia-Regular-MISO findfont 8.562 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(ChooseMinor) show
+115.938 11.312 moveto
+%%IncludeResource: font Utopia-Regular-MISO
+%%IncludeFont: Utopia-Regular-MISO
+/Utopia-Regular-MISO findfont 8.562 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+.52145 .18989 m
+.54802 .16949 L
+.57762 .14756 L
+.60789 .12519 L
+.63648 .10347 L
+s
+.63289 .0988 m
+.65086 .09179 L
+.63828 .10814 L
+.63289 .0988 L
+s
+.63289 .0988 m
+.65086 .09179 L
+.63828 .10814 L
+.63289 .0988 L
+F
+.97619 .05676 m
+.97445 .06661 L
+.96955 .07515 L
+.96192 .08238 L
+.95204 .08829 L
+.94034 .09289 L
+.92728 .09617 L
+.91332 .09814 L
+.8989 .0988 L
+.88448 .09814 L
+.87052 .09617 L
+.85747 .09289 L
+.84577 .08829 L
+.83588 .08238 L
+.82826 .07515 L
+.82335 .06661 L
+.82162 .05676 L
+.82335 .0469 L
+.82826 .03836 L
+.83588 .03114 L
+.84577 .02523 L
+.85747 .02063 L
+.87052 .01734 L
+.88448 .01537 L
+.8989 .01472 L
+.91332 .01537 L
+.92728 .01734 L
+.94034 .02063 L
+.95204 .02523 L
+.96192 .03114 L
+.96955 .03836 L
+.97445 .0469 L
+.97619 .05676 L
+s
+gsave
+.83167 .04928 -61 -4 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+/MISOfy
+{
+    /newfontname exch def
+    /oldfontname exch def
+
+    oldfontname findfont
+    dup length dict begin
+        {1 index /FID ne {def} {pop pop} ifelse} forall
+        /Encoding ISOLatin1Encoding def
+        currentdict
+    end
+
+    newfontname exch definefont pop
+} def
+
+0 18.25 translate 1 -1 scale
+63.000 11.312 moveto
+%%IncludeResource: font Utopia-Regular
+%%IncludeFont: Utopia-Regular
+%%BeginResource: font Utopia-Regular-MISO
+%%BeginFont: Utopia-Regular-MISO
+/Utopia-Regular /Utopia-Regular-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Utopia-Regular-MISO
+%%IncludeFont: Utopia-Regular-MISO
+/Utopia-Regular-MISO findfont 8.562 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 11.312 moveto
+%%IncludeResource: font Utopia-Regular-MISO
+%%IncludeFont: Utopia-Regular-MISO
+/Utopia-Regular-MISO findfont 8.562 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(FindMinors) show
+108.375 11.312 moveto
+%%IncludeResource: font Utopia-Regular-MISO
+%%IncludeFont: Utopia-Regular-MISO
+/Utopia-Regular-MISO findfont 8.562 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+.53763 .1969 m
+.55605 .18902 L
+.57178 .18289 L
+.60151 .17171 L
+.63135 .16088 L
+.69108 .13997 L
+.75048 .11949 L
+.80903 .0988 L
+.82701 .08946 L
+s
+.82161 .08479 m
+.83959 .08479 L
+.82341 .09647 L
+.82161 .08479 L
+s
+.82161 .08479 m
+.83959 .08479 L
+.82341 .09647 L
+.82161 .08479 L
+F
+.35609 .22493 m
+.35472 .23478 L
+.35084 .24333 L
+.34482 .25055 L
+.337 .25646 L
+.32775 .26106 L
+.31742 .26435 L
+.30638 .26632 L
+.29498 .26697 L
+.28358 .26632 L
+.27254 .26435 L
+.26222 .26106 L
+.25297 .25646 L
+.24515 .25055 L
+.23912 .24333 L
+.23524 .23478 L
+.23387 .22493 L
+.23524 .21508 L
+.23912 .20654 L
+.24515 .19931 L
+.25297 .1934 L
+.26222 .1888 L
+.27254 .18552 L
+.28358 .18354 L
+.29498 .18289 L
+.30638 .18354 L
+.31742 .18552 L
+.32775 .1888 L
+.337 .1934 L
+.34482 .19931 L
+.35084 .20654 L
+.35472 .21508 L
+.35609 .22493 L
+s
+gsave
+.2494 .21746 -61 -4 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+/MISOfy
+{
+    /newfontname exch def
+    /oldfontname exch def
+
+    oldfontname findfont
+    dup length dict begin
+        {1 index /FID ne {def} {pop pop} ifelse} forall
+        /Encoding ISOLatin1Encoding def
+        currentdict
+    end
+
+    newfontname exch definefont pop
+} def
+
+0 18.25 translate 1 -1 scale
+63.000 11.312 moveto
+%%IncludeResource: font Utopia-Regular
+%%IncludeFont: Utopia-Regular
+%%BeginResource: font Utopia-Regular-MISO
+%%BeginFont: Utopia-Regular-MISO
+/Utopia-Regular /Utopia-Regular-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Utopia-Regular-MISO
+%%IncludeFont: Utopia-Regular-MISO
+/Utopia-Regular-MISO findfont 8.562 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 11.312 moveto
+%%IncludeResource: font Utopia-Regular-MISO
+%%IncludeFont: Utopia-Regular-MISO
+/Utopia-Regular-MISO findfont 8.562 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(BMatrix) show
+94.000 11.312 moveto
+%%IncludeResource: font Utopia-Regular-MISO
+%%IncludeFont: Utopia-Regular-MISO
+/Utopia-Regular-MISO findfont 8.562 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+.2806 .18289 m
+.26892 .15223 L
+.25724 .11982 L
+s
+.25364 .12216 m
+.25005 .0988 L
+.26083 .11749 L
+.25364 .12216 L
+s
+.25364 .12216 m
+.25005 .0988 L
+.26083 .11749 L
+.25364 .12216 L
+F
+.33093 .18989 m
+.37272 .15077 L
+.4172 .10814 L
+s
+.41361 .10347 m
+.43158 .09647 L
+.419 .11282 L
+.41361 .10347 L
+s
+.41361 .10347 m
+.43158 .09647 L
+.419 .11282 L
+.41361 .10347 L
+F
+.81622 .56128 m
+.81489 .57113 L
+.81113 .57967 L
+.80527 .58689 L
+.79769 .59281 L
+.78871 .59741 L
+.77869 .60069 L
+.76797 .60266 L
+.75691 .60332 L
+.74585 .60266 L
+.73513 .60069 L
+.72511 .59741 L
+.71613 .59281 L
+.70854 .58689 L
+.70269 .57967 L
+.69893 .57113 L
+.6976 .56128 L
+.69893 .55142 L
+.70269 .54288 L
+.70854 .53566 L
+.71613 .52974 L
+.72511 .52515 L
+.73513 .52186 L
+.74585 .51989 L
+.75691 .51923 L
+.76797 .51989 L
+.77869 .52186 L
+.78871 .52515 L
+.79769 .52974 L
+.80527 .53566 L
+.81113 .54288 L
+.81489 .55142 L
+.81622 .56128 L
+s
+gsave
+.71088 .5538 -61 -4 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+/MISOfy
+{
+    /newfontname exch def
+    /oldfontname exch def
+
+    oldfontname findfont
+    dup length dict begin
+        {1 index /FID ne {def} {pop pop} ifelse} forall
+        /Encoding ISOLatin1Encoding def
+        currentdict
+    end
+
+    newfontname exch definefont pop
+} def
+
+0 18.25 translate 1 -1 scale
+63.000 11.312 moveto
+%%IncludeResource: font Utopia-Regular
+%%IncludeFont: Utopia-Regular
+%%BeginResource: font Utopia-Regular-MISO
+%%BeginFont: Utopia-Regular-MISO
+/Utopia-Regular /Utopia-Regular-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Utopia-Regular-MISO
+%%IncludeFont: Utopia-Regular-MISO
+/Utopia-Regular-MISO findfont 8.562 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 11.312 moveto
+%%IncludeResource: font Utopia-Regular-MISO
+%%IncludeFont: Utopia-Regular-MISO
+/Utopia-Regular-MISO findfont 8.562 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(Dimless) show
+94.062 11.312 moveto
+%%IncludeResource: font Utopia-Regular-MISO
+%%IncludeFont: Utopia-Regular-MISO
+/Utopia-Regular-MISO findfont 8.562 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+.73534 .3931 m
+.7336 .40296 L
+.7287 .4115 L
+.72107 .41872 L
+.71119 .42463 L
+.69949 .42923 L
+.68643 .43252 L
+.67247 .43449 L
+.65805 .43515 L
+.64364 .43449 L
+.62967 .43252 L
+.61662 .42923 L
+.60492 .42463 L
+.59503 .41872 L
+.58741 .4115 L
+.5825 .40296 L
+.58077 .3931 L
+.5825 .38325 L
+.58741 .37471 L
+.59503 .36748 L
+.60492 .36157 L
+.61662 .35697 L
+.62967 .35369 L
+.64364 .35172 L
+.65805 .35106 L
+.67247 .35172 L
+.68643 .35369 L
+.69949 .35697 L
+.71119 .36157 L
+.72107 .36748 L
+.7287 .37471 L
+.7336 .38325 L
+.73534 .3931 L
+s
+gsave
+.59395 .38563 -61 -4 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+/MISOfy
+{
+    /newfontname exch def
+    /oldfontname exch def
+
+    oldfontname findfont
+    dup length dict begin
+        {1 index /FID ne {def} {pop pop} ifelse} forall
+        /Encoding ISOLatin1Encoding def
+        currentdict
+    end
+
+    newfontname exch definefont pop
+} def
+
+0 18.25 translate 1 -1 scale
+63.000 11.312 moveto
+%%IncludeResource: font Utopia-Regular
+%%IncludeFont: Utopia-Regular
+%%BeginResource: font Utopia-Regular-MISO
+%%BeginFont: Utopia-Regular-MISO
+/Utopia-Regular /Utopia-Regular-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Utopia-Regular-MISO
+%%IncludeFont: Utopia-Regular-MISO
+/Utopia-Regular-MISO findfont 8.562 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 11.312 moveto
+%%IncludeResource: font Utopia-Regular-MISO
+%%IncludeFont: Utopia-Regular-MISO
+/Utopia-Regular-MISO findfont 8.562 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(DimlessRel) show
+106.312 11.312 moveto
+%%IncludeResource: font Utopia-Regular-MISO
+%%IncludeFont: Utopia-Regular-MISO
+/Utopia-Regular-MISO findfont 8.562 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+.73354 .52157 m
+.71355 .48741 L
+.6922 .4515 L
+s
+.69041 .45617 m
+.68142 .43515 L
+.6958 .44916 L
+.69041 .45617 L
+s
+.69041 .45617 m
+.68142 .43515 L
+.6958 .44916 L
+.69041 .45617 L
+F
+.94743 .3931 m
+.9456 .40158 L
+.94037 .40947 L
+.93208 .41661 L
+.92111 .42283 L
+.90781 .42797 L
+.89254 .43184 L
+.87567 .43429 L
+.85756 .43515 L
+.83945 .43429 L
+.82258 .43184 L
+.80732 .42797 L
+.79402 .42283 L
+.78304 .41661 L
+.77475 .40947 L
+.76952 .40158 L
+.76769 .3931 L
+.76952 .38463 L
+.77475 .37674 L
+.78304 .3696 L
+.79402 .36337 L
+.80732 .35824 L
+.82258 .35436 L
+.83945 .35192 L
+.85756 .35106 L
+.87567 .35192 L
+.89254 .35436 L
+.90781 .35824 L
+.92111 .36337 L
+.93208 .3696 L
+.94037 .37674 L
+.9456 .38463 L
+.94743 .3931 L
+s
+gsave
+.77835 .38563 -61 -4 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+/MISOfy
+{
+    /newfontname exch def
+    /oldfontname exch def
+
+    oldfontname findfont
+    dup length dict begin
+        {1 index /FID ne {def} {pop pop} ifelse} forall
+        /Encoding ISOLatin1Encoding def
+        currentdict
+    end
+
+    newfontname exch definefont pop
+} def
+
+0 18.25 translate 1 -1 scale
+63.000 11.312 moveto
+%%IncludeResource: font Utopia-Regular
+%%IncludeFont: Utopia-Regular
+%%BeginResource: font Utopia-Regular-MISO
+%%BeginFont: Utopia-Regular-MISO
+/Utopia-Regular /Utopia-Regular-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Utopia-Regular-MISO
+%%IncludeFont: Utopia-Regular-MISO
+/Utopia-Regular-MISO findfont 8.562 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 11.312 moveto
+%%IncludeResource: font Utopia-Regular-MISO
+%%IncludeFont: Utopia-Regular-MISO
+/Utopia-Regular-MISO findfont 8.562 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(MakeRelation) show
+116.562 11.312 moveto
+%%IncludeResource: font Utopia-Regular-MISO
+%%IncludeFont: Utopia-Regular-MISO
+/Utopia-Regular-MISO findfont 8.562 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+.78027 .52157 m
+.80094 .48741 L
+.81162 .46934 L
+.82161 .4515 L
+s
+.81802 .44916 m
+.8324 .43515 L
+.82341 .45617 L
+.81802 .44916 L
+s
+.81802 .44916 m
+.8324 .43515 L
+.82341 .45617 L
+.81802 .44916 L
+F
+.61851 .35573 m
+.59717 .33705 L
+.57447 .31661 L
+.55178 .29529 L
+.53044 .27398 L
+s
+.52864 .27865 m
+.51606 .2623 L
+.53404 .26931 L
+.52864 .27865 L
+s
+.52864 .27865 m
+.51606 .2623 L
+.53404 .26931 L
+.52864 .27865 L
+F
+.71557 .36507 m
+.76202 .34022 L
+.78615 .32685 L
+.80948 .3134 L
+.83096 .30027 L
+.84953 .28789 L
+.86414 .27665 L
+.87374 .26697 L
+.8805 .25404 L
+.88604 .2384 L
+.89048 .22062 L
+.89396 .20128 L
+.89659 .18096 L
+.89851 .16022 L
+.89984 .13965 L
+.9007 .11982 L
+s
+.89711 .12216 m
+.9007 .0988 L
+.90609 .12216 L
+.89711 .12216 L
+s
+.89711 .12216 m
+.9007 .0988 L
+.90609 .12216 L
+.89711 .12216 L
+F
+.59694 .36741 m
+.48124 .31719 L
+.42026 .29055 L
+.36688 .26697 L
+.3525 .25997 L
+s
+.35609 .26931 m
+.34171 .25296 L
+.35969 .25763 L
+.35609 .26931 L
+s
+.35609 .26931 m
+.34171 .25296 L
+.35969 .25763 L
+.35609 .26931 L
+F
+.72276 .22493 m
+.72131 .23478 L
+.7172 .24333 L
+.71082 .25055 L
+.70254 .25646 L
+.69274 .26106 L
+.68181 .26435 L
+.67012 .26632 L
+.65805 .26697 L
+.64598 .26632 L
+.63429 .26435 L
+.62336 .26106 L
+.61357 .25646 L
+.60529 .25055 L
+.59891 .24333 L
+.5948 .23478 L
+.59335 .22493 L
+.5948 .21508 L
+.59891 .20654 L
+.60529 .19931 L
+.61357 .1934 L
+.62336 .1888 L
+.63429 .18552 L
+.64598 .18354 L
+.65805 .18289 L
+.67012 .18354 L
+.68181 .18552 L
+.69274 .1888 L
+.70254 .1934 L
+.71082 .19931 L
+.7172 .20654 L
+.72131 .21508 L
+.72276 .22493 L
+s
+gsave
+.60431 .21746 -61 -4 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+/MISOfy
+{
+    /newfontname exch def
+    /oldfontname exch def
+
+    oldfontname findfont
+    dup length dict begin
+        {1 index /FID ne {def} {pop pop} ifelse} forall
+        /Encoding ISOLatin1Encoding def
+        currentdict
+    end
+
+    newfontname exch definefont pop
+} def
+
+0 18.25 translate 1 -1 scale
+63.000 11.312 moveto
+%%IncludeResource: font Utopia-Regular
+%%IncludeFont: Utopia-Regular
+%%BeginResource: font Utopia-Regular-MISO
+%%BeginFont: Utopia-Regular-MISO
+/Utopia-Regular /Utopia-Regular-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Utopia-Regular-MISO
+%%IncludeFont: Utopia-Regular-MISO
+/Utopia-Regular-MISO findfont 8.562 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 11.312 moveto
+%%IncludeResource: font Utopia-Regular-MISO
+%%IncludeFont: Utopia-Regular-MISO
+/Utopia-Regular-MISO findfont 8.562 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(Inclusion) show
+99.250 11.312 moveto
+%%IncludeResource: font Utopia-Regular-MISO
+%%IncludeFont: Utopia-Regular-MISO
+/Utopia-Regular-MISO findfont 8.562 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+.65805 .35106 m
+.65805 .29033 L
+s
+.65446 .29033 m
+.65805 .26697 L
+.66345 .29033 L
+.65446 .29033 L
+s
+.65446 .29033 m
+.65805 .26697 L
+.66345 .29033 L
+.65446 .29033 L
+F
+.85217 .22493 m
+.85108 .23478 L
+.848 .24333 L
+.84321 .25055 L
+.837 .25646 L
+.82966 .26106 L
+.82146 .26435 L
+.81269 .26632 L
+.80364 .26697 L
+.79459 .26632 L
+.78582 .26435 L
+.77762 .26106 L
+.77028 .25646 L
+.76407 .25055 L
+.75928 .24333 L
+.7562 .23478 L
+.75511 .22493 L
+.7562 .21508 L
+.75928 .20654 L
+.76407 .19931 L
+.77028 .1934 L
+.77762 .1888 L
+.78582 .18552 L
+.79459 .18354 L
+.80364 .18289 L
+.81269 .18354 L
+.82146 .18552 L
+.82966 .1888 L
+.837 .1934 L
+.84321 .19931 L
+.848 .20654 L
+.85108 .21508 L
+.85217 .22493 L
+s
+gsave
+.77243 .21746 -61 -4 Mabsadd m
+1 1 Mabs scale
+currentpoint translate
+/MISOfy
+{
+    /newfontname exch def
+    /oldfontname exch def
+
+    oldfontname findfont
+    dup length dict begin
+        {1 index /FID ne {def} {pop pop} ifelse} forall
+        /Encoding ISOLatin1Encoding def
+        currentdict
+    end
+
+    newfontname exch definefont pop
+} def
+
+0 18.25 translate 1 -1 scale
+63.000 11.312 moveto
+%%IncludeResource: font Utopia-Regular
+%%IncludeFont: Utopia-Regular
+%%BeginResource: font Utopia-Regular-MISO
+%%BeginFont: Utopia-Regular-MISO
+/Utopia-Regular /Utopia-Regular-MISO MISOfy
+%%EndFont
+%%EndResource
+%%IncludeResource: font Utopia-Regular-MISO
+%%IncludeFont: Utopia-Regular-MISO
+/Utopia-Regular-MISO findfont 8.562 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+63.000 11.312 moveto
+%%IncludeResource: font Utopia-Regular-MISO
+%%IncludeFont: Utopia-Regular-MISO
+/Utopia-Regular-MISO findfont 8.562 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+(Units) show
+84.062 11.312 moveto
+%%IncludeResource: font Utopia-Regular-MISO
+%%IncludeFont: Utopia-Regular-MISO
+/Utopia-Regular-MISO findfont 8.562 scalefont
+[1 0 0 -1 0 0 ] makefont setfont
+0.000 0.000 0.000 setrgbcolor
+0.000 0.000 rmoveto
+1.000 setlinewidth
+grestore
+.69041 .35573 m
+.72568 .31369 L
+.74424 .29201 L
+.7623 .27165 L
+s
+.75871 .26931 m
+.77488 .25763 L
+.7641 .27632 L
+.75871 .26931 L
+s
+.75871 .26931 m
+.77488 .25763 L
+.7641 .27632 L
+.75871 .26931 L
+F
+% End of Graphics
+MathPictureEnd
+\
+\>"], "Graphics",
+  ImageSize->{365.625, 226},
+  ImageMargins->{{0, 0}, {0, 0}},
+  ImageRegion->{{0, 1}, {0, 1}},
+  ImageCache->GraphicsData["Bitmap", "\<\
+CF5dJ6E]HGAYHf4PAg9QL6QYHg<PAVmbKF5d0`40005]0000hR000`400000o`00o`00o`00o`3ooom^
+0?ooo`00o`3ooom^0?ooo`00o`3ooom^0?ooo`00o`3ooom^0?ooo`00o`3ooom^0?ooo`00o`3ooom^
+0?ooo`00BP3ooolG00000440oooo5P00000m0?oooa<00000>03oool?000001h0oooo00130?ooo`L0
+00005`3oool6000003@0oooo1`00000F0?ooo`L00000<03oool6000001<0oooo1P00000]0?ooo`D0
+00003`3oool5000001T0oooo000o0?ooo`@00000903oool5000002X0oooo1@00000T0?ooo`D00000
+9`3oool4000001l0oooo1000000U0?ooo`@000006@3oool3000001H0oooo000l0?ooo`<00000;@3o
+ool3000002D0oooo0P00000^0?ooo`8000008`3oool2000002L0oooo0P00000Q0?ooo`800000803o
+ool2000001@0oooo000j0?ooo`800000<`3oool200000240oooo0P00000b0?ooo`800000803oool0
+0`000000oooo0?ooo`0Y0?ooo`8000007@3oool2000002@0oooo0P00000B0?ooo`00>03oool20000
+03L0oooo00<000000?ooo`3oool0703oool2000003H0oooo0P00000L0?ooo`800000;P3oool00`00
+0000oooo0?ooo`0H0?ooo`800000:03oool200000100oooo000f0?ooo`800000>P3oool2000001X0
+oooo0P00000j0?ooo`8000006@3oool00`000000oooo0?ooo`0_0?ooo`8000005`3oool00`000000
+oooo0?ooo`0Z0?ooo`8000003P3oool003D0oooo00<000000?ooo`3oool0?03oool00`000000oooo
+0?ooo`0F0?ooo`030000003oool0oooo03`0oooo00<000000?ooo`3oool05@3oool00`000000oooo
+0?ooo`0b0?ooo`030000003oool0oooo0180oooo0P00000_0?ooo`800000303oool003<0oooo0P00
+00100?ooo`800000503oool200000400oooo0P00000C0?ooo`800000=P3oool200000140oooo00<0
+00000?ooo`3oool0<@3oool00`000000oooo0?ooo`090?ooo`00<P3oool00`000000oooo0?ooo`12
+0?ooo`8000004@3oool00`000000oooo0?ooo`120?ooo`800000403oool00`000000oooo0?ooo`0h
+0?ooo`030000003oool0oooo00h0oooo00<000000?ooo`3oool0<@3oool00`000000oooo0?ooo`09
+0?ooo`00<@3oool00`000000oooo0?ooo`150?ooo`030000003oool0oooo00d0oooo00<000000?oo
+o`3oool0A@3oool00`000000oooo0?ooo`0<0?ooo`030000003oool0oooo03X0oooo00<000000?oo
+o`3oool03@3oool00`000000oooo0?ooo`0b0?ooo`030000003oool0oooo00P0oooo000a0?ooo`03
+0000003oool0oooo04D0oooo00<000000?ooo`3oool0303oool00`000000oooo0?ooo`160?ooo`03
+0000003oool0oooo00`0oooo00<000000?ooo`3oool0>P3oool00`000000oooo0?ooo`0<0?ooo`03
+0000003oool0oooo03<0oooo00<000000?ooo`3oool0203oool00300oooo00<000000?ooo`3oool0
+A`3oool00`000000oooo0?ooo`0:0?ooo`030000003oool0oooo04P0oooo00<000000?ooo`3oool0
+2P3oool00`000000oooo0?ooo`0l0?ooo`030000003oool0oooo00/0oooo00<000000?ooo`3oool0
+=03oool00`000000oooo0?ooo`070?ooo`00<03oool00`000000oooo0?ooo`0[0?ooo`<000006@3o
+ool00`000000oooo0?ooo`0:0?ooo`030000003oool0oooo04P0oooo00<000000?ooo`3oool02P3o
+ool00`000000oooo0?ooo`0l0?ooo`030000003oool0oooo00/0oooo00<000000?ooo`3oool0=03o
+ool00`000000oooo0?ooo`070?ooo`00;`3oool00`000000oooo0?ooo`0]0?ooo`030000003oool0
+oooo01T0oooo00<000000?ooo`3oool02@3oool00`000000oooo0?ooo`190?ooo`030000003oool0
+oooo00P0oooo00<000000?ooo`3oool0?@3oool00`000000oooo0?ooo`0:0?ooo`030000003oool0
+oooo03D0oooo00<000000?ooo`3oool01`3oool002l0oooo00<000000?ooo`3oool00P3oool20000
+00040?ooo`000000000000000080oooo00<000000?ooo`0000000P0000001@3oool0000000000000
+0000oooo0080000000<0oooo0000000000000`0000000`3oool00000000000020?ooo`P0000000@0
+oooo000000000000oooo0`0000030?ooo`<0000000D0oooo00000000000000000?ooo`0200000003
+0?ooo`000000000000D0000000@0oooo000000000000oooo0P00000:0?ooo`030000003oool0oooo
+00<0oooo0P000000103oool000000000000000020?ooo`030000003oool000000080000000D0oooo
+00000000000000000?ooo`02000000030?ooo`000000000000<0000000<0oooo0000000000001@3o
+ool010000000oooo0?ooo`3oool7000000050?ooo`00000000000000003oool010000000103oool0
+00000000000000020?ooo`<0000000<0oooo0000000000001@00000:0?ooo`030000003oool0oooo
+00D0oooo0`0000001@3oool00000000000000000oooo0080000000@0oooo00000000000000000P3o
+ool3000000040?ooo`000000000000000080oooo1`0000000`3oool000000?ooo`09000000040?oo
+o`00000000000?ooo`<0000000H0oooo00000000000000000?ooo`00000<0?ooo`030000003oool0
+oooo00<0oooo0`0000020?ooo`H0000000@0oooo000000000000oooo200000000`3oool000000?oo
+o`09000000040?ooo`00000000000?ooo`<0000000D0oooo00000000000000000?ooo`04000000T0
+oooo000_0?ooo`030000003oool0oooo0080oooo00D000000?ooo`3oool0oooo000000020?ooo`03
+0000003oool0000000<0oooo00<000000?ooo`0000000P3oool010000000oooo0?ooo`0000020?oo
+o`030000003oool000000080oooo00@000000?ooo`3oool000001@3oool00`000000oooo00000002
+0?ooo`060000003oool0oooo0000003oool000000`3oool00`000000oooo000000020?ooo`030000
+003oool0000000D0oooo00@000000?ooo`3oool000000P3oool00`000000oooo0?ooo`090?ooo`03
+0000003oool0oooo00<0oooo00D000000?ooo`3oool0oooo000000020?ooo`030000003oool00000
+00<0oooo00<000000?ooo`0000000P3oool010000000oooo0?ooo`0000020?ooo`030000003oool0
+00000080oooo00<000000?ooo`3oool00P3oool010000000oooo0?ooo`0000020?ooo`040000003o
+ool0oooo000000<0oooo00<000000?ooo`0000000P3oool010000000oooo0?ooo`0000020?ooo`06
+0000003oool0oooo0000003oool000001P3oool2000000T0oooo00<000000?ooo`3oool0103oool0
+1`000000oooo0?ooo`3oool000000?ooo`0000000P3oool00`000000oooo000000030?ooo`800000
+0`3oool010000000oooo0?ooo`3oool2000000D0oooo00@000000?ooo`3oool000000P3oool01000
+0000oooo0?ooo`0000020?ooo`060000003oool0oooo0000003oool000000`3oool00`000000oooo
+000000020?ooo`030000003oool0oooo00X0oooo00<000000?ooo`3oool0103oool00`000000oooo
+0?ooo`020?ooo`040000003oool0oooo00000080oooo00<000000?ooo`0000000`3oool010000000
+oooo0?ooo`0000020?ooo`040000003oool0oooo00000080oooo00@000000?ooo`3oool000000P3o
+ool00`000000oooo000000030?ooo`030000003oool0000000D0oooo00<000000?ooo`3oool01`3o
+ool00300oooo00<000000?ooo`3oool00P3oool010000000oooo0?ooo`0000020?ooo`030000003o
+ool0000000<0oooo00<000000?ooo`0000000P3oool010000000oooo0?ooo`0000020?ooo`030000
+003oool0000000D0oooo00@000000?ooo`3oool000000`3oool01@000000oooo0?ooo`3oool00000
+0080oooo00<000000?ooo`0000000`3oool00`000000oooo000000020?ooo`030000003oool00000
+00@0000000H0oooo0000003oool0oooo0000003oool2000000/0oooo00<000000?ooo`3oool0103o
+ool010000000oooo0?ooo`0000020?ooo`030000003oool0000000<0oooo00<000000?ooo`000000
+0P3oool010000000oooo0?ooo`0000020?ooo`030000003oool0000000H0oooo00<000000?ooo`00
+00000P3oool300000080oooo00D000000?ooo`3oool0oooo000000020?ooo`<000000P3oool01000
+0000oooo0?ooo`0000020?ooo`030000003oool0000000@0000000<0oooo0000000000002`3oool0
+0`000000oooo0?ooo`020?ooo`030000003oool0oooo00@0oooo00H000000?ooo`3oool000000?oo
+o`0000030?ooo`8000000`3oool01@000000oooo000000000000oooo00D0000000P0oooo0000003o
+ool000000?ooo`000000oooo00000080oooo00@000000?ooo`3oool000000P3oool00`000000oooo
+000000030?ooo`030000003oool000000080oooo00<000000?ooo`3oool02P3oool00`000000oooo
+0?ooo`040?ooo`060000003oool0oooo0000003oool000000P3oool01P000000oooo0?ooo`000000
+oooo000000<0oooo00X000000?ooo`3oool000000?ooo`000000oooo0000003oool000000P3oool0
+10000000oooo0?ooo`0000020?ooo`030000003oool0000000<0oooo00<000000?ooo`0000000`3o
+ool3000000T0oooo000`0?ooo`030000003oool0oooo0080oooo0`0000030?ooo`030000003oool0
+000000<0oooo00H000000?ooo`00000000000?ooo`0000020?ooo`060000003oool000000000003o
+ool000000P3oool00`000000oooo0?ooo`0400000080oooo00<000000?ooo`0000000P3oool01P00
+0000oooo0?ooo`000000oooo000000<0oooo00<000000?ooo`0000000P3oool00`000000oooo0000
+00030?ooo`030000003oool000000080oooo00@000000?ooo`00000000002`3oool00`000000oooo
+0?ooo`040?ooo`<000000`3oool00`000000oooo000000030?ooo`060000003oool000000000003o
+ool000000P3oool01P000000oooo000000000000oooo00000080oooo00L000000?ooo`3oool0oooo
+0000003oool0000000@0oooo00@000000?ooo`3oool000000P3oool2000000@0oooo00@000000?oo
+o`3oool000000P3oool01P000000oooo0?ooo`000000oooo000000<0oooo0`00000<0?ooo`030000
+003oool0oooo0080oooo00<000000?ooo`3oool0103oool01P000000oooo0?ooo`000000oooo0000
+00<0oooo0P0000030?ooo`8000000`3oool03P000000oooo0?ooo`3oool000000?ooo`000000oooo
+0000003oool000000?ooo`000000oooo0P0000020?ooo`060000003oool0oooo0000003oool00000
+0`3oool00`000000oooo000000020?ooo`030000003oool0oooo00/0oooo00<000000?ooo`3oool0
+0`3oool600000080oooo00H000000?ooo`3oool000000?ooo`0000030?ooo`0;0000003oool0oooo
+0000003oool000000?ooo`000000oooo0000003oool00P0000020?ooo`060000003oool0oooo0000
+003oool000000`3oool00`000000oooo000000020?ooo`040000003oool0oooo000000T0oooo000a
+0?ooo`070000003oool0oooo0?ooo`000000oooo000000020?ooo`<0000000D0oooo000000000000
+00000?ooo`02000000030?ooo`000000oooo008000000`3oool00`000000oooo0?ooo`02000000<0
+oooo00<000000?ooo`3oool00P3oool2000000030?ooo`000000000000@000000`3oool300000003
+0?ooo`0000000000008000000`3oool3000000030?ooo`00000000000080000000<0oooo00000000
+00000P00000;0?ooo`030000003oool0oooo00<0oooo00<000000?ooo`0000000P3oool300000005
+0?ooo`00000000000000003oool00P0000000`3oool000000?ooo`02000000<0oooo00<000000?oo
+o`3oool00P0000030?ooo`040000003oool0oooo0?ooo`@000000P3oool4000000030?ooo`000000
+oooo00<000000`3oool3000000<0oooo00<000000?ooo`3oool00`0000000`3oool0000000000002
+000000/0oooo00D000000?ooo`3oool0oooo000000060?ooo`<000000`3oool300000080oooo0`00
+00020?ooo`<0000000@0oooo00000000000000000P3oool01`000000oooo0000003oool000000?oo
+o`0000000P3oool00`000000oooo00000003000000<0oooo0`0000000`3oool00000000000020000
+00h0oooo00<000000?ooo`3oool00`3oool00`000000oooo0?ooo`020?ooo`030000003oool00000
+00<000000`3oool400000080oooo00L000000?ooo`000000oooo0000003oool000000080oooo00<0
+00000?ooo`0000000`0000030?ooo`<0000000<0oooo0000000000000P000000103oool000000000
+000000090?ooo`00<@3oool00`000000oooo0?ooo`020?ooo`8000000`3oool00`000000oooo0?oo
+o`0F0?ooo`040000003oool0oooo00000240oooo00<000000?ooo`0000003@3oool00`000000oooo
+0?ooo`030?ooo`8000000`3oool00`000000oooo0?ooo`0F0?ooo`050000003oool0oooo0?ooo`00
+00004@3oool2000000@0oooo0P0000060?ooo`030000003oool0oooo00`0oooo00<000000?ooo`3o
+ool00P3oool010000000oooo0?ooo`3oool3000001P0oooo0P0000030?ooo`8000004P3oool00`00
+0000oooo0?ooo`0<0?ooo`030000003oool0oooo00<0oooo00@000000?ooo`3oool000003@3oool0
+0`000000oooo0?ooo`02000000<0oooo0P00000E0?ooo`030000003oool0oooo00P0oooo000b0?oo
+o`050000003oool0oooo0?ooo`0000005@3oool00`000000oooo0?ooo`040?ooo`D00000803oool0
+0`000000oooo0?ooo`0?0?ooo`030000003oool0oooo0080oooo00<000000?ooo`3oool04`3oool0
+0`000000oooo0?ooo`040?ooo`<000000P3oool2000000T0oooo00<000000?ooo`3oool01@3oool0
+0`000000oooo0?ooo`030?ooo`030000003oool0oooo00<0oooo00<000000?ooo`3oool03P3oool0
+0`000000oooo0?ooo`020?ooo`<000000P3oool00`000000oooo0?ooo`0E0?ooo`8000001@3oool2
+000000030?ooo`000000oooo00d0oooo00<000000?ooo`3oool03P3oool010000000oooo0?ooo`3o
+ool5000000030?ooo`000000oooo00T0oooo0P0000000`3oool00000000000050?ooo`80000000<0
+oooo0000003oool04@3oool00`000000oooo0?ooo`080?ooo`00<`3oool00`000000oooo0?ooo`10
+0?ooo`8000004`3oool00`000000oooo0?ooo`100?ooo`8000004P3oool00`000000oooo0?ooo`0f
+0?ooo`030000003oool0oooo00l0oooo00<000000?ooo`3oool0<@3oool00`000000oooo0?ooo`09
+0?ooo`00=03oool00`000000oooo0?ooo`0n0?ooo`030000003oool0oooo01@0oooo00<000000?oo
+o`3oool0?P3oool00`000000oooo0?ooo`0C0?ooo`030000003oool0oooo03@0oooo00<000000?oo
+o`3oool04@3oool2000002l0oooo0P00000<0?ooo`00=@3oool2000003`0oooo0P00000H0?ooo`80
+0000?03oool2000001L0oooo00<000000?ooo`3oool0<@3oool2000001H0oooo00<000000?ooo`3o
+ool0:`3oool00`000000oooo0?ooo`0<0?ooo`00=`3oool2000003P0oooo0P00000L0?ooo`800000
+>03oool2000001X0oooo0P00000_0?ooo`8000004`3oool7000002X0oooo0P00000?0?ooo`00>@3o
+ool3000003<0oooo0P00000P0?ooo`<00000<P3oool3000001h0oooo0P00000[0?ooo`8000005@3o
+ool6000000030?ooo`000000000002L0oooo00<000000?ooo`3oool03`3oool003`0oooo0`00000]
+0?ooo`<000009@3oool2000002h0oooo0P00000S0?ooo`8000009`3oool2000001L0oooo1@000004
+0?ooo`8000008P3oool300000180oooo000o0?ooo`@00000903oool5000002X0oooo1@00000T0?oo
+o`D000009`3oool4000001l0oooo1000000H0?ooo`D000001`3oool4000001/0oooo0`00000E0?oo
+o`00@`3oool7000001L0oooo1P000000103oool0000000000000000`0?ooo`L000005P3oool70000
+02T0oooo1@0000020?ooo`H000004`3oool6000001X0oooo0P0000020?ooo`800000303oool20000
+01L0oooo0P00000H0?ooo`00BP3ooolG000000P0oooo1P00000]0?ooo`800000103ooolF000002h0
+oooo1P0000090?oooa<000007@3oool3000000@0oooo00<000000?ooo`3oool03@3ooolG000001X0
+oooo001K0?ooo`8000003@3oool5000002T0oooo1@00000@0?ooo`030000003oool0oooo03H0oooo
+1P00000g0?ooo`8000008`3oool00`000000oooo0?ooo`0R0?ooo`00F`3oool2000000d0oooo1@00
+000W0?ooo`H000004@3oool00`000000oooo0?ooo`0g0?ooo`@00000=@3oool3000002D0oooo00<0
+00000?ooo`3oool08P3oool005/0oooo0`00000=0?ooo`D000009P3oool600000100oooo0`00000g
+0?ooo`@00000<`3oool3000002L0oooo0`00000S0?ooo`00F`3oool3000000h0oooo0P0000020?oo
+o`030000003oool0oooo02@0oooo1000000A0?ooo`<00000=P3oool010000000oooo0?ooo`00000b
+0?ooo`800000:P3oool3000002<0oooo001L0?ooo`<000003P3oool010000000oooo0?ooo`3oool2
+000002@0oooo0`00000B0?ooo`<00000=@3oool00`000000oooo0?ooo`0a0?ooo`<00000;03oool3
+000002<0oooo001L0?ooo`<00000503oool00`000000oooo0?ooo`0P0?ooo`030000003oool00000
+01<0oooo0`00000c0?ooo`800000<@3oool3000002l0oooo0`00000S0?ooo`00G03oool4000001@0
+oooo0P00000O0?ooo`030000003oool0oooo01<0oooo1@00000a0?ooo`030000003oool0oooo02l0
+oooo0P00000a0?ooo`D000008P3oool005`0oooo0`00000G0?ooo`030000003oool0oooo01X0oooo
+0P00000F0?ooo`D00000<03oool00`000000oooo0?ooo`0]0?ooo`<00000<`3oool500000280oooo
+001L0?ooo`8000006@3oool2000001T0oooo00<000000?ooo`3oool05P3oool5000002h0oooo0P00
+000]0?ooo`<00000=P3oool500000280oooo001N0?ooo`030000003oool0oooo01P0oooo00<00000
+0?ooo`3oool05@3oool00`000000oooo0?ooo`0I0?ooo`030000003oool0oooo02d0oooo00<00000
+0?ooo`3oool0:P3oool3000003/0oooo00<000000?ooo`3oool08P3oool005h0oooo00<000000?oo
+o`3oool06@3oool2000001@0oooo00<000000?ooo`3oool06P3oool00`000000oooo0?ooo`0[0?oo
+o`800000:@3oool4000003h0oooo00<000000?ooo`3oool08P3oool005l0oooo00<000000?ooo`3o
+ool06P3oool00`000000oooo0?ooo`0@0?ooo`030000003oool0oooo01/0oooo00<000000?ooo`3o
+ool0:P3oool00`000000oooo0?ooo`0V0?ooo`<00000@@3oool00`000000oooo0?ooo`0S0?ooo`00
+G`3oool00`000000oooo0?ooo`0K0?ooo`030000003oool0oooo00h0oooo00<000000?ooo`3oool0
+703oool00`000000oooo0?ooo`0Y0?ooo`030000003oool0oooo02@0oooo0`0000140?ooo`030000
+003oool0oooo02<0oooo001O0?ooo`030000003oool0oooo01`0oooo0P00000=0?ooo`030000003o
+ool0oooo01d0oooo00<000000?ooo`3oool09`3oool2000002@0oooo0`0000170?ooo`030000003o
+ool0oooo02<0oooo001P0?ooo`030000003oool0oooo01d0oooo00<000000?ooo`3oool0203oool2
+00000200oooo00<000000?ooo`3oool09P3oool00`000000oooo0?ooo`0Q0?ooo`<00000BP3oool0
+0`000000oooo0?ooo`0S0?ooo`00H03oool00`000000oooo0?ooo`0N0?ooo`030000003oool0oooo
+00H0oooo00<000000?ooo`3oool0803oool00`000000oooo0?ooo`0U0?ooo`030000003oool0oooo
+0200oooo0P00001=0?ooo`030000003oool0oooo02<0oooo001Q0?ooo`030000003oool0oooo01h0
+oooo0P0000050?ooo`030000003oool0oooo0240oooo00<000000?ooo`3oool08`3oool200000200
+oooo0`00001?0?ooo`030000003oool0oooo02<0oooo001Q0?ooo`030000003oool0oooo0200oooo
+00D000000?ooo`3oool0oooo0000000T0?ooo`030000003oool0oooo0280oooo00<000000?ooo`3o
+ool07@3oool300000580oooo00<000000?ooo`3oool08`3oool00680oooo00<000000?ooo`3oool0
+803oool3000002D0oooo00<000000?ooo`3oool0803oool2000001h0oooo0P00001E0?ooo`030000
+003oool0oooo02<0oooo001R0?ooo`030000003oool0oooo0240oooo0P00000U0?ooo`030000003o
+ool0oooo01l0oooo00<000000?ooo`3oool06`3oool3000005L0oooo00<000000?ooo`3oool08`3o
+ool00680oooo00<000000?ooo`3oool0803oool00`000000oooo0?ooo`02000002<0oooo00<00000
+0?ooo`3oool07P3oool00`000000oooo0?ooo`0I0?ooo`<00000FP3oool00`000000oooo0?ooo`0S
+0?ooo`00H`3oool00`000000oooo0?ooo`0N0?ooo`030000003oool0oooo00<0oooo00<000000?oo
+o`3oool0803oool00`000000oooo0?ooo`0L0?ooo`8000006P3oool2000005d0oooo00<000000?oo
+o`3oool08`3oool006<0oooo00<000000?ooo`3oool07@3oool00`000000oooo0?ooo`050?ooo`80
+0000803oool00`000000oooo0?ooo`0K0?ooo`030000003oool0oooo01L0oooo0`00001O0?ooo`03
+0000003oool0oooo02<0oooo001S0?ooo`030000003oool0oooo01`0oooo00<000000?ooo`3oool0
+203oool00`000000oooo0?ooo`0M0?ooo`030000003oool0oooo01X0oooo00<000000?ooo`3oool0
+5@3oool300000680oooo00<000000?ooo`3oool08`3oool006@0oooo00<000000?ooo`3oool06P3o
+ool00`000000oooo0?ooo`0:0?ooo`8000007@3oool00`000000oooo0?ooo`0H0?ooo`8000005P3o
+ool2000006D0oooo00<000000?ooo`3oool08`3oool006@0oooo00<000000?ooo`3oool06@3oool0
+0`000000oooo0?ooo`0=0?ooo`030000003oool0oooo01X0oooo00<000000?ooo`3oool05`3oool0
+0`000000oooo0?ooo`0C0?ooo`<00000I`3oool00`000000oooo0?ooo`0S0?ooo`00I@3oool00`00
+0000oooo0?ooo`0G0?ooo`030000003oool0oooo00l0oooo00<000000?ooo`3oool06@3oool00`00
+0000oooo0?ooo`0F0?ooo`030000003oool0oooo0140oooo0`00001Y0?ooo`030000003oool0oooo
+02@0oooo001U0?ooo`030000003oool0oooo01H0oooo00<000000?ooo`3oool04@3oool2000001T0
+oooo00<000000?ooo`3oool05@3oool00`000000oooo0?ooo`0?0?ooo`<00000K03oool00`000000
+oooo0?ooo`0T0?ooo`00I@3oool00`000000oooo0?ooo`0E0?ooo`030000003oool0oooo01@0oooo
+00<000000?ooo`3oool05P3oool00`000000oooo0?ooo`0D0?ooo`030000003oool0oooo00h0oooo
+0P00001_0?ooo`030000003oool0oooo02@0oooo001V0?ooo`030000003oool0oooo01<0oooo00<0
+00000?ooo`3oool05P3oool00`000000oooo0?ooo`0E0?ooo`030000003oool0oooo0180oooo0P00
+000>0?ooo`<00000L@3oool00`000000oooo0?ooo`0T0?ooo`00I@3oool<000000X0oooo00<00000
+0?ooo`3oool0603oool00`000000oooo0?ooo`0:0?oooa<000002`3oool00`000000oooo0?ooo`0;
+0?ooo`<000005`3oool=000002X0oooo2P00000L0?ooo`030000003oool0oooo02@0oooo001Q0?oo
+o`@00000303oool4000000D0oooo00<000000?ooo`3oool06P3oool2000000H0oooo1000000C0?oo
+o`D000001@3oool00`000000oooo0?ooo`090?ooo`<000005P3oool4000000d0oooo1000000S0?oo
+o`<000002P3oool3000001T0oooo00<000000?ooo`3oool0903oool005l0oooo0P00000D0?ooo`<0
+000000<0oooo0000003oool07P3oool010000000oooo0?ooo`3oool2000001`0oooo0P0000020?oo
+o`030000003oool0oooo00L0oooo0`00000F0?ooo`<000005@3oool3000001h0oooo0P00000@0?oo
+o`8000005`3oool00`000000oooo0?ooo`0T0?ooo`00G@3oool2000001T0oooo0P00000P0?ooo`<0
+0000803oool3000000L0oooo0P00000G0?ooo`8000006`3oool2000001X0oooo0P00000D0?ooo`80
+00005@3oool00`000000oooo0?ooo`0T0?ooo`00G03oool00`000000oooo0?ooo`0K0?ooo`030000
+003oool0oooo01/0oooo0P00000V0?ooo`8000000`3oool2000001P0oooo00<000000?ooo`3oool0
+7@3oool2000001L0oooo00<000000?ooo`3oool05P3oool00`000000oooo0?ooo`0A0?ooo`030000
+003oool0oooo02D0oooo001J0?ooo`8000007`3oool2000001T0oooo0P00000Z0?ooo`<00000603o
+ool200000280oooo0P00000D0?ooo`030000003oool0oooo01P0oooo00<000000?ooo`3oool0403o
+ool00`000000oooo0?ooo`0U0?ooo`00F@3oool00`000000oooo0?ooo`0Q0?ooo`030000003oool0
+oooo01@0oooo0P00000^0?ooo`8000005P3oool00`000000oooo0?ooo`0T0?ooo`030000003oool0
+oooo0100oooo00<000000?ooo`3oool06P3oool00`000000oooo0?ooo`0?0?ooo`030000003oool0
+oooo02D0oooo001H0?ooo`030000003oool0oooo02<0oooo00<000000?ooo`3oool04P3oool00`00
+0000oooo0?ooo`0`0?ooo`8000004`3oool00`000000oooo0?ooo`0V0?ooo`030000003oool0oooo
+00h0oooo00<000000?ooo`3oool0703oool00`000000oooo0?ooo`0>0?ooo`030000003oool0oooo
+02D0oooo001H0?ooo`030000003oool0oooo02@0oooo00<000000?ooo`3oool03`3oool2000003D0
+oooo0P00000A0?ooo`030000003oool0oooo02H0oooo00<000000?ooo`3oool03P3oool00`000000
+oooo0?ooo`0L0?ooo`030000003oool0oooo00h0oooo00<000000?ooo`3oool09@3oool005L0oooo
+00<000000?ooo`3oool09P3oool00`000000oooo0?ooo`0=0?ooo`030000003oool0oooo03L0oooo
+00<000000?ooo`3oool03@3oool00`000000oooo0?ooo`0X0?ooo`030000003oool0oooo00`0oooo
+00<000000?ooo`3oool07P3oool00`000000oooo0?ooo`0=0?ooo`030000003oool0oooo02D0oooo
+001F0?ooo`030000003oool0oooo02L0oooo00<000000?ooo`3oool0303oool00`000000oooo0?oo
+o`0h0?ooo`030000003oool0oooo00`0oooo00<000000?ooo`3oool0:@3oool00`000000oooo0?oo
+o`0<0?ooo`030000003oool0oooo01h0oooo00<000000?ooo`3oool03@3oool00`000000oooo0?oo
+o`0U0?ooo`00EP3oool00`000000oooo0?ooo`0X0?ooo`030000003oool0oooo00/0oooo00<00000
+0?ooo`3oool0>@3oool00`000000oooo0?ooo`0;0?ooo`030000003oool0oooo02X0oooo00<00000
+0?ooo`3oool02P3oool00`000000oooo0?ooo`0P0?ooo`030000003oool0oooo00/0oooo00<00000
+0?ooo`3oool09P3oool005D0oooo00<000000?ooo`3oool0:@3oool00`000000oooo0?ooo`0:0?oo
+o`030000003oool0oooo03X0oooo00<000000?ooo`3oool02P3oool00`000000oooo0?ooo`0[0?oo
+o`030000003oool0oooo00X0oooo00<000000?ooo`3oool0803oool00`000000oooo0?ooo`0;0?oo
+o`030000003oool0oooo02H0oooo001E0?ooo`030000003oool0oooo02T0oooo00<000000?ooo`3o
+ool02P3oool00`000000oooo0?ooo`0j0?ooo`030000003oool0oooo00X0oooo00<000000?ooo`3o
+ool0:`3oool00`000000oooo0?ooo`0:0?ooo`030000003oool0oooo0200oooo00<000000?ooo`3o
+ool02`3oool00`000000oooo0?ooo`0V0?ooo`00E@3oool00`000000oooo0?ooo`0Y0?ooo`030000
+003oool0oooo00T0oooo00<000000?ooo`3oool0?03oool00`000000oooo0?ooo`090?ooo`030000
+003oool0oooo02`0oooo00<000000?ooo`3oool02@3oool00`000000oooo0?ooo`0P0?ooo`030000
+003oool0oooo00/0oooo00<000000?ooo`3oool09P3oool005D0oooo00<000000?ooo`3oool0:@3o
+ool00`000000oooo0?ooo`090?ooo`030000003oool0oooo03`0oooo00<000000?ooo`3oool02@3o
+ool00`000000oooo0?ooo`0/0?ooo`030000003oool0oooo00T0oooo00<000000?ooo`3oool0803o
+ool00`000000oooo0?ooo`0;0?ooo`030000003oool0oooo02H0oooo001E0?ooo`030000003oool0
+oooo00D0oooo1@0000001`3oool00000000000000000oooo0000003oool00`0000000`3oool00000
+0000000200000080oooo100000000`3oool0000000000003000000050?ooo`00000000000?ooo`00
+00002`3oool00`000000oooo0?ooo`030?ooo`D000000P3oool6000000040?ooo`00000000000?oo
+o`D0000000<0oooo0000000000001@0000001@3oool00000000000000000oooo00D000000P3oool7
+000000030?ooo`000000000000@0000000<0oooo0000003oool02P3oool00`000000oooo0?ooo`03
+0?ooo`H0000000@0oooo000000000000oooo0P0000020?ooo`<000000P3oool7000000050?ooo`00
+000000000000003oool00`0000001@3oool00000000000000000oooo00<000002`3oool00`000000
+oooo0?ooo`070?ooo`<000000P3oool3000000030?ooo`000000000000<000000P3oool4000000D0
+oooo00<000000?ooo`3oool02P3oool00`000000oooo0?ooo`0W0?ooo`00E@3oool00`000000oooo
+0?ooo`060?ooo`070000003oool0oooo0?ooo`000000oooo000000020?ooo`060000003oool0oooo
+0000003oool000000P3oool010000000oooo0?ooo`0000020?ooo`050000003oool0oooo0?ooo`00
+00000P3oool00`000000oooo000000020?ooo`030000003oool0oooo00X0oooo00<000000?ooo`3o
+ool00`3oool01@000000oooo0?ooo`3oool000000080oooo00@000000?ooo`3oool000000P3oool0
+10000000oooo0?ooo`0000020?ooo`030000003oool0000000L0oooo00L000000?ooo`3oool0oooo
+0000003oool0000000<0oooo0P0000020?ooo`030000003oool0oooo0080oooo00<000000?ooo`00
+0000103oool00`000000oooo0?ooo`0:0?ooo`030000003oool0oooo00@0oooo00@000000?ooo`3o
+ool000000P3oool00`000000oooo000000020?ooo`040000003oool0oooo00000080oooo00@00000
+0?ooo`3oool00000103oool01@000000oooo0000003oool0000000<0oooo00<000000?ooo`000000
+0P3oool00`000000oooo0000000;0?ooo`030000003oool0oooo00H0oooo00D000000?ooo`3oool0
+oooo000000020?ooo`040000003oool0oooo00000080oooo00@000000?ooo`3oool00000103oool0
+0`000000oooo0?ooo`020?ooo`030000003oool0oooo00X0oooo00<000000?ooo`3oool09`3oool0
+05D0oooo00<000000?ooo`3oool01P3oool03@000000oooo0?ooo`3oool000000?ooo`000000oooo
+0000003oool000000?ooo`0000000P3oool300000080oooo00@000000?ooo`3oool000000`3oool0
+1@000000oooo0?ooo`3oool0000000<0oooo00<000000?ooo`3oool02P3oool00`000000oooo0?oo
+o`030?ooo`030000003oool0oooo0080oooo00<000000?ooo`0000000P3oool010000000oooo0?oo
+o`0000020?ooo`050000003oool0oooo0000003oool01@0000000`3oool00000000000020?ooo`80
+00000P3oool01P000000oooo0?ooo`3oool000000?ooo`<000000P3oool200000080oooo00<00000
+0?ooo`3oool00`00000<0?ooo`030000003oool0oooo00@0oooo00@000000?ooo`3oool000000P3o
+ool00`000000oooo000000050?ooo`040000003oool0oooo00000080oooo00<000000?ooo`3oool0
+0P0000020?ooo`030000003oool0000000<0oooo00<000000?ooo`0000000P3oool2000000`0oooo
+00<000000?ooo`3oool01P3oool01@000000oooo0?ooo`3oool000000080oooo00@000000?ooo`3o
+ool000000P3oool010000000oooo0?ooo`0000020?ooo`8000001@3oool00`000000oooo0?ooo`0:
+0?ooo`030000003oool0oooo02L0oooo001E0?ooo`030000003oool0oooo00H0oooo100000020?oo
+o`070000003oool000000?ooo`000000oooo000000040?ooo`040000003oool0oooo00000080oooo
+00<000000?ooo`3oool00P0000020?ooo`030000003oool000000080oooo00<000000?ooo`3oool0
+2`3oool00`000000oooo0?ooo`020?ooo`030000003oool0oooo0080oooo0`0000020?ooo`800000
+00D0oooo0000003oool0oooo000000020?ooo`030000003oool0000000<0oooo0P0000030?ooo`03
+0000003oool0oooo0080oooo100000040?ooo`030000003oool0000000<0oooo0P0000001@3oool0
+00000?ooo`3oool0000000`0oooo00<000000?ooo`3oool0103oool010000000oooo0?ooo`000002
+0?ooo`030000003oool000000080oooo00@000000?ooo`3oool000000P3oool01P000000oooo0?oo
+o`000000oooo000000<0oooo0P0000000`3oool000000?ooo`020?ooo`030000003oool000000080
+oooo0P00000<0?ooo`030000003oool0oooo00H0oooo00D000000?ooo`3oool0oooo000000020?oo
+o`050000003oool0oooo0000003oool00P0000020?ooo`030000003oool0000000L0oooo00<00000
+0?ooo`3oool02@3oool00`000000oooo0?ooo`0X0?ooo`00EP3oool00`000000oooo0?ooo`050?oo
+o`040000003oool0oooo00000080oooo00P000000?ooo`000000oooo0000003oool000000?ooo`<0
+00000P3oool7000000030?ooo`000000oooo0080000000D0oooo000000000000oooo0000000=0?oo
+o`030000003oool0oooo0080oooo00<000000?ooo`3oool00P3oool010000000oooo0000003oool2
+000000030?ooo`000000oooo008000000`3oool00`000000oooo0?ooo`0300000080oooo0`000000
+1P3oool00000000000000000oooo00000080oooo00<000000?ooo`0000000P0000030?ooo`<00000
+00@0oooo0000003oool0oooo0`00000=0?ooo`030000003oool0oooo00<0oooo00<000000?ooo`00
+00000`0000030?ooo`8000000`3oool01@000000oooo000000000000oooo008000000P3oool30000
+00040?ooo`000000oooo0?ooo`<0000000<0oooo0000000000000P0000000`3oool000000?ooo`0;
+0?ooo`030000003oool0oooo00H0oooo00H000000?ooo`3oool0oooo0000003oool4000000<0oooo
+00<000000?ooo`0000000P000000103oool000000000000000040?ooo`030000003oool0oooo00T0
+oooo00<000000?ooo`3oool0:03oool005H0oooo00<000000?ooo`3oool01@3oool010000000oooo
+0?ooo`0000020?ooo`8000000`3oool2000000L0oooo00<000000?ooo`3oool02`3oool00`000000
+oooo0?ooo`0=0?ooo`050000003oool0oooo0?ooo`0000000`3oool00`000000oooo0?ooo`0;0?oo
+o`8000003`3oool010000000oooo0?ooo`00000?0?ooo`030000003oool0oooo00`0oooo00<00000
+0?ooo`3oool00`3oool00`000000oooo0?ooo`0:0?ooo`8000005`3oool00`000000oooo0?ooo`0<
+0?ooo`030000003oool0oooo00D0oooo00D000000?ooo`3oool0oooo0000000;0?ooo`030000003o
+ool0oooo00H0oooo00<000000?ooo`3oool02P3oool00`000000oooo0?ooo`0X0?ooo`00E`3oool0
+0`000000oooo0?ooo`030?ooo`@000000P3oool2000000D0oooo0P00000=0?ooo`030000003oool0
+oooo00@0oooo00<000000?ooo`3oool03P3oool00`000000oooo00000004000000<0oooo00<00000
+0?ooo`3oool02@3oool00`000000oooo0?ooo`0<0?ooo`@00000303oool010000000oooo0?ooo`00
+000@0?ooo`040000003oool0oooo0?ooo`<00000303oool00`000000oooo0?ooo`0:0?ooo`030000
+003oool0oooo00P0oooo00<000000?ooo`3oool0303oool00`000000oooo0?ooo`040?ooo`<00000
+00@0oooo00000000000000001`3oool00`000000oooo0?ooo`090?ooo`030000003oool0oooo00T0
+oooo00<000000?ooo`3oool0:@3oool005P0oooo00<000000?ooo`3oool0903oool00`000000oooo
+0?ooo`0@0?ooo`030000003oool0oooo03<0oooo00<000000?ooo`3oool0403oool00`000000oooo
+0?ooo`0V0?ooo`030000003oool0oooo00h0oooo00<000000?ooo`3oool0703oool00`000000oooo
+0?ooo`0:0?ooo`030000003oool0oooo02T0oooo001H0?ooo`030000003oool0oooo02<0oooo00<0
+00000?ooo`3oool04P3oool00`000000oooo0?ooo`0`0?ooo`8000004`3oool00`000000oooo0?oo
+o`0V0?ooo`030000003oool0oooo00h0oooo00<000000?ooo`3oool0703oool00`000000oooo0?oo
+o`0:0?ooo`030000003oool0oooo02T0oooo001I0?ooo`030000003oool0oooo0240oooo00<00000
+0?ooo`3oool0503oool2000002h0oooo0P00000F0?ooo`030000003oool0oooo02@0oooo00<00000
+0?ooo`3oool0403oool00`000000oooo0?ooo`0J0?ooo`030000003oool0oooo00X0oooo00<00000
+0?ooo`3oool0:P3oool005X0oooo0P00000O0?ooo`D000005P3oool2000002X0oooo0P00000I0?oo
+o`8000008P3oool2000001@0oooo00<000000?ooo`3oool0603oool00`000000oooo0?ooo`0;0?oo
+o`030000003oool0oooo02X0oooo001L0?ooo`030000003oool0oooo01/0oooo00<000000?ooo`3o
+ool01`00000D0?ooo`8000009P3oool2000001d0oooo00<000000?ooo`3oool07@3oool2000001L0
+oooo00<000000?ooo`0000005P3oool00`000000oooo0?ooo`0<0?ooo`030000003oool0oooo02X0
+oooo001M0?ooo`8000006@3oool2000000@0oooo1P00000F0?ooo`@000007P3oool400000200oooo
+0P00000K0?ooo`8000006P3oool2000001@0oooo0P00000>0?ooo`030000003oool0oooo02/0oooo
+001O0?ooo`800000503oool3000000H0oooo1@00000K0?ooo`D000004`3oool7000002D0oooo0`00
+000E0?ooo`<000006P3oool3000000030?ooo`00000000000100oooo0P00000@0?ooo`030000003o
+ool0oooo02/0oooo001Q0?ooo`P00000103oool8000000X0oooo1P00000N0?ooo`L000001P3oool6
+000000L0oooo0P00000V0?ooo`P000001@3oool8000001`0oooo0`0000040?ooo`H000000`3oool7
+00000140oooo00<000000?ooo`3oool0;03oool006T0oooo1000000C0?ooo`8000000`3oool20000
+02<0oooo1P00000=0?ooo`@00000;03oool5000002<0oooo1000000:0?ooo`<00000603oool00`00
+0000oooo0?ooo`0/0?ooo`00P@3oool00`000000oooo0?ooo`030?ooo`800000=@3oool5000002`0
+oooo00<000000?ooo`3oool08P3oool4000002@0oooo0P00000_0?ooo`00R@3oool3000003<0oooo
+0`00000]0?ooo`030000003oool0oooo0280oooo1000000S0?ooo`030000003oool0oooo02l0oooo
+002<0?ooo`800000<@3oool4000002`0oooo0P00000S0?ooo`030000003oool0000002<0oooo00<0
+00000?ooo`3oool0<03oool008h0oooo0`00000_0?ooo`040000003oool0oooo000002/0oooo0P00
+000R0?ooo`030000003oool0oooo02<0oooo00<000000?ooo`3oool0<@3oool00940oooo0P00000a
+0?ooo`030000003oool0oooo02L0oooo0`00000Q0?ooo`030000003oool0oooo0280oooo0P00000d
+0?ooo`00T`3oool3000002l0oooo00<000000?ooo`3oool09P3oool300000200oooo00<000000?oo
+o`3oool08P3oool00`000000oooo0?ooo`0d0?ooo`00UP3oool2000002h0oooo00<000000?ooo`3o
+ool09@3oool4000001l0oooo00<000000?ooo`3oool08@3oool00`000000oooo0?ooo`0e0?ooo`00
+V03oool3000002`0oooo00<000000?ooo`3oool0903oool4000001h0oooo00<000000?ooo`3oool0
+803oool2000003P0oooo002K0?ooo`800000:`3oool00`000000oooo0?ooo`0T0?ooo`030000003o
+ool0oooo01d0oooo00<000000?ooo`3oool0803oool00`000000oooo0?ooo`0h0?ooo`00W@3oool2
+000002X0oooo00<000000?ooo`3oool08`3oool00`000000oooo0?ooo`0L0?ooo`030000003oool0
+oooo0200oooo00<000000?ooo`3oool0>@3oool009l0oooo0P00000Y0?ooo`030000003oool0oooo
+0280oooo00<000000?ooo`3oool06`3oool00`000000oooo0?ooo`0O0?ooo`800000?03oool00:40
+oooo0P00000X0?ooo`030000003oool0oooo0240oooo00<000000?ooo`3oool06P3oool00`000000
+oooo0?ooo`0O0?ooo`030000003oool0oooo03`0oooo002S0?ooo`<000009P3oool00`000000oooo
+0?ooo`0P0?ooo`030000003oool0oooo01X0oooo00<000000?ooo`3oool07@3oool2000003l0oooo
+002V0?ooo`8000009@3oool00`000000oooo0?ooo`0O0?ooo`030000003oool0oooo01T0oooo00<0
+00000?ooo`3oool0703oool200000440oooo002X0?ooo`800000903oool00`000000oooo0?ooo`0N
+0?ooo`030000003oool0oooo01P0oooo00<000000?ooo`3oool0703oool00`000000oooo0?ooo`11
+0?ooo`00ZP3oool2000002<0oooo00<000000?ooo`3oool07@3oool00`000000oooo0?ooo`0G0?oo
+o`030000003oool0oooo01/0oooo0P0000140?ooo`00[03oool200000280oooo00<000000?ooo`3o
+ool0703oool00`000000oooo0?ooo`0F0?ooo`030000003oool0oooo01X0oooo0P0000160?ooo`00
+[P3oool300000200oooo00<000000?ooo`3oool06`3oool00`000000oooo0?ooo`0E0?ooo`030000
+003oool0oooo01T0oooo0P0000180?ooo`00/@3oool2000001l0oooo00<000000?ooo`3oool06P3o
+ool00`000000oooo0?ooo`0D0?ooo`030000003oool0oooo01P0oooo0P00001:0?ooo`00/`3oool2
+000001h0oooo00<000000?ooo`3oool06@3oool00`000000oooo0?ooo`0C0?ooo`030000003oool0
+oooo01L0oooo0P00001<0?ooo`00]@3oool3000001`0oooo00<000000?ooo`3oool0603oool00`00
+0000oooo0?ooo`0C0?ooo`030000003oool0oooo01H0oooo00<000000?ooo`3oool0C03oool00;P0
+oooo0P00000K0?ooo`800000603oool00`000000oooo0?ooo`0B0?ooo`030000003oool0oooo01D0
+oooo0P00001?0?ooo`00^P3oool2000001/0oooo00<000000?ooo`3oool05@3oool00`000000oooo
+0?ooo`0A0?ooo`030000003oool0oooo01@0oooo0P00001A0?ooo`00_03oool3000001T0oooo00<0
+00000?ooo`3oool0503oool00`000000oooo0?ooo`0@0?ooo`030000003oool0oooo01<0oooo0P00
+001C0?ooo`00_`3oool2000001P0oooo00<000000?ooo`3oool04`3oool00`000000oooo0?ooo`0?
+0?ooo`030000003oool0oooo0180oooo0P00001E0?ooo`00`@3oool2000001L0oooo00<000000?oo
+o`3oool04P3oool00`000000oooo0?ooo`0>0?ooo`030000003oool0oooo0180oooo00<000000?oo
+o`3oool0E@3oool00<<0oooo0`00000E0?ooo`030000003oool0oooo0140oooo00<000000?ooo`3o
+ool03@3oool00`000000oooo0?ooo`0A0?ooo`800000F03oool00<H0oooo0P00000D0?ooo`030000
+003oool0oooo0100oooo00<000000?ooo`3oool0303oool00`000000oooo0?ooo`0@0?ooo`800000
+FP3oool00<P0oooo0P00000C0?ooo`800000403oool00`000000oooo0?ooo`0<0?ooo`030000003o
+ool0oooo00h0oooo0P00001L0?ooo`00bP3oool300000180oooo00<000000?ooo`3oool02`3oool5
+000000/0oooo00<000000?ooo`3oool03@3oool2000002H0oooo1`00000a0?ooo`00c@3oool20000
+0140oooo00<000000?ooo`3oool02P0000050?ooo`/000003P3oool200000240oooo1`0000070?oo
+o`H00000:`3oool00<l0oooo0P00000>0?ooo`@00000603oool5000000T0oooo0P00000N0?ooo`D0
+0000503oool6000002D0oooo003A0?ooo`<000002@3oool200000240oooo0P0000050?ooo`800000
+703oool4000001l0oooo1000000Q0?ooo`00e03oool2000000D0oooo0P00000U0?ooo`80000000<0
+oooo000000000000703oool2000002L0oooo0P00000O0?ooo`00eP3oool2000000030?ooo`000000
+000002T0oooo0P00000J0?ooo`<00000:`3oool2000001d0oooo003H0?ooo`800000;03oool00`00
+0000oooo0?ooo`0E0?ooo`800000<03oool2000001/0oooo003G0?ooo`030000003oool0oooo02d0
+oooo00<000000?ooo`3oool04`3oool00`000000oooo0?ooo`0b0?ooo`8000006@3oool00=L0oooo
+00<000000?ooo`3oool0;P3oool00`000000oooo0?ooo`0A0?ooo`030000003oool0oooo03D0oooo
+00<000000?ooo`3oool05P3oool00=H0oooo00<000000?ooo`3oool0<03oool00`000000oooo0?oo
+o`0?0?ooo`030000003oool0oooo03L0oooo00<000000?ooo`3oool05@3oool00=D0oooo00<00000
+0?ooo`3oool0<P3oool00`000000oooo0?ooo`0=0?ooo`030000003oool0oooo03T0oooo00<00000
+0?ooo`3oool0503oool00=D0oooo00<000000?ooo`3oool0<P3oool00`000000oooo0?ooo`0<0?oo
+o`030000003oool0oooo03/0oooo00<000000?ooo`3oool04`3oool00=@0oooo00<000000?ooo`3o
+ool0=03oool00`000000oooo0?ooo`0;0?ooo`030000003oool0oooo03/0oooo00<000000?ooo`3o
+ool04`3oool00=@0oooo00<000000?ooo`3oool0=03oool00`000000oooo0?ooo`0:0?ooo`030000
+003oool0oooo03d0oooo00<000000?ooo`3oool04P3oool00=@0oooo00<000000?ooo`3oool0=03o
+ool00`000000oooo0?ooo`0:0?ooo`030000003oool0oooo03d0oooo00<000000?ooo`3oool04P3o
+ool00=<0oooo00<000000?ooo`3oool0=@3oool00`000000oooo0?ooo`090?ooo`030000003oool0
+oooo03l0oooo00<000000?ooo`3oool04@3oool00=<0oooo00<000000?ooo`3oool0103oool50000
+0080oooo1P000000103oool000000000003oool5000000030?ooo`000000000000D0000000D0oooo
+00000000000000000?ooo`0300000080oooo00<000000?ooo`0000001`00000;0?ooo`030000003o
+ool0oooo00<0oooo0`0000000`3oool000000?ooo`03000000030?ooo`000000000000@000000P3o
+ool00`000000oooo0000000600000080oooo00<000000?ooo`0000001P0000000`3oool000000000
+000200000080oooo100000001@3oool00000000000000000oooo00<0000000@0oooo000000000000
+00004`3oool00=<0oooo00<000000?ooo`3oool01@3oool01@000000oooo0?ooo`3oool000000080
+oooo00@000000?ooo`3oool000000P3oool010000000oooo0?ooo`0000020?ooo`030000003oool0
+000000L0oooo00L000000?ooo`3oool0oooo0000003oool000000080oooo00<000000?ooo`000000
+1@3oool00`000000oooo0000000;0?ooo`030000003oool0oooo00@0oooo00@000000?ooo`3oool0
+00000P3oool00`000000oooo000000020?ooo`080000003oool0oooo0000003oool000000?ooo`00
+00050?ooo`060000003oool0oooo0000003oool000001@3oool00`000000oooo000000020?ooo`04
+0000003oool0oooo00000080oooo00<000000?ooo`0000000`3oool00`000000oooo000000020?oo
+o`030000003oool0000001<0oooo003D0?ooo`030000003oool0oooo00@0oooo00<000000?ooo`3o
+ool00P3oool00`000000oooo000000020?ooo`040000003oool0oooo00000080oooo00D000000?oo
+o`3oool000000?ooo`05000000030?ooo`00000000000080oooo0P0000020?ooo`050000003oool0
+oooo0000003oool01@000000103oool000000?ooo`00000<0?ooo`030000003oool0oooo00<0oooo
+00L000000?ooo`000000oooo0000003oool000000080oooo0`0000020?ooo`8000000P3oool50000
+00060?ooo`000000oooo0?ooo`000000oooo1@000000103oool000000?ooo`3oool300000080oooo
+00H000000?ooo`3oool000000?ooo`0000030?ooo`030000003oool000000080oooo0P00000D0?oo
+o`00e03oool00`000000oooo0?ooo`040?ooo`030000003oool0oooo0080oooo0`0000020?ooo`80
+000000D0oooo0000003oool0oooo000000020?ooo`030000003oool0000000<0oooo0P0000030?oo
+o`030000003oool0oooo0080oooo0`0000020?ooo`090000003oool0oooo0?ooo`000000oooo0000
+003oool0000000`0oooo00<000000?ooo`3oool00`3oool01`000000oooo0000003oool000000?oo
+o`000000103oool00`000000oooo0?ooo`03000000030?ooo`000000oooo0080oooo00<000000?oo
+o`0000000P0000020?ooo`070000003oool0oooo0?ooo`000000oooo000000040?ooo`050000003o
+ool0oooo0000003oool00P0000000`3oool000000?ooo`020?ooo`030000003oool000000080oooo
+0P00000D0?ooo`00e@3oool00`000000oooo0?ooo`030?ooo`030000003oool0oooo0080oooo00@0
+00000?ooo`000000oooo0P0000000`3oool000000?ooo`02000000<0oooo00<000000?ooo`3oool0
+0`0000020?ooo`<0000000H0oooo00000000000000000?ooo`0000020?ooo`030000003oool0oooo
+00<000000P3oool2000000h0oooo00<000000?ooo`3oool00P3oool020000000oooo0000003oool0
+00000?ooo`000000oooo0`0000030?ooo`050000003oool0oooo0000003oool00`0000020?ooo`04
+0000003oool0oooo00000080oooo0`0000020?ooo`030000003oool00000008000000P3oool30000
+00040?ooo`000000oooo0?ooo`<0000000<0oooo0000000000000`00000E0?ooo`00e@3oool00`00
+0000oooo0?ooo`030?ooo`050000003oool0oooo0?ooo`0000003@3oool2000000l0oooo00@00000
+0?ooo`3oool000001P3oool3000000h0oooo00<000000?ooo`3oool00P3oool2000000<0oooo0P00
+00060?ooo`8000002@3oool010000000oooo0?ooo`0000060?ooo`8000001`3oool00`000000oooo
+0?ooo`0;0?ooo`030000003oool0oooo01<0oooo003F0?ooo`040000003oool0oooo0?ooo`D00000
+0`3oool00`000000oooo0?ooo`090?ooo`030000003oool0oooo00`0oooo100000080?ooo`030000
+003oool0oooo00h0oooo00<000000?ooo`3oool00P0000050?ooo`8000001P3oool00`000000oooo
+0?ooo`060?ooo`@00000203oool00`000000oooo0?ooo`080?ooo`030000003oool0oooo00L0oooo
+00<000000?ooo`3oool0503oool00=L0oooo00<000000?ooo`3oool0;P3oool00`000000oooo0?oo
+o`0@0?ooo`800000=`3oool2000001L0oooo003G0?ooo`030000003oool0oooo02d0oooo00<00000
+0?ooo`3oool04`3oool00`000000oooo0?ooo`0b0?ooo`8000006@3oool00=P0oooo00<000000?oo
+o`3oool0:`3oool00`000000oooo0?ooo`0E0?ooo`800000<03oool2000001/0oooo003I0?ooo`80
+0000:@3oool2000001X0oooo0`00000[0?ooo`8000007@3oool00=/0oooo0P00000U0?ooo`800000
+7`3oool2000002L0oooo0P00000O0?ooo`00g@3oool200000240oooo0P00000S0?ooo`<000008@3o
+ool300000240oooo003O0?ooo`@000006@3oool4000002P0oooo0P00000M0?ooo`800000903oool0
+0><0oooo1@00000@0?ooo`@00000;P3oool4000001@0oooo1@00000V0?ooo`00j03ooolA000003D0
+oooo5000000[0?ooo`00n03oool2000003@0oooo0P00000m0?ooo`00n@3oool200000380oooo0P00
+000n0?ooo`00n@3oool300000300oooo0`00000n0?ooo`00n@3oool4000002h0oooo1000000n0?oo
+o`00nP3oool4000002`0oooo1000000o0?ooo`00nP3oool3000002h0oooo0`00000o0?ooo`00n`3o
+ool3000002`0oooo0`0000100?ooo`00n`3oool00`000000oooo0000000/0?ooo`030000003oool0
+00000400oooo003n0?ooo`030000003oool0oooo02P0oooo00<000000?ooo`3oool0@@3oool00?h0
+oooo00<000000?ooo`3oool09`3oool00`000000oooo0?ooo`120?ooo`00o`3oool00`000000oooo
+0?ooo`0V0?ooo`030000003oool0oooo0480oooo003o0?ooo`40oooo00<000000?ooo`3oool0903o
+ool00`000000oooo0?ooo`130?ooo`00o`3oool10?ooo`030000003oool0oooo02<0oooo00<00000
+0?ooo`3oool0A03oool00?l0oooo0P3oool00`000000oooo0?ooo`0R0?ooo`030000003oool0oooo
+04@0oooo003o0?ooo`<0oooo00<000000?ooo`3oool0803oool00`000000oooo0?ooo`150?ooo`00
+o`3oool30?ooo`030000003oool0oooo0200oooo00<000000?ooo`3oool0A@3oool00?l0oooo103o
+ool00`000000oooo0?ooo`0N0?ooo`030000003oool0oooo04H0oooo003o0?ooo`@0oooo00<00000
+0?ooo`3oool07P3oool00`000000oooo0?ooo`160?ooo`00o`3oool50?ooo`030000003oool0oooo
+01`0oooo00<000000?ooo`3oool0A`3oool00?l0oooo1P3oool00`000000oooo0?ooo`0J0?ooo`03
+0000003oool0oooo04P0oooo003o0?ooo`H0oooo00<000000?ooo`3oool06P3oool00`000000oooo
+0?ooo`180?ooo`00o`3oool70?ooo`030000003oool0oooo01P0oooo00<000000?ooo`3oool0B@3o
+ool00?l0oooo1`3oool00`000000oooo0?ooo`0H0?ooo`030000003oool0oooo04T0oooo003o0?oo
+o`P0oooo00<000000?ooo`3oool05P3oool00`000000oooo0?ooo`1:0?ooo`00o`3oool80?ooo`03
+0000003oool0oooo01H0oooo00<000000?ooo`3oool0BP3oool00?l0oooo2@3oool00`000000oooo
+0?ooo`0D0?ooo`030000003oool0oooo04/0oooo003o0?ooo`X0oooo00<000000?ooo`3oool04P3o
+ool00`000000oooo0?ooo`1<0?ooo`00o`3oool:0?ooo`030000003oool0oooo0180oooo00<00000
+0?ooo`3oool0C03oool00?l0oooo2`3oool00`000000oooo0?ooo`0@0?ooo`030000003oool0oooo
+04d0oooo003o0?ooo`/0oooo00<000000?ooo`3oool0403oool00`000000oooo0?ooo`1=0?ooo`00
+o`3oool<0?oooa800000D03oool00?l0oooo2P3oool200000140oooo0P00001?0?ooo`00o`3oool7
+0?ooo`<000005@3oool3000004`0oooo003o0?ooo`D0oooo0P00000K0?ooo`800000BP3oool00?l0
+oooo103oool00`000000oooo0?ooo`0M0?ooo`030000003oool0oooo04L0oooo003o0?ooo`@0oooo
+00<000000?ooo`3oool07P3oool00`000000oooo0?ooo`160?ooo`00o`3oool30?ooo`030000003o
+ool0oooo0200oooo00<000000?ooo`3oool0A@3oool00?l0oooo0P3oool00`000000oooo0?ooo`0R
+0?ooo`030000003oool0oooo04@0oooo003o0?ooo`40oooo00<000000?ooo`3oool0903oool00`00
+0000oooo0?ooo`130?ooo`00o`3oool00`000000oooo0?ooo`0U0?ooo`030000003oool0oooo04<0
+oooo003o0?ooo`030000003oool0oooo02H0oooo00<000000?ooo`3oool0@P3oool00?h0oooo00<0
+00000?ooo`3oool09`3oool00`000000oooo0?ooo`120?ooo`00oP3oool00`000000oooo0?ooo`0W
+0?ooo`030000003oool0oooo0480oooo003n0?ooo`030000003oool0oooo02L0oooo00<000000?oo
+o`3oool0@P3oool00?h0oooo00<000000?ooo`3oool0:03oool00`000000oooo0?ooo`110?ooo`00
+oP3oool00`000000oooo0?ooo`040?ooo`D000000P3oool6000000040?ooo`00000000000?ooo`D0
+000000<0oooo0000000000001@000000103oool000000000000000020?ooo`030000003oool0oooo
+0440oooo003n0?ooo`030000003oool0oooo00D0oooo00D000000?ooo`3oool0oooo000000020?oo
+o`040000003oool0oooo00000080oooo00@000000?ooo`3oool000000P3oool00`000000oooo0000
+00070?ooo`070000003oool0oooo0?ooo`000000oooo000000130?ooo`00oP3oool00`000000oooo
+0?ooo`050?ooo`030000003oool0oooo0080oooo00<000000?ooo`0000000P3oool010000000oooo
+0?ooo`0000020?ooo`050000003oool0oooo0000003oool01@0000000`3oool00000000000020?oo
+o`80000000<0oooo0000003oool0@`3oool00?h0oooo00<000000?ooo`3oool01@3oool00`000000
+oooo0?ooo`020?ooo`<000000P3oool2000000050?ooo`000000oooo0?ooo`0000000P3oool00`00
+0000oooo000000030?ooo`8000000`3oool01@000000oooo0?ooo`3oool0000004@0oooo003n0?oo
+o`030000003oool0oooo00D0oooo00<000000?ooo`3oool00P3oool010000000oooo0000003oool2
+000000030?ooo`000000oooo008000000`3oool00`000000oooo0?ooo`0300000080oooo0`000000
+0`3oool0000000000002000004@0oooo003o0?ooo`030000003oool0oooo00@0oooo00D000000?oo
+o`3oool0oooo0000000=0?ooo`8000003P3oool00`000000oooo0?ooo`120?ooo`00o`3oool00`00
+0000oooo0?ooo`030?ooo`D000000`3oool00`000000oooo0?ooo`090?ooo`030000003oool0oooo
+00/0oooo00<000000?ooo`3oool0@`3oool00?l0oooo0@3oool00`000000oooo0?ooo`0T0?ooo`03
+0000003oool0oooo04<0oooo003o0?ooo`80oooo00<000000?ooo`3oool08P3oool00`000000oooo
+0?ooo`140?ooo`00o`3oool30?ooo`030000003oool0oooo0200oooo00<000000?ooo`3oool0A@3o
+ool00?l0oooo103oool00`000000oooo0?ooo`0M0?ooo`800000B03oool00?l0oooo1@3oool00`00
+0000oooo0?ooo`0K0?ooo`030000003oool0oooo04P0oooo003o0?ooo`H0oooo0P00000I0?ooo`80
+0000B`3oool00?l0oooo203oool3000001<0oooo0`00001=0?ooo`00o`3oool;0?ooo`<00000303o
+ool400000500oooo003o0?ooo`h0oooo3000001D0?ooo`00o`3ooom^0?ooo`00o`3ooom^0?ooo`00
+o`3ooom^0?ooo`00o`3ooom^0?ooo`00o`3ooom^0?ooo`00\
+\>"],
+  ImageRangeCache->{{{118, 482.625}, {579.125, 354.125}} -> {-118.64, 291.7, \
+0.934521, 0.719127}}]
+}, Open  ]],
+
+Cell["Dependency graph", "Caption"],
+
+Cell[BoxData[{
+    \(<< Miscellaneous`Units`\), "\n", 
+    \(<< Miscellaneous`PhysicalConstants`\)}], "Input",
+  CellLabel->"In[68]:="],
+
+Cell[BoxData[
+    \(\(ToFundamental\  = \ \n\ \ Dispatch[{Radian\  -> \ 
+              1, \ \n\ \ \ \ Steradian\  -> \ 
+              Radian^2, \ \n\ \ \ \ Newton\  -> \ \((Kilogram*Meter)\)/
+                Second^2, \ \n\ \ \ \ Pascal\  -> \ 
+              Newton/Meter^2, \ \n\ \ \ \ Joule\  -> \ 
+              Meter*Newton, \ \n\ \ \ \ Watt\  -> \ 
+              Joule/Second, \ \n\ \ \ \ Coulomb\  -> \ 
+              Ampere*Second, \ \n\ \ \ \ Volt\  -> \ 
+              Watt/Ampere, \ \n\ \ \ \ Ohm\  -> \ 
+              Volt/Ampere, \ \n\ \ \ \ Siemens\  -> \ 
+              Ampere/Volt, \ \n\ \ \ \ Farad\  -> \ 
+              Coulomb/Volt, \ \n\ \ \ \ Weber\  -> \ 
+              Second*Volt, \ \n\ \ \ \ Henry\  -> \ 
+              Ohm*Second, \ \n\ \ \ \ Tesla\  -> \ 
+              Weber/Meter^2, \ \n\ \ \ \ Lumen\  -> \ 
+              Candela*Steradian, \ \n\ \ \ \ Lux\  -> \ 
+              Lumen/Meter^2, \ \n\ \ \ \ Hertz\  -> \ 
+              Second^\((\(-1\))\), \ \n\ \ \ \ Becquerel\  -> \ 
+              Second^\((\(-1\))\), \ \n\ \ \ \ Gray\  -> \ 
+              Joule/Kilogram}];\)\)], "Input",
+  CellLabel->"In[70]:="],
+
+Cell[BoxData[{
+    \(Clear[AtomicExponent]\), "\n", 
+    \(AtomicExponent[expr_, 
+        x_] := \ \[IndentingNewLine]\(\(If[#1 \[Equal] {}, {0}, #1] &\)@
+            If[#1 \[Equal] {}, Cases[expr, s : x -> 1, 1], #1] &\)[
+        Cases[expr, s : Power[x, n_] -> n, Infinity]]\)}], "Input",
+  CellLabel->"In[71]:="],
+
+Cell[BoxData[{
+    \(Clear[AtomicVariables]\), "\n", 
+    \(AtomicVariables[x_] := \ \[IndentingNewLine]Union[
+        Cases[x, 
+          s_ /; \ \((\(! NumericQ[s]\)\  && \ AtomQ[s] || 
+                MatchQ[s, 
+                  Subscript[
+                    s1_ /; \((\(! NumericQ[s1]\)\  && \ AtomQ[s1])\), _]])\), 
+          Infinity]]\[IndentingNewLine]\)}], "Input",
+  CellLabel->"In[73]:="],
+
+Cell[BoxData[{
+    \(Clear[CleanSubscripts]\), "\[IndentingNewLine]", 
+    \(CleanSubscripts[
+        x_] := \[IndentingNewLine]Module[{pos}, \[IndentingNewLine]\(Take[
+                x, #1] &\) /@ \((\(\(Position[#1, {}] &\)\ @\((Flatten /@ 
+                        Outer[Cases[#2, #1, Infinity] &, #1, #1])\) &\)[
+                x])\) // 
+          Flatten\[IndentingNewLine]]\[IndentingNewLine]\)}], "Input",
+  CellLabel->"In[75]:="],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+    \(FUNDAMENTAL = 
+      AtomicVariables[\(\((#1[\([2]\)] //. 
+                ToFundamental)\) &\) /@ \(\(Definition[
+                ToFundamental]\)[\([1]\)]\)[\([1]\)]]\)], "Input",
+  CellLabel->"In[77]:="],
+
+Cell[BoxData[
+    \({Ampere, Candela, Kilogram, Meter, Second}\)], "Output",
+  CellLabel->"Out[77]="]
+}, Open  ]],
+
+Cell[BoxData[{
+    \(Clear[FindMinors, ChooseMinor]\), "\[IndentingNewLine]", 
+    \(FindMinors[mat_, highestRank_, 
+        lowestRank_:  1] := \[IndentingNewLine]Module[{d, mmat, amat, rules, 
+          a}, \[IndentingNewLine]{rows, cols} = Dimensions[mat]; 
+        mmat = If[rows < cols, 
+            Join[mat, Table[0, {i, rows + 1, cols}, {j, 1, cols}]]]; 
+        mmat = If[rows > cols, 
+            Transpose\ @\ 
+              Join[Transpose[mat], 
+                Table[0, {i, cols + 1, rows}, {j, 1, 
+                    rows}]]]; \[IndentingNewLine]amat = 
+          Array[a, Dimensions[mmat]]; \[IndentingNewLine]rules = 
+          Thread[Flatten[
+                Table[Minors[amat, i, Identity], {i, highestRank, 
+                    lowestRank, \(-1\)}], 2] -> \[IndentingNewLine]Flatten[
+                Table[Minors[mmat, i, Identity], {i, highestRank, 
+                    lowestRank, \(-1\)}], 2]]; \[IndentingNewLine]Select[
+            rules, Det[#1[\([2]\)]] \[NotEqual] 0 &] /. 
+          a[x_, y_] \[Rule] {x, 
+              y}\[IndentingNewLine]]\[IndentingNewLine]\), "\
+\[IndentingNewLine]", 
+    \(ChooseMinor[minorRules_] := \[IndentingNewLine]First[
+        minorRules]\)}], "Input",
+  CellLabel->"In[78]:="],
+
+Cell[BoxData[{
+    \(Clear[MakeDimlessRules]\), "\[IndentingNewLine]", 
+    \(MakeDimlessRules[eqn_, minor_, basisIndex_, 
+        units_] := \[IndentingNewLine]Thread[\(units \[Rule] \((Exp /@ 
+                  LinearSolve[
+                    minor[\([2]\)], \(\(-Log[\(eqn[\([#1]\)] //. 
+                                ToFundamental\) /. 
+                              Thread[
+                                units \[Rule] 
+                                  Table[1, {Length[units]}]]]\) &\) /@ 
+                      basisIndex])\) // PowerExpand\) // 
+          Simplify]\[IndentingNewLine]\), "\[IndentingNewLine]", 
+    \(Clear[DimlessBasis]\), "\[IndentingNewLine]", 
+    \(DimlessBasis[eqn_, ChooseMinor_, 
+        DoWithBasis_] := \[IndentingNewLine]Module[{B, units, minor, basis, 
+          basisIndex}, \[IndentingNewLine]units = 
+          Intersection[FUNDAMENTAL, 
+            AtomicVariables[
+              eqn //. ToFundamental]]; \[IndentingNewLine]B = \
+\(PowerExpand[#1 //. ToFundamental] &\) /@ \(List @@ 
+              eqn\); \[IndentingNewLine]B = 
+          Flatten\  /@ \ 
+            Outer[AtomicExponent[#1, #2] &, B, 
+              units]; \[IndentingNewLine]minor = 
+          ChooseMinor[
+            FindMinors[B, 
+              Length[units]]]; \[IndentingNewLine]basisIndex = \(#1[\([1, 
+                  1]\)] &\) /@ 
+            minor[\([1]\)]; \[IndentingNewLine]basis = \(B[\([#1]\)] &\) /@ 
+            basisIndex; \[IndentingNewLine]DoWithBasis[eqn, minor, 
+          basisIndex, 
+          Extract[units, \((\({#1[\([2]\)]} &\) /@ 
+                minor[\([1, 1]\)])\)]]\[IndentingNewLine]]\)}], "Input",
+  CellLabel->"In[81]:="],
+
+Cell[BoxData[{
+    \(Clear[BMatrix]\), "\[IndentingNewLine]", 
+    \(BMatrix[
+        eqn_] := \[IndentingNewLine]Module[{B, units, minor, basis, 
+          basisIndex}, \[IndentingNewLine]units = 
+          Intersection[FUNDAMENTAL, 
+            AtomicVariables[
+              eqn //. ToFundamental]]; \[IndentingNewLine]B = \
+\(PowerExpand[#1 //. ToFundamental] &\) /@ \(List @@ 
+              eqn\); \[IndentingNewLine]B = 
+          Flatten\  /@ \ 
+            Outer[AtomicExponent[#1, #2] &, B, 
+              units]\[IndentingNewLine]]\)}], "Input",
+  CellLabel->"In[85]:="],
+
+Cell[BoxData[{
+    \(Clear[Units]\), "\[IndentingNewLine]", 
+    \(\(Units[eqn_] := 
+        Intersection[FUNDAMENTAL, 
+          AtomicVariables[eqn //. ToFundamental]];\)\)}], "Input",
+  CellLabel->"In[87]:="],
+
+Cell[BoxData[{
+    \(Clear[Inclusion]\), "\[IndentingNewLine]", 
+    \(Inclusion[l1_, 
+        l2_] := \(#1 \[Equal] Sort[l1] || #1 \[Equal] Sort[l2] &\)[
+        Sort[Intersection[l1, l2]]]\)}], "Input",
+  CellLabel->"In[89]:="],
+
+Cell[BoxData[{
+    \(Clear[DimlessRel]\), "\[IndentingNewLine]", 
+    \(DimlessRel[eqn_, constants_: {}] /; 
+        And @@ \((\(MemberQ[eqn, #1, Infinity] &\) /@ constants)\) || 
+          constants === {} := \[IndentingNewLine]Module[{units, minors, pos, 
+          B}, \[IndentingNewLine]units = 
+          Units[eqn]; \[IndentingNewLine]pos = \(\(Position[eqn, #1]\)[\([1, 
+                  1]\)] &\) /@ constants; \[IndentingNewLine]B = 
+          BMatrix[eqn]; \[IndentingNewLine]minors = 
+          Select[FindMinors[B, Length[units], Length[units]], 
+            Inclusion[\(#1[\([1, 1]\)] &\) /@ #1[\([1]\)], 
+                pos] &]; \[IndentingNewLine]\(DimlessBasis[eqn, 
+              Function[x, Evaluate[#1]], MakeDimlessRules] &\) /@ 
+          minors\[IndentingNewLine]]\)}], "Input",
+  CellLabel->"In[91]:="],
+
+Cell[BoxData[
+    RowBox[{"(*", 
+      RowBox[{\(<< Utilities`Notation`\), "\n", 
+        RowBox[{"Notation", "[", 
+          RowBox[{
+            TagBox[\(x_ \[LeftAngleBracket]y___\[RightAngleBracket]\),
+              NotationBoxTag,
+              TagStyle->"NotationTemplateStyle"], " ", 
+            "\[DoubleLongLeftRightArrow]", " ", 
+            TagBox[\(Measure[x_, y___]\),
+              NotationBoxTag,
+              TagStyle->"NotationTemplateStyle"]}], "]"}], "\n", 
+        RowBox[{"Notation", "[", 
+          RowBox[{
+            TagBox[
+              TagBox[\("\<\[DifferentialD]\>" x___\),
+                NotationBoxTag,
+                TagStyle->"NotationTemplateStyle"],
+              NotationBoxTag,
+              TagStyle->"NotationTemplateStyle"], " ", 
+            "\[DoubleLongLeftRightArrow]", " ", 
+            TagBox[
+              RowBox[{" ", 
+                TagBox[\(DifferentialD[x___]\),
+                  NotationBoxTag,
+                  TagStyle->"NotationTemplateStyle"]}],
+              NotationBoxTag,
+              TagStyle->"NotationTemplateStyle"]}], "]"}]}], "*)"}]], "Input",\
+
+  CellLabel->"In[93]:="],
+
+Cell[BoxData[{
+    \(Clear[MakeRelation]\), "\n", 
+    \(MakeRelation[eqn_] := \[IndentingNewLine]f @@ 
+        Cases[eqn, Measure[g_, dim_] \[Rule] g*dim, \[Infinity]]\)}], "Input",\
+
+  CellLabel->"In[94]:="],
+
+Cell[BoxData[{
+    \(Clear[Dimless]\), "\n", 
+    \(Dimless[eqn_, 
+          constants_: {}] /; \((And @@ \((\(MemberQ[eqn, #1, Infinity] &\) /@ 
+                  constants)\) || 
+            constants === {})\) := \[IndentingNewLine]Module[{relrules}, \
+\[IndentingNewLine]relrules = 
+          DimlessRel[MakeRelation[eqn], 
+            constants]; \[IndentingNewLine]\(\((\(eqn /. #1\) /. {Measure[g_, 
+                        dim_] \[Rule] g*dim} // Simplify)\) &\) /@ 
+          relrules\[IndentingNewLine]]\)}], "Input",
+  CellLabel->"In[96]:="]
+}, Open  ]]
+}, Open  ]]
+},
+FrontEndVersion->"4.0 for X",
+ScreenRectangle->{{0, 1024}, {0, 768}},
+ScreenStyleEnvironment->"AllBrackets",
+CellGrouping->Manual,
+WindowSize->{661, 637},
+WindowMargins->{{Automatic, 124}, {Automatic, 0}},
+Visible->True,
+PrintingPageRange->{Automatic, Automatic},
+PrintingOptions->{"PaperSize"->{612, 792},
+"PaperOrientation"->"Portrait",
+"PostScriptOutputFile":>FrontEnd`FileName[{$RootDirectory, "gbar", "newton", \
+"home4", "dmu", "dmuaaa", "MathFiles", "dimensionless"}, \
+"DimLessGuide.nb.ps", CharacterEncoding -> "ISO8859-1"],
+"Magnification"->1},
+InputAliases->{"notation"->RowBox[ {"Notation", "[", 
+        RowBox[ {
+          TagBox[ 
+          "\[Placeholder]", NotationBoxTag, TagStyle -> 
+            "NotationTemplateStyle"], " ", "\[DoubleLongLeftRightArrow]", " ",
+           
+          TagBox[ 
+          "\[Placeholder]", NotationBoxTag, TagStyle -> 
+            "NotationTemplateStyle"]}], "]"}], 
+    "notation>"->RowBox[ {"Notation", "[", 
+        RowBox[ {
+          TagBox[ 
+          "\[Placeholder]", NotationBoxTag, TagStyle -> 
+            "NotationTemplateStyle"], " ", "\[DoubleLongRightArrow]", " ", 
+          TagBox[ 
+          "\[Placeholder]", NotationBoxTag, TagStyle -> 
+            "NotationTemplateStyle"]}], "]"}], 
+    "notation<"->RowBox[ {"Notation", "[", 
+        RowBox[ {
+          TagBox[ 
+          "\[Placeholder]", NotationBoxTag, TagStyle -> 
+            "NotationTemplateStyle"], " ", "\[DoubleLongLeftArrow]", " ", 
+          TagBox[ 
+          "\[Placeholder]", NotationBoxTag, TagStyle -> 
+            "NotationTemplateStyle"]}], "]"}], 
+    "symb"->RowBox[ {"Symbolize", "[", 
+        TagBox[ 
+        "\[Placeholder]", NotationBoxTag, TagStyle -> 
+          "NotationTemplateStyle"], "]"}], 
+    "infixnotation"->RowBox[ {"InfixNotation", "[", 
+        RowBox[ {
+          TagBox[ 
+          "\[Placeholder]", NotationBoxTag, TagStyle -> 
+            "NotationTemplateStyle"], ",", "\[Placeholder]"}], "]"}], 
+    "addia"->RowBox[ {"AddInputAlias", "[", 
+        RowBox[ {
+          TagBox[ 
+          "\[Placeholder]", NotationBoxTag, TagStyle -> 
+            "NotationTemplateStyle"], ",", "\[Placeholder]"}], "]"}], 
+    "pattwraper"->TagBox[ 
+      "\[Placeholder]", NotationPatternTag, TagStyle -> 
+        "NotationPatternWrapperStyle"], 
+    "madeboxeswraper"->TagBox[ 
+      "\[Placeholder]", NotationMadeBoxesTag, TagStyle -> 
+        "NotationMadeBoxesWrapperStyle"]},
+Magnification->1,
+StyleDefinitions -> FrontEnd`FileName[{ParentDirectory[]}, \
+"MyReportStyleSheet.nb", CharacterEncoding -> "ISO8859-1"]
+]
+
+
+(***********************************************************************
+Cached data follows.  If you edit this Notebook file directly, not using
+Mathematica, you must remove the line containing CacheID at the top of 
+the file.  The cache data will then be recreated when you save this file 
+from within Mathematica.
+***********************************************************************)
+
+(*CellTagsOutline
+CellTagsIndex->{
+  "MFuncs"->{
+    Cell[18261, 547, 162, 7, 72, "Section",
+      CellTags->"MFuncs"]}
+  }
+*)
+
+(*CellTagsIndex
+CellTagsIndex->{
+  {"MFuncs", 95751, 2555}
+  }
+*)
+
+(*NotebookFileOutline
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[1739, 51, 44, 0, 72, "Title"],
+Cell[1786, 53, 176, 6, 98, "Author"],
+
+Cell[CellGroupData[{
+Cell[1987, 63, 33, 0, 70, "Section 1"],
+Cell[2023, 65, 296, 5, 60, "Text"],
+Cell[2322, 72, 55, 0, 30, "MathCaption"],
+Cell[2380, 74, 81, 1, 32, "Input"],
+Cell[2464, 77, 396, 13, 28, "Text"],
+Cell[2863, 92, 43, 0, 30, "MathCaption"],
+Cell[2909, 94, 55, 1, 32, "Input"],
+Cell[2967, 97, 377, 9, 32, "Input"],
+Cell[3347, 108, 360, 9, 32, "Input"],
+Cell[3710, 119, 467, 11, 44, "Text"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[4214, 135, 38, 0, 67, "Section"],
+Cell[4255, 137, 262, 5, 46, "Text"],
+Cell[4520, 144, 659, 11, 94, "Input"],
+Cell[5182, 157, 162, 5, 28, "Text"],
+Cell[5347, 164, 159, 6, 30, "MathCaption"],
+
+Cell[CellGroupData[{
+Cell[5531, 174, 48, 1, 32, "Input"],
+Cell[5582, 177, 699, 15, 159, "Output"]
+}, Open  ]],
+Cell[6296, 195, 317, 7, 60, "Text"],
+Cell[6616, 204, 69, 0, 21, "Caption"],
+
+Cell[CellGroupData[{
+Cell[6710, 208, 50, 1, 32, "Input"],
+Cell[6763, 211, 286, 4, 110, "Output"]
+}, Open  ]],
+Cell[7064, 218, 164, 5, 28, "Text"],
+Cell[7231, 225, 64, 0, 30, "MathCaption"],
+
+Cell[CellGroupData[{
+Cell[7320, 229, 67, 2, 32, "Input"],
+Cell[7390, 233, 83, 2, 47, "Output"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[7522, 241, 42, 0, 67, "Section"],
+Cell[7567, 243, 467, 12, 60, "Text"],
+Cell[8037, 257, 207, 4, 44, "Text"],
+Cell[8247, 263, 877, 16, 124, "Text"],
+
+Cell[CellGroupData[{
+Cell[9149, 283, 73, 1, 32, "Input"],
+Cell[9225, 286, 178, 3, 68, "Output"]
+}, Open  ]],
+Cell[9418, 292, 120, 3, 28, "Text"],
+
+Cell[CellGroupData[{
+Cell[9563, 299, 85, 1, 32, "Input"],
+Cell[9651, 302, 296, 5, 117, "Output"]
+}, Open  ]],
+Cell[9962, 310, 259, 6, 44, "Text"],
+
+Cell[CellGroupData[{
+Cell[10246, 320, 79, 1, 33, "Input"],
+Cell[10328, 323, 639, 12, 199, "Output"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[11016, 341, 49, 0, 67, "Section"],
+Cell[11068, 343, 500, 12, 76, "Text"],
+Cell[11571, 357, 44, 0, 30, "MathCaption"],
+
+Cell[CellGroupData[{
+Cell[11640, 361, 69, 2, 32, "Input"],
+Cell[11712, 365, 76, 1, 47, "Output"]
+}, Open  ]],
+Cell[11803, 369, 313, 8, 46, "MathCaption"],
+
+Cell[CellGroupData[{
+Cell[12141, 381, 53, 1, 32, "Input"],
+Cell[12197, 384, 422, 7, 118, "Output"]
+}, Open  ]],
+Cell[12634, 394, 172, 6, 21, "Caption"],
+
+Cell[CellGroupData[{
+Cell[12831, 404, 53, 1, 33, "Input"],
+Cell[12887, 407, 1328, 20, 295, "Output"]
+}, Open  ]],
+Cell[14230, 430, 124, 3, 30, "MathCaption"],
+
+Cell[CellGroupData[{
+Cell[14379, 437, 49, 1, 32, "Input"],
+Cell[14431, 440, 1866, 30, 420, "Output"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[16346, 476, 63, 0, 67, "Section"],
+Cell[16412, 478, 159, 3, 44, "Text"],
+
+Cell[CellGroupData[{
+Cell[16596, 485, 60, 1, 32, "Input"],
+Cell[16659, 488, 509, 16, 68, "Output"]
+}, Open  ]],
+Cell[17183, 507, 88, 3, 28, "Text"],
+
+Cell[CellGroupData[{
+Cell[17296, 514, 61, 1, 32, "Input"],
+Cell[17360, 517, 35, 1, 47, "Output"]
+}, Open  ]],
+Cell[17410, 521, 68, 0, 30, "MathCaption"],
+Cell[17481, 523, 67, 1, 32, "Input"],
+
+Cell[CellGroupData[{
+Cell[17573, 528, 113, 2, 32, "Input"],
+Cell[17689, 532, 523, 9, 152, "Output"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+Cell[18261, 547, 162, 7, 72, "Section",
+  CellTags->"MFuncs"],
+
+Cell[CellGroupData[{
+Cell[18448, 558, 96, 3, 19, "Program"],
+Cell[18547, 563, 64602, 1683, 242, 23564, 1172, "GraphicsData", "PostScript", \
+"Graphics"]
+}, Open  ]],
+Cell[83164, 2249, 35, 0, 21, "Caption"],
+Cell[83202, 2251, 135, 3, 48, "Input"],
+Cell[83340, 2256, 1145, 21, 336, "Input"],
+Cell[84488, 2279, 315, 6, 80, "Input"],
+Cell[84806, 2287, 401, 9, 160, "Input"],
+Cell[85210, 2298, 438, 8, 144, "Input"],
+
+Cell[CellGroupData[{
+Cell[85673, 2310, 226, 5, 64, "Input"],
+Cell[85902, 2317, 101, 2, 47, "Output"]
+}, Open  ]],
+Cell[86018, 2322, 1238, 24, 336, "Input"],
+Cell[87259, 2348, 1673, 33, 352, "Input"],
+Cell[88935, 2383, 580, 13, 128, "Input"],
+Cell[89518, 2398, 211, 5, 64, "Input"],
+Cell[89732, 2405, 229, 5, 64, "Input"],
+Cell[89964, 2412, 827, 14, 192, "Input"],
+Cell[90794, 2428, 1146, 29, 64, "Input"],
+Cell[91943, 2459, 209, 5, 64, "Input"],
+Cell[92155, 2466, 552, 11, 128, "Input"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
+
+
+
+(***********************************************************************
+End of Mathematica Notebook file.
+***********************************************************************)
+

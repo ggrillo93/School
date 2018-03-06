@@ -1,0 +1,276 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 11.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      7912,        266]
+NotebookOptionsPosition[      7102,        236]
+NotebookOutlinePosition[      7708,        257]
+CellTagsIndexPosition[      7665,        254]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"degree", "=", "8"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"series", "=", 
+  RowBox[{"1", "+", 
+   RowBox[{"Plus", "@@", 
+    RowBox[{"Table", "[", 
+     RowBox[{
+      RowBox[{
+       SubscriptBox["a", "i"], 
+       SuperscriptBox["x", "i"]}], ",", 
+      RowBox[{"{", 
+       RowBox[{"i", ",", "2", ",", "degree"}], "}"}]}], "]"}]}], "+", 
+   SuperscriptBox[
+    RowBox[{"O", "[", "x", "]"}], 
+    RowBox[{"degree", "+", "1"}]]}]}]}], "Input",
+ CellChangeTimes->{{3.690579538610972*^9, 3.690579644233734*^9}, {
+   3.690580982489044*^9, 3.690580983196232*^9}, {3.690596596434091*^9, 
+   3.690596596891597*^9}, 3.690647668883286*^9}],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"1", "+", 
+   RowBox[{
+    SubscriptBox["a", "2"], " ", 
+    SuperscriptBox["x", "2"]}], "+", 
+   RowBox[{
+    SubscriptBox["a", "3"], " ", 
+    SuperscriptBox["x", "3"]}], "+", 
+   RowBox[{
+    SubscriptBox["a", "4"], " ", 
+    SuperscriptBox["x", "4"]}], "+", 
+   RowBox[{
+    SubscriptBox["a", "5"], " ", 
+    SuperscriptBox["x", "5"]}], "+", 
+   RowBox[{
+    SubscriptBox["a", "6"], " ", 
+    SuperscriptBox["x", "6"]}], "+", 
+   RowBox[{
+    SubscriptBox["a", "7"], " ", 
+    SuperscriptBox["x", "7"]}], "+", 
+   RowBox[{
+    SubscriptBox["a", "8"], " ", 
+    SuperscriptBox["x", "8"]}], "+", 
+   InterpretationBox[
+    SuperscriptBox[
+     RowBox[{"O", "[", "x", "]"}], "9"],
+    SeriesData[$CellContext`x, 0, {}, 0, 9, 1],
+    Editable->False]}],
+  SeriesData[$CellContext`x, 0, {1, 0, 
+    Subscript[$CellContext`a, 2], 
+    Subscript[$CellContext`a, 3], 
+    Subscript[$CellContext`a, 4], 
+    Subscript[$CellContext`a, 5], 
+    Subscript[$CellContext`a, 6], 
+    Subscript[$CellContext`a, 7], 
+    Subscript[$CellContext`a, 8]}, 0, 9, 1],
+  Editable->False]], "Output",
+ CellChangeTimes->{3.690579647246015*^9, 3.6905809865385637`*^9, 
+  3.690596599377631*^9, 3.690648204859395*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"unknowns", "=", 
+   RowBox[{"Table", "[", 
+    RowBox[{
+     SubscriptBox["a", "i"], ",", 
+     RowBox[{"{", 
+      RowBox[{"i", ",", "2", ",", "degree"}], "}"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"expression", "=", 
+   RowBox[{
+    RowBox[{
+     FractionBox[
+      RowBox[{
+       RowBox[{
+        RowBox[{"-", "2"}], 
+        RowBox[{"z", "[", "x", "]"}]}], "-", 
+       RowBox[{"x", 
+        SuperscriptBox[
+         RowBox[{"(", 
+          RowBox[{"y", "[", "x", "]"}], ")"}], "3"]}]}], "x"], "-", 
+     RowBox[{
+      RowBox[{"z", "'"}], "[", "x", "]"}]}], "/.", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"y", "[", "x", "]"}], "\[Rule]", "series"}], ",", 
+      RowBox[{
+       RowBox[{"z", "[", "x", "]"}], "\[Rule]", 
+       RowBox[{"D", "[", 
+        RowBox[{"series", ",", "x"}], "]"}]}], ",", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"z", "'"}], "[", "x", "]"}], "\[Rule]", 
+       RowBox[{"D", "[", 
+        RowBox[{"series", ",", 
+         RowBox[{"{", 
+          RowBox[{"x", ",", "2"}], "}"}]}], "]"}]}]}], "}"}]}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"coefflist", "=", 
+   RowBox[{"CoefficientList", "[", 
+    RowBox[{
+     RowBox[{"Normal", "[", "expression", "]"}], ",", "x"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"solution", "=", 
+   RowBox[{"Solve", "[", 
+    RowBox[{
+     RowBox[{"Thread", "[", 
+      RowBox[{"coefflist", "\[Equal]", "0"}], "]"}], ",", "unknowns"}], 
+    "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"(", 
+   RowBox[{"series", "/.", "solution"}], ")"}], "[", 
+  RowBox[{"[", "1", "]"}], "]"}]}], "Input",
+ CellChangeTimes->{{3.690579668665395*^9, 3.6905797241896963`*^9}, {
+  3.6905802917129374`*^9, 3.690580292257786*^9}, {3.690580469972582*^9, 
+  3.6905804772100782`*^9}, {3.6905805159693213`*^9, 3.690580602620861*^9}, {
+  3.6905806607746353`*^9, 3.6905806824766273`*^9}, {3.6905807985752497`*^9, 
+  3.6905809263898907`*^9}, {3.690647621653843*^9, 3.690647622707961*^9}}],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"1", "-", 
+   FractionBox[
+    SuperscriptBox["x", "2"], "6"], "+", 
+   FractionBox[
+    SuperscriptBox["x", "4"], "40"], "-", 
+   FractionBox[
+    RowBox[{"19", " ", 
+     SuperscriptBox["x", "6"]}], "5040"], "+", 
+   FractionBox[
+    RowBox[{"619", " ", 
+     SuperscriptBox["x", "8"]}], "1088640"], "+", 
+   InterpretationBox[
+    SuperscriptBox[
+     RowBox[{"O", "[", "x", "]"}], "9"],
+    SeriesData[$CellContext`x, 0, {}, 0, 9, 1],
+    Editable->False]}],
+  SeriesData[$CellContext`x, 0, {1, 0, 
+    Rational[-1, 6], 0, 
+    Rational[1, 40], 0, 
+    Rational[-19, 5040], 0, 
+    Rational[619, 1088640]}, 0, 9, 1],
+  Editable->False]], "Output",
+ CellChangeTimes->{3.690580927786227*^9, 3.690580989128964*^9, 
+  3.690596605973256*^9, 3.690648207760913*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"D", "[", 
+  RowBox[{
+   InterpretationBox[
+    RowBox[{"1", "-", 
+     FractionBox[
+      SuperscriptBox["x", "2"], "6"], "+", 
+     FractionBox[
+      SuperscriptBox["x", "4"], "40"], "-", 
+     FractionBox[
+      RowBox[{"19", " ", 
+       SuperscriptBox["x", "6"]}], "5040"], "+", 
+     FractionBox[
+      RowBox[{"619", " ", 
+       SuperscriptBox["x", "8"]}], "1088640"], "+", 
+     InterpretationBox[
+      SuperscriptBox[
+       RowBox[{"O", "[", "x", "]"}], "9"],
+      SeriesData[$CellContext`x, 0, {}, 0, 9, 1],
+      Editable->False]}],
+    SeriesData[$CellContext`x, 0, {1, 0, 
+      Rational[-1, 6], 0, 
+      Rational[1, 40], 0, 
+      Rational[-19, 5040], 0, 
+      Rational[619, 1088640]}, 0, 9, 1],
+    Editable->False], ",", "x"}], "]"}]], "Input",
+ CellChangeTimes->{{3.6905810399458*^9, 3.690581044295574*^9}, 
+   3.690596617112446*^9}],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{
+   RowBox[{"-", 
+    FractionBox["x", "3"]}], "+", 
+   FractionBox[
+    SuperscriptBox["x", "3"], "10"], "-", 
+   FractionBox[
+    RowBox[{"19", " ", 
+     SuperscriptBox["x", "5"]}], "840"], "+", 
+   FractionBox[
+    RowBox[{"619", " ", 
+     SuperscriptBox["x", "7"]}], "136080"], "+", 
+   InterpretationBox[
+    SuperscriptBox[
+     RowBox[{"O", "[", "x", "]"}], "8"],
+    SeriesData[$CellContext`x, 0, {}, 1, 8, 1],
+    Editable->False]}],
+  SeriesData[$CellContext`x, 0, {
+    Rational[-1, 3], 0, 
+    Rational[1, 10], 0, 
+    Rational[-19, 840], 0, 
+    Rational[619, 136080]}, 1, 8, 1],
+  Editable->False]], "Output",
+ CellChangeTimes->{
+  3.690581045188743*^9, {3.690596609020698*^9, 3.690596618413006*^9}}]
+}, Open  ]]
+},
+WindowSize->{1600, 841},
+WindowMargins->{{310, Automatic}, {183, 143}},
+PrintingCopies->1,
+PrintingPageRange->{Automatic, Automatic},
+PrintingOptions->{"PaperOrientation"->"Portrait",
+"PaperSize"->{Automatic, Automatic},
+"PostScriptOutputFile"->"/home/gian/Documents/School/Grad School/Fall \
+2016/AEP 4380/HWs/Final Project/laneemden.pdf"},
+FrontEndVersion->"11.0 for Linux x86 (64-bit) (September 21, 2016)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 671, 18, 64, "Input"],
+Cell[1254, 42, 1236, 39, 34, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[2527, 86, 2070, 61, 152, "Input"],
+Cell[4600, 149, 806, 25, 54, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[5443, 179, 880, 27, 58, InheritFromParent],
+Cell[6326, 208, 760, 25, 54, "Output"]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
+

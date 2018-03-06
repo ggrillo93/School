@@ -1,0 +1,1398 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+\usepackage{listings}
+\lstset{breaklines=true}
+\end_preamble
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 2cm
+\topmargin 3cm
+\rightmargin 2cm
+\bottommargin 3cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+AEP 4380 HW#6: Boundary Value Problems and Relaxation
+\end_layout
+
+\begin_layout Author
+Gianfranco Grillo
+\end_layout
+
+\begin_layout Date
+October 26, 2016
+\end_layout
+
+\begin_layout Section
+Background
+\end_layout
+
+\begin_layout Subsection
+Solving Laplace's Equation Using Gauss-Seidel Iteration and SOR
+\end_layout
+
+\begin_layout Standard
+The method of Gauss-Seidel iteration with successive over-relaxation (SOR)
+ is a method in numerical linear algebra used to solve a system of linear
+ equations.
+ It can be used in order to numerically solve boundary value problems in
+ mathematics and physics.
+ A boundary value problem is a differential equation coupled with a set
+ of conditions, or boundaries, upon which the solution will depend.
+ Gauss-Seidel iteration works by elaborating the original problem in the
+ form of a finite difference matrix that is then solved by repeteadly iterating
+ over the matrix and changing the values of each of the matrix components
+ based on the values of each of the components neighbors, starting from
+ an initial guess.
+ After a certain number of iterations, depending on the particular characteristi
+cs of the problem, the components in the matrix will converge towards stable
+ values that will correspond to the problem's solution.
+ This algorithm is useful in the field of electrostatics, where it is often
+ necessary to calculate the value of potentials and electric fields throughout
+ a certain region of space, and it might prove difficult or impossible to
+ do so using analytical methods.
+ This homework will use Gauss-Seidel iteration in this context.
+\end_layout
+
+\begin_layout Standard
+The potential 
+\begin_inset Formula $V=\phi(z,\,r)$
+\end_inset
+
+ at a certain point in empty space must satisfy the Laplace equation, given
+ by
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\nabla^{2}\phi=0
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In cylindrical coordinates, and assuming azimuthal independence, (1) becomes
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\nabla^{2}\phi=\left(\frac{\partial^{2}}{\partial z^{2}}+\frac{\partial^{2}}{\partial r^{2}}+\frac{1}{r}\frac{\partial}{\partial r}\right)\phi(z,\,r)=0
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using a finite difference grid with 
+\begin_inset Formula $z=ih$
+\end_inset
+
+ and 
+\begin_inset Formula $r=jh$
+\end_inset
+
+, where 
+\begin_inset Formula $h$
+\end_inset
+
+ corresponds to the grid spacing, the components of the finite difference
+ matrix used to solve (2) are given by
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{eqnarray}
+\phi_{i,j} & = & \frac{1}{4}[\phi_{i,j+1}+\phi_{i,j-1}+\phi_{i-1,j}+\phi_{i+1,j}]+\frac{1}{8j}[\phi_{i,j+1}-\phi_{i,j-1}]\,;\,j>0\\
+\phi_{i,j} & = & \frac{1}{6}[4\phi_{i,j=1}+\phi_{i+1,j=0}+\phi_{i-1,j=0}]\,;\,j=0
+\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Having calculated the values of the components of the finite difference
+ matrix, the new matrix after iteration is given by
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\phi_{i,j}^{new}=\phi_{i,j}^{old}+\omega(\phi_{i,j}^{FD}-\phi_{i,j}^{old})
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where 
+\begin_inset Formula $\omega$
+\end_inset
+
+ corresponds to the relaxation parameter.
+ Successive overrelaxation requires 
+\begin_inset Formula $1<\omega<2$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Electric Field and Capacitance
+\end_layout
+
+\begin_layout Standard
+Solving the Laplace equation for each point in the grid allows one to calculate
+ the electric field at each point, since the electric field 
+\begin_inset Formula $\overrightarrow{E}$
+\end_inset
+
+ is related to the potential by the equation
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\overrightarrow{E}=-\overrightarrow{\nabla}V
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In particular, for a 2D set of coordinates 
+\begin_inset Formula $(z\,,r)$
+\end_inset
+
+ like the one in this problem, the magnitude of the components of the electric
+ field are given by
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{eqnarray}
+E_{r} & = & -\frac{\partial V}{\partial r}\\
+E_{z} & = & -\frac{\partial V}{\partial z}
+\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In practice, and in particular in the context of this problem, we can approximat
+e the derivatives using finite difference approximations:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{eqnarray}
+E_{r} & = & -\frac{\phi_{i=m,j+1}-\phi_{i=m,j-1}}{2h}\\
+E_{z} & = & -\frac{\phi_{i+1,j=n}-\phi_{i-1,j=n}}{2h}
+\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Finally, it is possible to find the 
+\begin_inset Formula $C$
+\end_inset
+
+ capacitance of the particular configuration of electrodes given by calculating
+ the total energy stored in the electric field between each of the electrodes
+ and their respective potential differences 
+\begin_inset Formula $V_{c}$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+C=\frac{\epsilon_{0}}{V_{c}}\int\left|\overrightarrow{E}\right|^{2}dv
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where 
+\begin_inset Formula $\epsilon_{0}=8.8542\,picoFarads\,m^{-1}$
+\end_inset
+
+ and 
+\begin_inset Formula $dv$
+\end_inset
+
+ is a volume element.
+ In this case, this will be accomplished by adding the magnitudes of the
+ electric fields in between the electrodes, and then multiplying that by
+ 
+\begin_inset Formula $2\pi$
+\end_inset
+
+, to account for this particular configuration.
+\end_layout
+
+\begin_layout Section
+Results
+\end_layout
+
+\begin_layout Subsection
+Task 1
+\end_layout
+
+\begin_layout Standard
+Figure 1 shows the number of iterations needed for the maximum difference
+ between 
+\begin_inset Formula $\phi^{old}$
+\end_inset
+
+ and 
+\begin_inset Formula $\phi^{FD}$
+\end_inset
+
+ is less than 2 volts, as a function of the relaxation parameter 
+\begin_inset Formula $\omega$
+\end_inset
+
+.
+ The minimum occurs at 
+\begin_inset Formula $\omega=1.85$
+\end_inset
+
+, so I decided to use a slightly smaller value of 
+\begin_inset Formula $\omega,$
+\end_inset
+
+ 1.84, for the rest of the operations.
+ The code for this task is given in section 4.1.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename plot1.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Number of iterations 
+\begin_inset Formula $N$
+\end_inset
+
+ needed to converge to a 2 volts difference as a function of relaxation
+ parameter 
+\begin_inset Formula $\omega$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Task 2
+\end_layout
+
+\begin_layout Standard
+Table 1 shows a list of values for the potential 
+\begin_inset Formula $V$
+\end_inset
+
+ at 
+\begin_inset Formula $r=z=0$
+\end_inset
+
+ as a function of 
+\begin_inset Formula $h$
+\end_inset
+
+ and the tolerance 
+\begin_inset Formula $\left|V_{max}\right|.$
+\end_inset
+
+ They are very different from one another simply because the smaller the
+ grid size, the greater the number of points, and the value of the potential
+ divides among a greater number of points (?).
+ The value of the electric field is almost zero in every case, however.
+ I used a grid space of 0.06 and a 
+\begin_inset Formula $\left|V_{max}\right|$
+\end_inset
+
+ of 1.5 volts.
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Honestly, I think there is something wrong going on here, but I wasn't able
+ to figure out what I was doing wrong.
+ The following results appear to make more sense, however.
+\end_layout
+
+\end_inset
+
+ The code for this is given in section 4.2.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="16" columns="3">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $h$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\left|V_{max}\right|$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $V$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.05
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.5
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.00501958
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.05
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.6
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.00228572
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.05
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.7
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.00103221
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.05
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.8
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.000461368
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.05
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.9
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.000211358
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.06
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.5
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.201326
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.06
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.6
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.115872
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.06
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.7
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.0663074
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.06
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.8
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.0376722
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.06
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.9
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.0217755
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.5
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+26.6209
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.6
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+22.8581
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.7
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+19.4951
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.8
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+16.7167
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.9
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+14.1673
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset Formula $V$
+\end_inset
+
+ at a fixed point for several values of 
+\begin_inset Formula $h$
+\end_inset
+
+ and 
+\begin_inset Formula $\left|V_{max}\right|$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Task 3
+\end_layout
+
+\begin_layout Standard
+Task 3 involved plotting 
+\begin_inset Formula $V$
+\end_inset
+
+ and 
+\begin_inset Formula $E_{z}$
+\end_inset
+
+ as a function of 
+\begin_inset Formula $z$
+\end_inset
+
+ along 
+\begin_inset Formula $r=0$
+\end_inset
+
+.
+ This is shown in Figure 2.
+ The code for this is given in section 4.3.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename plot2.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset Formula $V$
+\end_inset
+
+ and 
+\begin_inset Formula $E_{z}$
+\end_inset
+
+ as a function of 
+\begin_inset Formula $z$
+\end_inset
+
+ at 
+\begin_inset Formula $r=0$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Task 4
+\end_layout
+
+\begin_layout Standard
+Task 4 involved plotting 
+\begin_inset Formula $V,$
+\end_inset
+
+ 
+\begin_inset Formula $E_{r}$
+\end_inset
+
+, and 
+\begin_inset Formula $E_{z}$
+\end_inset
+
+ along the 
+\begin_inset Formula $z$
+\end_inset
+
+ axis at 
+\begin_inset Formula $r=0.75$
+\end_inset
+
+ mm, with 
+\begin_inset Formula $-10mm<z<10mm$
+\end_inset
+
+.
+ The result of this is shown in Figure 3.
+ The code is given in 4.4.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename plot3.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset Formula $V$
+\end_inset
+
+,
+\begin_inset Formula $E_{z}$
+\end_inset
+
+, and 
+\begin_inset Formula $E_{r}$
+\end_inset
+
+ as a function of 
+\begin_inset Formula $z$
+\end_inset
+
+ at 
+\begin_inset Formula $r=0.75mm$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Task 5
+\end_layout
+
+\begin_layout Standard
+Figure 4 shows a contour plot of the potential as a function of 
+\begin_inset Formula $z$
+\end_inset
+
+ and 
+\begin_inset Formula $r$
+\end_inset
+
+.
+ The code used to produce this is given in 4.5.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename plot4.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Contour of plot of 
+\begin_inset Formula $V(z,\,r)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Task 6
+\end_layout
+
+\begin_layout Standard
+I calculated the capacitances of both sets of capacitors and got 
+\begin_inset Formula $C_{1}=92.14\,picoFarads$
+\end_inset
+
+ and 
+\begin_inset Formula $C_{2}=91.79\,picoFarads$
+\end_inset
+
+.
+ The code used is given in 4.6.
+\end_layout
+
+\begin_layout Section
+Analysis
+\end_layout
+
+\begin_layout Standard
+Most of the results produced make sense, except for the values obtained
+ for the potential as a function of 
+\begin_inset Formula $h$
+\end_inset
+
+ and 
+\begin_inset Formula $\left|V_{max}\right|$
+\end_inset
+
+, although it is possible that this discrepancy is due to what I suggested
+ earlier, namely that the sum of all of the potentials across each point
+ in space must remain constant, and diminishing the grid spacing implies
+ that the potential values at each point become smaller.
+ I do not know why changing the tolerance produced such drastic changes
+ in the values, however, and I suspect it must be something in my code that
+ I was not able to fix.
+ The relationship between the potential and the electric fields looks good,
+ and the contour plot looks good as well, showing that the potential becomes
+ smaller and smaller the farther away one moves from the electrodes, and
+ it does so in a consistent manner.
+ The values obtained for the capacitances is puzzling, since it seems that
+ the capacitor with the less plate separation (
+\begin_inset Formula $C_{1}$
+\end_inset
+
+) has a greater capacitance than the one with the less separation (
+\begin_inset Formula $C_{2}$
+\end_inset
+
+), but its possible that the fringe fields for 
+\begin_inset Formula $C_{1}$
+\end_inset
+
+ are somewhat greater than for 
+\begin_inset Formula $C_{2}$
+\end_inset
+
+ given the respective geometries.
+\end_layout
+
+\begin_layout Section
+Source code
+\end_layout
+
+\begin_layout Subsection
+hw6a.cpp
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinputlisting[language=C++]{hw6a.cpp}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+hw6b.cpp
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinputlisting[language=C++]{hw6b.cpp}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+hw6c.cpp
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinputlisting[language=C++]{hw6c.cpp}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+hw6d.cpp
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinputlisting[language=C++]{hw6d.cpp}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+hw6e.cpp
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinputlisting[language=C++]{hw6e.cpp}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+hw6f.cpp
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinputlisting[language=C++]{hw6f.cpp}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+References
+\end_layout
+
+\begin_layout Standard
+This homework was done using material obtained from the lectures.
+\end_layout
+
+\end_body
+\end_document

@@ -1,0 +1,902 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+\usepackage{listings}
+\usepackage{courier}
+\lstset{basicstyle=\ttfamily, breaklines=true}
+\end_preamble
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 2cm
+\topmargin 3cm
+\rightmargin 2cm
+\bottommargin 3cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+AEP 4380 HW#10: The Fast Fourier Transform (FFT) and Spectral Methods
+\end_layout
+
+\begin_layout Author
+Gianfranco Grillo
+\end_layout
+
+\begin_layout Date
+November 30, 2016
+\end_layout
+
+\begin_layout Section
+Background
+\end_layout
+
+\begin_layout Subsection
+Fourier Transforms and the FFT
+\end_layout
+
+\begin_layout Standard
+Fourier transforms show up in many areas of the physical sciences.
+ At its core, the basis behind the idea of a Fourier transform is simple:
+ it is just a way of representing a certain function or data set as a sum
+ of sines and cosines.
+ This is useful in itself, because trigonometric functions have been studied
+ for millenia, so it is often the case that it is easier to analyze the
+ Fourier transform of a function than the original function itself, and
+ thus Fourier transforms are a useful tool for indirectly studying the propertie
+s of the original function/data set.
+ This homework follows this line of thinking by using Fourier transforms
+ to approximate the solution to a second order differential equation.
+\end_layout
+
+\begin_layout Standard
+A more technical way of looking at Fourier transforms is by regarding them
+ as a way of transforming a signal from its time domain to its frequency
+ domain, or viceversa.
+ In other words, it allows one to take a function or data set that is sampled
+ in the time domain and represent it in terms of its frequency, or the other
+ way around.
+ The process also works with other related units.
+ For instance, one can Fourier transform a function that depends on position
+ into one that depends on inverse wavelength.
+ Fourier transforms come in two types: continuous and discrete.
+ This homework makes use of Discrete Fourier Transforms (DFT).
+ Given a function of position 
+\begin_inset Formula $h(x_{i})$
+\end_inset
+
+ sampled at discrete positions 
+\begin_inset Formula $x_{i}$
+\end_inset
+
+, the DFT is given by
+\begin_inset Formula 
+\begin{eqnarray}
+H(k_{n}) & = & \sum_{i=0}^{N-1}h(x_{i})\exp(ik_{n}x_{i})\\
+h(x_{i}) & = & \frac{1}{N}\sum_{n=0}^{N-1}H(k_{n})\exp(-ik_{n}x_{i})
+\end{eqnarray}
+
+\end_inset
+
+Here, (1) corresponds to the forward transform, and (2) corresponds to the
+ inverse transform.
+ 
+\begin_inset Formula $k_{n}$
+\end_inset
+
+ is a spatial frequency number, and 
+\begin_inset Formula $N$
+\end_inset
+
+ is the number of times the data was sampled.
+\end_layout
+
+\begin_layout Standard
+Due to the DFT's multiple applications, numerical algorithms used to perform
+ the transforms have a long development history.
+ One of them, the Fast Fourier Transform, is among the fastest numerical
+ algorithms available.
+ This homework uses a variant of the FFT developed for C/C++ and Fortran,
+ the FFTW (Fastest Fourier Transform in the West)
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+More details about this algorithm, as well as the code itself, are available
+ at www.fftw.org
+\end_layout
+
+\end_inset
+
+, to perform the required transforms needed in order to solve the wave equation,
+ as described in the next subsection.
+\end_layout
+
+\begin_layout Subsection
+Solving the 2D Wave Equation Using Spectral Methods
+\end_layout
+
+\begin_layout Standard
+Certain partial differential equations can be numerically solved using spectral
+ methods, which involve using FFTs in one way or another.
+ The purpose of this homework is to use spectral methods to solve the 2D
+ wave equation, given a set of initial conditions.
+ For a displacement 
+\begin_inset Formula $\psi(x,\,y)$
+\end_inset
+
+ as a function of position 
+\begin_inset Formula $\vec{x}=(x,\,y)$
+\end_inset
+
+, and time 
+\begin_inset Formula $t$
+\end_inset
+
+, the wave equation is given by
+\begin_inset Formula 
+\begin{equation}
+v^{2}\left(\frac{\partial^{2}}{\partial x^{2}}+\frac{\partial^{2}}{\partial y^{2}}\right)\psi=\frac{\partial^{2}\psi}{\partial t^{2}}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $v$
+\end_inset
+
+ is the wave's velocity of propagation.
+ The spectral method assumes that (3) has a solution in the form of a Fourier
+ series, given by
+\begin_inset Formula 
+\begin{equation}
+\psi(\vec{x},\,t)=\sum_{ij}a_{ij}(t)\exp(i\vec{k}_{ij}\cdot\vec{x})
+\end{equation}
+
+\end_inset
+
+Here, 
+\begin_inset Formula $\vec{k_{ij}}$
+\end_inset
+
+ and 
+\begin_inset Formula $\vec{x}$
+\end_inset
+
+ are the 2D versions of the same variables as defined in the previous subsection
+, and 
+\begin_inset Formula $a_{ij}$
+\end_inset
+
+ is a complex constant.
+ By substuting (4) into (3) and equating coefficients, one arrives to the
+ solution
+\begin_inset Formula 
+\begin{equation}
+\psi(\vec{x},\,t)=\sum_{ij}\left[b_{ij}\exp(iv|\vec{k}_{ij}|t)+c_{ij}\exp(-iv|\vec{k}_{ij}|t)\right]\exp(i\vec{k}_{ij}\cdot\vec{x})
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $b_{ij}$
+\end_inset
+
+ and 
+\begin_inset Formula $c_{ij}$
+\end_inset
+
+ are also complex constants.
+ Finally, if we take the displacement to be released from a certain position
+ initially at rest, such that 
+\begin_inset Formula $\frac{\partial\psi(\vec{x},\,t=0)}{\partial t}=0$
+\end_inset
+
+, 
+\begin_inset Formula $b_{ij}=c_{ij}$
+\end_inset
+
+ and the final solution can be written as
+\begin_inset Formula 
+\begin{equation}
+\psi(\vec{x},\,t)=\sum_{ij}d_{ij}\cos(v|\vec{k}_{ij}|t)\exp(i\vec{k}_{ij}\cdot\vec{x})
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $d_{ij}=2b_{ij}$
+\end_inset
+
+.
+ For this homework, the spatial lengths 
+\begin_inset Formula $L_{x}$
+\end_inset
+
+ and 
+\begin_inset Formula $L_{y}$
+\end_inset
+
+ are set to 
+\begin_inset Formula $500\,m$
+\end_inset
+
+, 
+\begin_inset Formula $v$
+\end_inset
+
+ corresponds to the speed of sound in air, 
+\begin_inset Formula $343\,ms^{-1}$
+\end_inset
+
+, 
+\begin_inset Formula $N_{x}=N_{y}=512$
+\end_inset
+
+, and the initial displacement is taken to be the sum of three Gausians
+ near the center, as follows:
+\begin_inset Formula 
+\begin{equation}
+\psi(\vec{x},\,t=0)=\sum_{i=1}^{3}A_{i}\exp\left(-\frac{|\vec{x}-\vec{x_{i}}|^{2}}{s_{i}^{2}}\right)
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $\vec{x_{i}}=\left[\begin{array}{c}
+(0.4,\,0.5,\,0.6)L_{x}\\
+(0.4,\,0.6,\,0.4)L_{y}
+\end{array}\right]$
+\end_inset
+
+, 
+\begin_inset Formula $s_{i}=(10,\,20,\,10)\,m$
+\end_inset
+
+, and 
+\begin_inset Formula $A_{i}=(1,\,2,\,1)$
+\end_inset
+
+.
+ This setup implies that 
+\begin_inset Formula 
+\begin{equation}
+|\vec{k}_{ij}|=\sqrt{\left(\frac{2\pi i}{L_{x}}\right)^{2}+\left(\frac{2\pi j}{L_{y}}\right)^{2}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Equation (6) can be solved by performing a Fourier transform on the initial
+ displacement given by (7) in order to calculate the 
+\begin_inset Formula $d_{ij}$
+\end_inset
+
+ coefficients, and then multiplying these coefficients by the cosine factor
+ from equation (6) with 
+\begin_inset Formula $t$
+\end_inset
+
+ set to the time in which the system wants to be observed, which in this
+ case corresponds to 0.1, 0.2, and 0.4 seconds.
+ The inverse transform of this result then is a representation of the state
+ of the system at the chosen 
+\begin_inset Formula $t$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Section
+Results
+\end_layout
+
+\begin_layout Standard
+Figures 1-8 correspond to gray scale countour plots and 3D plots of the
+ real part of 
+\begin_inset Formula $\psi(\vec{x},\,t)$
+\end_inset
+
+ at the four different times indicated previously.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "49col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Grayscale Plots/plot1.png
+	lyxscale 50
+	scale 45
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Grayscale plot of 
+\begin_inset Formula $Re[\psi(\vec{x},\,t=0)]$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "49col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename 3D Plots/plot13d.png
+	lyxscale 50
+	scale 45
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+3D plot of 
+\begin_inset Formula $Re[\psi(\vec{x},\,t=0)]$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "49col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Grayscale Plots/plot2.png
+	lyxscale 50
+	scale 45
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Grayscale plot of 
+\begin_inset Formula $Re[\psi(\vec{x},\,t=0.1\,s)]$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "49col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename 3D Plots/plot23d.png
+	lyxscale 50
+	scale 45
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+3D plot of 
+\begin_inset Formula $Re[\psi(\vec{x},\,t=0.1\,s)]$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "49col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Grayscale Plots/plot3.png
+	lyxscale 50
+	scale 45
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Grayscale plot of 
+\begin_inset Formula $Re[\psi(\vec{x},\,t=0.2\,s)]$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "49col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename 3D Plots/plot33d.png
+	lyxscale 50
+	scale 45
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+3D plot of 
+\begin_inset Formula $Re[\psi(\vec{x},\,t=0.2\,s)]$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "49col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Grayscale Plots/plot4.png
+	lyxscale 50
+	scale 45
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Grayscale plot of 
+\begin_inset Formula $Re[\psi(\vec{x},\,t=0.4\,s)]$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "49col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename 3D Plots/plot43d.png
+	lyxscale 50
+	scale 45
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+3D plot of 
+\begin_inset Formula $Re[\psi(\vec{x},\,t=0.4\,s)]$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Analysis
+\end_layout
+
+\begin_layout Standard
+The results are in line with the expectations.
+ The surface at 
+\begin_inset Formula $t=0$
+\end_inset
+
+ is flat except for three Gaussians near the center, with characteristics
+ consistent to the ones we would expect to see given the values of the parameter
+s that were used in equation (7), as can be clearly observed in Figures
+ 1-2.
+ Figures 3-8 show how the system evolves in time from this starting point,
+ as the initial configuration gives rise to waves that expand outwards from
+ the initial Gaussians and then proceed to interfere with each other.
+ The peaks of the Gaussians proper appear to oscillate periodically between
+ positive and negative values of 
+\begin_inset Formula $\psi$
+\end_inset
+
+, much like a string would be expected to oscillate in an equivalent 1D
+ system.
+ The changes in color of the grayscale plots' backgrounds are simply the
+ result of the surface being observed from different altitudes, as necessary
+ in order to account for the differing values of the Gaussian peaks at the
+ different sampling times.
+\end_layout
+
+\begin_layout Section
+Source code
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinputlisting[language=C++]{hw10.cpp}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-1"
+
+\end_inset
+
+W.
+ H.
+ Press, S.
+ A.
+ Teukolsky, W.
+ T.
+ Vetterling and B.
+ P.
+ Flannery 
+\emph on
+Numerical Recipes, The Art of Scientific Computing, 3rd edit.
+\emph default
+, Camb.
+ Univ.
+ Press 2007.
+
+\emph on
+ 
+\end_layout
+
+\end_body
+\end_document

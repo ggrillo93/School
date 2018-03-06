@@ -1,0 +1,1021 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+\usepackage{listings}
+\lstset{breaklines=true}
+\end_preamble
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 2cm
+\topmargin 3cm
+\rightmargin 2cm
+\bottommargin 3cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+AEP 4380 HW#7: Least Squares Curve Fitting
+\end_layout
+
+\begin_layout Author
+Gianfranco Grillo
+\end_layout
+
+\begin_layout Date
+November 9, 2016
+\end_layout
+
+\begin_layout Section
+Background
+\end_layout
+
+\begin_layout Subsection
+Curve Fitting Via Linear Least Squares
+\end_layout
+
+\begin_layout Standard
+Given a data set obtained from experimental observations, we are often intereste
+d in learning the precise relationship between each of the data points.
+ Assuming the relationship is a linear combination of a set of analytic
+ functions, it is possible to find out the linear combination that best
+ fits the data by performing a linear least squares fit.
+ In essence, given a set of analytic functions relating the data to an independe
+nt variable, this method finds the weights that need to be given to each
+ of these functions in order to minimize as much as possible the discrepancy
+ between the observed data values and the theoretical values produced by
+ the linear combination of the functions.
+ The discrepancy between each data point and each point in the model is
+ known as the residual.
+ This residual is also dependent on the error inherent to each of the measuremen
+ts: the greater the error, the less weight is given to the residual, and
+ viceversa.
+ In more precise terms, given raw data points 
+\begin_inset Formula $(t_{i},\,y_{i})$
+\end_inset
+
+ with an error for each 
+\begin_inset Formula $y_{i}$
+\end_inset
+
+ given by 
+\begin_inset Formula $\sigma_{i}$
+\end_inset
+
+ 
+\begin_inset Formula $(i=1,\,2,\,...,\,N)$
+\end_inset
+
+ (and assuming no error in the 
+\begin_inset Formula $t_{i}$
+\end_inset
+
+ variable), the 
+\begin_inset Quotes eld
+\end_inset
+
+best fit
+\begin_inset Quotes erd
+\end_inset
+
+ of a linear combination of fitting functions is defined as that fit which
+ minimizes the total reduced chi-squared given by
+\begin_inset Formula 
+\begin{equation}
+\chi_{r}^{2}=\frac{1}{N-m}\sum_{i=1}^{N}\left[\frac{y_{i}-f(t_{i})}{\sigma_{i}}\right]^{2}
+\end{equation}
+
+\end_inset
+
+with 
+\begin_inset Formula $f(t_{i})$
+\end_inset
+
+ corresponding to the linear combination of fitting functions, 
+\begin_inset Formula 
+\begin{equation}
+f(t,\,\vec{a})=\sum_{k=1}^{m}a_{k}f_{k}(t)
+\end{equation}
+
+\end_inset
+
+and 
+\begin_inset Formula $N$
+\end_inset
+
+ being the number of data points, and 
+\begin_inset Formula $m$
+\end_inset
+
+ the number of fitting functions.
+ The least squares method of curve fitting thus consists in finding the
+ appropriate parameters 
+\begin_inset Formula $a_{k}$
+\end_inset
+
+ in order to obtain the minimum value of 
+\begin_inset Formula $\chi_{r}^{2}$
+\end_inset
+
+ possible.
+ In practice, this can be done by solving the following matrix equation
+ for the 
+\begin_inset Formula $a_{k}$
+\end_inset
+
+ coefficients:
+\begin_inset Formula 
+\begin{equation}
+F\vec{a}=\vec{b}
+\end{equation}
+
+\end_inset
+
+where the vector 
+\begin_inset Formula $\vec{a}$
+\end_inset
+
+, the 
+\begin_inset Formula $F$
+\end_inset
+
+ matrix elements 
+\begin_inset Formula $F_{lk}$
+\end_inset
+
+, and the 
+\begin_inset Formula $\vec{b}$
+\end_inset
+
+ vector elements 
+\begin_inset Formula $b_{l}$
+\end_inset
+
+ are given by
+\begin_inset Formula 
+\begin{eqnarray}
+\vec{a} & = & \left[\begin{array}{c}
+a_{0}\\
+a_{1}\\
+\vdots\\
+a_{m-1}
+\end{array}\right]\\
+F_{lk} & = & \sum_{i=1}^{N}\frac{f_{l}(t_{i})f_{k}(t_{i})}{\sigma_{i}^{2}}\\
+b_{l} & = & \sum_{i=1}^{N}\frac{y_{i}f_{l}(t_{i})}{\sigma_{i}^{2}}
+\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+There is more than one way of numerically solving a matrix equation like
+ (3).
+ In this assignment, this is done via Gauss-Jordan elimination (with pivoting),
+ which is described in section 2.1 of [1].
+ 
+\end_layout
+
+\begin_layout Subsection
+Fitting Atmospheric 
+\begin_inset Formula $CO_{2}$
+\end_inset
+
+ Data
+\end_layout
+
+\begin_layout Standard
+The webpage http://cdiac.ornl.gov/ftp/trends/co2/maunaloa.co2 contains monthly
+ values of atmospheric 
+\begin_inset Formula $CO_{2}$
+\end_inset
+
+ starting in 1958 and ending in 2008, as measured in Mauna Loa, Hawaii,
+ by the Carbon Dioxide Research Group of the University of California.
+ A plot for this data is shown in Figure 1.
+ This assignment will attempt to fit this data via the least squares method,
+ using a total of 7 fitting functions, given by
+\begin_inset Formula 
+\begin{eqnarray}
+f_{0}=\sin\left(\frac{\pi t}{6}\right), & f_{1}=\cos\left(\frac{\pi t}{6}\right), & f_{2}=\sin\left(\frac{\pi t}{3}\right)\nonumber \\
+f_{3}=\cos\left(\frac{\pi t}{3}\right), & f_{4}=t^{2}, & f_{5}=t\\
+f_{6}=1\,\,\,\,\,\,\,\,\,\,\nonumber 
+\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The independent variable 
+\begin_inset Formula $t$
+\end_inset
+
+ is taken as the number of months since the start of data collection in
+ January of 1958.
+ The first four fitting functions are used to fit for the seasonal variations,
+ whereas the last three are the components of a quadratic function that
+ is used to fit for the long term trend.
+ An error of 
+\begin_inset Formula $\sigma_{i}=0.002$
+\end_inset
+
+ is assumed for all of the 
+\begin_inset Formula $CO_{2}$
+\end_inset
+
+ values, whereas the error in the independent variable 
+\begin_inset Formula $t$
+\end_inset
+
+ is taken to be non-existent.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename /home/gian/Documents/School/Grad School/Fall 2016/AEP 4380/HWs/HW #8/figure1.png
+	scale 70
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Atmospheric 
+\begin_inset Formula $CO_{2}$
+\end_inset
+
+ vs time as measured in Hawaii
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Results
+\end_layout
+
+\begin_layout Subsection
+Task 1
+\end_layout
+
+\begin_layout Standard
+Task 1 consisted in performing the fit using the seven fitting functions
+ and plotting it on top of the original data (Figure 2).
+ The reduced chi-square value of the fit was (to 3 s.
+ f.)
+\begin_inset Formula $\chi_{r}^{2}=1.09$
+\end_inset
+
+.
+ The red line in Figure 2 shows the overall underlying trend and was produced
+ by fitting the data only using the functions corresponding to the quadratic
+ coefficients (
+\begin_inset Formula $f_{4}$
+\end_inset
+
+, 
+\begin_inset Formula $f_{5}$
+\end_inset
+
+, and 
+\begin_inset Formula $f_{6}$
+\end_inset
+
+).
+ Figure 3 contains a scatter plot of the residuals for each point.
+ Table 1 gives the value of the best fit parameters for the full least squares
+ fit (the green curve in Figure 2), as well as their respective relative
+ errors.
+ All quantities are rounded to 3 significant figures.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename /home/gian/Documents/School/Grad School/Fall 2016/AEP 4380/HWs/HW #8/figure2.png
+	scale 70
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Atmospheric 
+\begin_inset Formula $CO_{2}$
+\end_inset
+
+ vs time with fits
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename /home/gian/Documents/School/Grad School/Fall 2016/AEP 4380/HWs/HW #8/figure3.png
+	scale 70
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Residual vs time derived from original data and the least squares fit (7
+ parameters)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="8" columns="3">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Fit parameter 
+\begin_inset Formula $a_{k}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Value
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Relative error
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $a_{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $2.80$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1.55\times10^{-3}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $a_{1}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $-0.374$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1.56\times10^{-3}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $a_{2}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $-0.678$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1.55\times10^{-3}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $a_{3}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.384$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1.56\times10^{-3}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $a_{4}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $8.4\times10^{-5}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1.02\times10^{-12}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $a_{5}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $6.69\times10^{-2}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $3.91\times10^{-7}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $a_{6}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $314$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $6.40\times10^{-3}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Best fit parameter values and error
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Task 2
+\end_layout
+
+\begin_layout Standard
+The second task consisted in making the fit using five of the seven parameters
+ by dropping 
+\begin_inset Formula $f_{2}$
+\end_inset
+
+ and 
+\begin_inset Formula $f_{3}$
+\end_inset
+
+, the parameters that are intended to account for the seasonal variations.
+ Doing so gives a value of the reduced chi-square of 
+\begin_inset Formula $\chi_{i}^{2}=1.74$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Task 3
+\end_layout
+
+\begin_layout Standard
+Figure 3 shows that the residuals appear not to be random, and follow roughly
+ a sine wave pattern with a period of about 300 months.
+ So I added two more parameters to the fit, 
+\begin_inset Formula $f_{7}=\cos(\frac{\pi t}{150})$
+\end_inset
+
+ and 
+\begin_inset Formula $f_{8}=\sin(\frac{\pi t}{150})$
+\end_inset
+
+ in order to see whether this would improve the fit.
+ It did: 
+\begin_inset Formula $\chi_{r}^{2}=0.649$
+\end_inset
+
+ for this fit.
+ Figure 4 shows the resulting residuals.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figure4.png
+	scale 70
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Residual vs time derived from original data and the least squares fit (9
+ parameters)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Analysis
+\end_layout
+
+\begin_layout Standard
+The results show that the data can be successfully modeled with the fitting
+ functions used, as the value for the reduced chi-squared in all three attempted
+ fits falls within the range 
+\begin_inset Formula $0.5<\chi_{r}^{2}<2.0$
+\end_inset
+
+, which is the range expected for a typical good fit.
+ The results also show that the seven parameter model with two 6 month period
+ sine waves provides a better fit than the five parameter model without
+ them, and the nine parameter model with the two 300 month period sine waves
+ provides an even better model still.
+ The first result is to be expected, but the second is a little surprising.
+ What kind of process could be at work that has a 300 month period? It also
+ looks like the residuals shown in Figure 4 could be fit even better of
+ more oscillatory functions.
+ It is possible that there might be some mechanisms at work here that are
+ not obvious based on a cursory glance of the original data.
+\end_layout
+
+\begin_layout Section
+Source code
+\end_layout
+
+\begin_layout Subsection
+hw8a.cpp
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinputlisting[language=C++]{hw8a.cpp}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+main() Variations
+\end_layout
+
+\begin_layout Subsubsection
+Quadratic Fit Only
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinputlisting[language=C++]{main2.cpp}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+5 Parameter Fit
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinputlisting[language=C++]{main3.cpp}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+9 Parameter Fit
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinputlisting[language=C++]{main4.cpp}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-1"
+
+\end_inset
+
+W.
+ H.
+ Press, S.
+ A.
+ Teukolsky, W.
+ T.
+ Vetterling and B.
+ P.
+ Flannery 
+\emph on
+Numerical Recipes, The Art of Scientific Computing, 3rd edit.
+\emph default
+, Camb.
+ Univ.
+ Press 2007.
+
+\emph on
+ 
+\end_layout
+
+\end_body
+\end_document

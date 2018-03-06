@@ -1,0 +1,940 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+\usepackage{listings}
+\end_preamble
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 2cm
+\topmargin 3cm
+\rightmargin 2cm
+\bottommargin 3cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+AEP 4380 HW#3: Root Finding and Special Functions
+\end_layout
+
+\begin_layout Author
+Gianfranco Grillo
+\end_layout
+
+\begin_layout Date
+September 21, 2016
+\end_layout
+
+\begin_layout Section
+Background
+\end_layout
+
+\begin_layout Subsection
+Bessel Functions
+\end_layout
+
+\begin_layout Standard
+The Bessel functions, named after the German astronomer and mathematician
+ Friedrich Wilhelm Bessel, are defined as the canonical solutions of the
+ differential equation given by
+\begin_inset Formula 
+\begin{equation}
+x^{2}\frac{d^{2}y}{dx^{2}}+x\frac{dy}{dx}+(x^{2}\text{−}\nu^{2})y=0
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For any real 
+\begin_inset Formula $\nu$
+\end_inset
+
+, the Bessel function 
+\begin_inset Formula $y=J_{\nu}(x)$
+\end_inset
+
+ can be written as
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+J_{\nu}(x)=\left(\frac{1}{2}x\right)^{\nu}\sum_{k=0}^{\infty}\frac{\left(−\frac{1}{4}x^{2}\right)^{k}}{k!\Gamma(\nu+k+1)}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If 
+\begin_inset Formula $\nu$
+\end_inset
+
+ is not an integer, the Bessel function 
+\begin_inset Formula $y=Y_{\nu}(x)$
+\end_inset
+
+ is given by
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+Y_{\nu}(x)=\frac{J_{\nu}(x)\cos(\nu\pi)−J_{−\nu}(x)}{\sin(\nu\pi)}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Both 
+\begin_inset Formula $(2)$
+\end_inset
+
+ and 
+\begin_inset Formula $(3)$
+\end_inset
+
+ satisfy recurrence relations, namely
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{eqnarray}
+J_{n+1}(x) & = & \frac{2n}{x}J_{n}(x)\text{−}J_{n−1}(x)\\
+Y_{n+1}(x) & = & \frac{2n}{x}Y_{n}(x)\text{−}Y_{n−1}(x)
+\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Bessel functions appear in several areas of physics, including electromagnetic
+ theory, thermodynamics, quantum mechanics, and fluid mechanics.
+ The purpose of this homework is to use numerical methods to plot some instances
+ of Bessel functions, and to find the roots of an equation involving Bessel
+ functions.
+ More specifically, numerical methods will be used to plot 
+\begin_inset Formula $J_{n}(x)$
+\end_inset
+
+ and 
+\begin_inset Formula $Y_{n}(x)$
+\end_inset
+
+ for 
+\begin_inset Formula $n=1,\,2,\,3$
+\end_inset
+
+, and to find the first five roots of the equation given by
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+J_{0}(x)Y_{0}(x)\text{−}J_{2}(x)Y_{2}(x)=0
+\end{equation}
+
+\end_inset
+
+for 
+\begin_inset Formula $x>0$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Bisection
+\end_layout
+
+\begin_layout Standard
+Bisection is common numerical algorithm of computing the roots of a given
+ function.
+ Given a function 
+\begin_inset Formula $f(x)$
+\end_inset
+
+ and an interval 
+\begin_inset Formula $[x_{1},x_{2}]$
+\end_inset
+
+, and assuming that there exists a single point 
+\begin_inset Formula $x_{0}$
+\end_inset
+
+ within that interval that satisfies the condition 
+\begin_inset Formula $f(x_{0})=0$
+\end_inset
+
+, this method finds 
+\begin_inset Formula $x_{0}$
+\end_inset
+
+ up to a certain desired precision by evaluating different values of 
+\begin_inset Formula $x$
+\end_inset
+
+ that have different signs and are increasingly closer together.
+ More specifically, given the values of the edges of an interval 
+\begin_inset Formula $x_{1}$
+\end_inset
+
+and 
+\begin_inset Formula $x_{2}$
+\end_inset
+
+, where 
+\begin_inset Formula $f(x_{1})$
+\end_inset
+
+ and 
+\begin_inset Formula $f(x_{2})$
+\end_inset
+
+ have different signs, the algorithm computes a value 
+\begin_inset Formula $x_{3}$
+\end_inset
+
+ given by
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+x_{3}=\frac{1}{2}(x_{1}+x_{2})
+\end{equation}
+
+\end_inset
+
+and then proceeds to compare the sign of 
+\begin_inset Formula $f(x_{3})$
+\end_inset
+
+ with those of 
+\begin_inset Formula $f(x_{1})$
+\end_inset
+
+ and 
+\begin_inset Formula $f(x_{2})$
+\end_inset
+
+ in order to determine a new value for 
+\begin_inset Formula $x_{1}$
+\end_inset
+
+ or 
+\begin_inset Formula $x_{2}$
+\end_inset
+
+ in such a way that a new, smaller interval that contains the root is created.
+ Then the algorithm is ran again using the new interval.
+\end_layout
+
+\begin_layout Standard
+Once the the absolute value of the function at a certain 
+\begin_inset Formula $x_{3}$
+\end_inset
+
+ is less than a desired threshold, the algorithm ends and returns the value
+ of that particular 
+\begin_inset Formula $x_{3}$
+\end_inset
+
+ which will correspond to a numerical approximation of the root being searched
+ for.
+\end_layout
+
+\begin_layout Subsection
+False position
+\end_layout
+
+\begin_layout Standard
+False position is the name of another common numerical algorithm used to
+ compute the roots of a given function.
+ Its logic is exactly analogous to that of the bisection method, with the
+ difference that it computes 
+\begin_inset Formula $x_{3}$
+\end_inset
+
+ by interpolating linearly, that is, 
+\begin_inset Formula $x_{3}$
+\end_inset
+
+ is now given by
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+x_{3}=x_{1}\text{−}f(x_{1})\frac{x_{2}−x_{1}}{f(x_{2})−f(x_{1})}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In this homework, I use the bisection method and the false position method
+ in order to calculate the first five roots of equation 
+\begin_inset Formula $(6)$
+\end_inset
+
+ for 
+\begin_inset Formula $x>0$
+\end_inset
+
+.
+ Then, I compare the results given by both methods and estimate their relative
+ efficiency by comparing the necessary number of iterations that each method
+ needs in order to arrive to the desired solutions.
+\end_layout
+
+\begin_layout Section
+Results
+\end_layout
+
+\begin_layout Subsection
+Task 1
+\end_layout
+
+\begin_layout Standard
+Task 1 consisted in running hw3a.cpp in order to produce two files, 
+\begin_inset Quotes eld
+\end_inset
+
+jfunctions.dat
+\begin_inset Quotes erd
+\end_inset
+
+, and 
+\begin_inset Quotes eld
+\end_inset
+
+yfunctions.dat
+\begin_inset Quotes erd
+\end_inset
+
+, and using these files to plot Figure 1.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+jfunctions.dat
+\begin_inset Quotes erd
+\end_inset
+
+ contains four columns.
+ Column 1 is a list of 1000 equally spaced values of 
+\begin_inset Formula $x$
+\end_inset
+
+ for the interval 
+\begin_inset Formula $0<x<20$
+\end_inset
+
+, while columns 2-4 correspond to 
+\begin_inset Formula $J_{0}(x),\,J_{1}(x)$
+\end_inset
+
+ and 
+\begin_inset Formula $J_{2}(x)$
+\end_inset
+
+, evaluated at each 
+\begin_inset Formula $x$
+\end_inset
+
+ from column 1.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+yfunctions.dat
+\begin_inset Quotes erd
+\end_inset
+
+ has the same format as 
+\begin_inset Quotes eld
+\end_inset
+
+jfunctions.dat
+\begin_inset Quotes erd
+\end_inset
+
+ but now column 1 has 1000 equally spaced values of 
+\begin_inset Formula $x$
+\end_inset
+
+ for the interval 
+\begin_inset Formula $0.75<x<20$
+\end_inset
+
+, and columns 2-4 evaluate each of these values of 
+\begin_inset Formula $x$
+\end_inset
+
+ using 
+\begin_inset Formula $Y_{0}(x),\,Y_{1}(x)$
+\end_inset
+
+ and 
+\begin_inset Formula $Y_{2}(x)$
+\end_inset
+
+, respectively.
+ The plot was produced using the Python package Matplotlib, and the evaluation
+ of the Bessel functions was made using code from N.
+ Rec.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename besselplot.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Bessel functions for n=0, 1, 2.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Task 2
+\end_layout
+
+\begin_layout Standard
+Running hw3b1.cpp produces an output file that allowed me to plot equation
+ 
+\begin_inset Formula $(6)$
+\end_inset
+
+ for 
+\begin_inset Formula $0\leq x<20$
+\end_inset
+
+ (Figure 2), in order to visually determine the intervals inside which the
+ first five roots of the equation could be found, as required in order to
+ be able to use bisection and false position.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename plot3.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset Formula $J_{0}(x)Y_{0}(x)\text{−}J_{2}(x)Y_{2}(x)$
+\end_inset
+
+ for interval 
+\begin_inset Formula $0\leq x<20$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+After determining these intervals, I ran hw3b2.cpp, which produces an output
+ file with two rows, the first containing the five roots found by the method
+ of bisection, as well as the number of iterations required for it to arrive
+ at these roots, and the second row containing the same corresponding data
+ for the false position method.
+ These results are given in Table 1.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="7" columns="3">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Method
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Bisection
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+False position
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Root #1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.694391
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.694392
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Root #2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2.92456
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2.92456
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Root #3
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+4.57483
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+4.57483
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Root #4
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+6.18170
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+6.18168
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Root #5
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+7.77338
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+7.77336
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Total # of iterations
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+71
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+79
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Roots and number of iterations for bisection and false position methods
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Analysis
+\end_layout
+
+\begin_layout Standard
+The values obtained for the roots are consistent with each other given the
+ tolerance level used (
+\begin_inset Formula $\left|f(x_{3})\right|<10^{-6}$
+\end_inset
+
+), and are also consistent with a naked eye estimation, so it can be safely
+ assumed that the code works, at least for this particular case.
+ The total number of function calls needed by the bisection method was eight
+ less than the total number needed by the false position method, implying
+ that in this case at least, and by this measure, bisection was more efficient
+ in arriving at the results than false position.
+ This is unexpected, as it is generally assumed that false position converges
+ faster than bisection.
+ A more detailed analysis outside the scope of this work is needed in order
+ to understand why this is the case, but it is possible that changing the
+ initial bracket positions for each root might give a different result.
+\end_layout
+
+\begin_layout Section
+Source code
+\end_layout
+
+\begin_layout Subsection
+hw3a.cpp
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinputlisting[language=C++]{hw3a.cpp}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+hw3b1.cpp
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinputlisting[language=C++]{hw3b1.cpp}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+hw3b2.cpp
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinputlisting[language=C++]{hw3b2.cpp}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-1"
+
+\end_inset
+
+W.
+ H.
+ Press, S.
+ A.
+ Teukolsky, W.
+ T.
+ Vetterling and B.
+ P.
+ Flannery 
+\emph on
+Numerical Recipes, The Art of Scientific Computing, 3rd edit.
+\emph default
+, Camb.
+ Univ.
+ Press 2007.
+
+\emph on
+ 
+\end_layout
+
+\end_body
+\end_document
