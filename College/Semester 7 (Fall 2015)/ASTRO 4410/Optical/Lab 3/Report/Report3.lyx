@@ -1,0 +1,702 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 3cm
+\topmargin 3cm
+\rightmargin 3cm
+\bottommargin 5cm
+\headheight 1cm
+\headsep 1cm
+\footskip 2cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+ASTRO 4410 LAB 3
+\end_layout
+
+\begin_layout Date
+December 2nd, 2015
+\end_layout
+
+\begin_layout Author
+Gianfranco Grillo
+\end_layout
+
+\begin_layout Section
+Objectives
+\end_layout
+
+\begin_layout Enumerate
+Obtain the rotation curve of the galaxy NGC 7331
+\end_layout
+
+\begin_layout Section
+Setup
+\end_layout
+
+\begin_layout Subsection
+Target object
+\end_layout
+
+\begin_layout Standard
+The object observed was the spiral galaxy NGC 7331, located at a distance
+ of 12.2 ± 1.0 Mpc from Earth.
+ It is located in the constellation Pegasus, and its equatorial coordinates
+ are 22h 37m 04.1s RA and +34° 24' 56'' Dec.
+\end_layout
+
+\begin_layout Subsection
+Bias and flat noise
+\end_layout
+
+\begin_layout Standard
+Before observations began, 5 images with exposure time of 0.00001 seconds
+ were taken in order to obtain data that was later used to compensate for
+ bias.
+ No photons were allowed to enter the CCD while these images were taken.
+ In addition to this, 5 images of exposure time of 2 seconds under a flat
+ bright light field were performed in order to properly compensate for imperfect
+ions in the subsequent image acquisition.
+\end_layout
+
+\begin_layout Subsection
+Image acquisition
+\end_layout
+
+\begin_layout Standard
+Observations were made during the night of October 7th, 2015 at the Hartung-Boot
+hroyd Observatory (HBO) located at Mount Pleasant, Ithaca, NY.
+ The HBO houses the James R.
+ Houck telescope, a fork mounted cassegrain reflector telescope whose primary
+ mirror is 25 inches (0.635 meters) in diameter.
+ It has a f/13.5 lens, with a native plate scale of 24 arcsec/mm.
+ Photon detection was performed using an Andor iDus 440 CCD, which sports
+ a coated e2v CCD 42-10 BV sensor.
+ Image resolution was of 2048 by 512 pixels, with a pixel size of 13.5e-6
+ m, a plate scale of 0.3''/pixel, a field of view of 10.7' by 2.6', and a read
+ noise of 4 e
+\begin_inset script superscript
+
+\begin_layout Plain Layout
+-
+\end_layout
+
+\end_inset
+
+.
+ A spectrograph was used in order to decompose the light coming from the
+ target object into a spectrum.
+ This spectrum can be regarded as a three dimensional plot, with decreasing
+ wavelength from left to right along the x-axis, and the value of each pixel
+ correlates with the intensity of the corresponding spectral line.
+ The bright band that covers the entire image near the vertical center from
+ left to right is NGC 7331, so different values for the y-axis correlate
+ with different distances away from the galaxy's center.
+ Two separate spectra were produced, each with a different exposure time.
+ Figure 1 shows the spectrum obtained after a 300 second exposure, and Figure
+ 2 shows the spectrum obtained after a 600 second exposure.
+\end_layout
+
+\begin_layout Subsection
+Calibration spectrum
+\end_layout
+
+\begin_layout Standard
+The analysis performed required the x-axis on Figures 1 and 2 to be a measure
+ of the wavelength being observed.
+ The spectrum by itself does not provide the means to do this: each value
+ in the x-axis is simply a pixel number.
+ Since the resolution is 2048 by 512 pixels, there are 2048 pixels in the
+ x-direction, and so the x-axis can be regarded as a scale that goes from
+ 0 to 2048.
+ With this in mind, the CCD/spectrograph was exposed for 5 seconds to light
+ produced by a mercury lamp.
+ Since the wavelengths of the spectral lines of mercury are known, this
+ spectrum was later used to establish a relationship between pixel number
+ and wavelength, which was subsequently used to scale the galactic spectra's
+ x-axis.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename Figures/spectrum300cropped.jpg
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Spectrum obtained after a 300 second exposure
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename Figures/spectrum600cropped.jpg
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Spectrum obtained after a 600 second exposure
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename Figures/calibrationcropped.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Mercury spectrum
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Data reduction
+\end_layout
+
+\begin_layout Subsection
+Calibration
+\end_layout
+
+\begin_layout Standard
+The calibration spectrum (Figure 3) contains five spectral lines.
+ Given the characteristics of the mercury spectrum, we know that the two
+ closely spaced lines seen close to the left edge have wavelengths of 5770
+ and 5790 Å.
+ The wavelength decreases from left to right, and the next line has a wavelength
+ of 5461 Å, and the following one has a wavelength of 4358 Å.
+ The fifth line is faint so it was ignored.
+ Plotting the value of a row of pixels at a fixed y-position, which was
+ chosen to coincide with the center of the galaxy as seen in the spectrum
+ shown in Figure 1, the location of the pixels corresponding to the 5461
+ and 4358 Å lines was identified.
+ The 5461 Å line was located at pixel # 807, while the 4358 Å was located
+ at pixel # 1504.
+ Since the relationship between pixel number and wavelength is linear, the
+ wavelength 
+\emph on
+λ
+\emph default
+ as a function of pixel number
+\emph on
+ p
+\emph default
+ was found to be:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\lambda=-1.582p+6738\:Å
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This predicts the location for the Hα line in the galactic spectra, which
+ was used in the subsequent analysis, to be around pixel # 110, which is
+ consistent with visual inspection of the spectra.
+\end_layout
+
+\begin_layout Subsection
+Redshift and velocity
+\end_layout
+
+\begin_layout Standard
+The redshift 
+\emph on
+z
+\emph default
+ of a certain spectral line with rest wavelength 
+\emph on
+λ
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+
+\emph on
+rest
+\end_layout
+
+\end_inset
+
+
+\emph default
+and an observed wavelength 
+\emph on
+λ
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+
+\emph on
+obs
+\end_layout
+
+\end_inset
+
+
+\emph default
+is given by:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+z=\frac{\lambda_{obs}-\lambda_{rest}}{\lambda_{rest}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+At velocities 
+\emph on
+v
+\emph default
+ much smaller than the speed of light 
+\emph on
+c
+\emph default
+, i.e.
+ 
+\begin_inset Formula $v\ll c=3.00\cdot10^{5}\: km\, s^{-1}$
+\end_inset
+
+,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+z\approx\dfrac{v}{c}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In this case, the expected velocities are in the range 0-300 kms
+\begin_inset script superscript
+
+\begin_layout Plain Layout
+-1
+\end_layout
+
+\end_inset
+
+, so the condition is fulfilled and (3) applies almost perfectly.
+ Combining (2) and (3) gives
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+v=c\,\frac{\lambda_{obs}-\lambda_{rest}}{\lambda_{rest}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, the rotation curve was obtained in the following manner.
+ The spectral line used was the Hα line, which has a rest wavelength of
+ 6563 Å.
+ First, both spectra obtained were added together, after compensating for
+ the differing exposure times.
+ Next, the resulting combined spectrum was adjusted in order to account
+ for the bias and the flat noise.
+ The location of the horizontal collection of pixels corresponding to the
+ center of the galaxy was found by looking at all the 512 horizontal collections
+ of pixels contained in the spectrum and locating the brightest one.
+ This was used, as explained in 3.1, to find equation (1), and also to create
+ an 80 by 2048 rectangular matrix of values with the row at the bottom correspon
+ding to the galactic center and the top row corresponding to the last row
+ in which the Hα line was detectable.
+ Visual inspection of the spectrum reveals that the line is the first noticeable
+ spectral line going from left to right, that it is located around pixel
+ # 110, as noted above, and that the next visible spectral line is located
+ around pixel # 240.
+ With this in mind, the matrix was reduced to an 80 by 30 size, by ignoring
+ all pixels before location 90 and after location 120.
+ This matrix was binned vertically, twice, by adding adjacent rows together
+ in order to improve the signal, thus transforming the 80 by 30 matrix into
+ a 20 by 30 matrix.
+ The location of the Hα line for each row was then obtained by finding the
+ location of the maximum valued pixel on each of them.
+ Equation (1) was then used in order to transform this location into a wavelengt
+h, which would correspond to 
+\emph on
+λ
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+
+\emph on
+obs
+\end_layout
+
+\end_inset
+
+.
+
+\emph default
+ The absolute velocity of each of the rows with respect to us was found
+ by applying equation (4),
+\emph on
+ 
+\emph default
+with
+\emph on
+ λ
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+
+\emph on
+rest
+\end_layout
+
+\end_inset
+
+
+\emph default
+equal to
+\emph on
+ 
+\emph default
+6563 Å.
+ However, since the galaxy as a whole is receding away from us, finding
+ the actual velocity of the rows with respect to the galactic center involved
+ calculating this receding velocity and subtracting it from each of the
+ absolute velocities obtained.
+ This receding velocity was taken to be the absolute velocity of the brightest
+ row, which is the one closest to the center.
+ This was plotted as a function of arbitrary radius.
+\end_layout
+
+\begin_layout Section
+Results and Analysis
+\end_layout
+
+\begin_layout Subsection
+General analysis
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/rotationcurve.png
+	scale 60
+	clip
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Rotation curve for NGC 7331 [1]
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename Figures/rotationcurve2.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Rotation curve for NGC 7331 [2]
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Figures 3 and 4 show the resulting rotation curve with the x-axis scaled
+ in two different ways.
+ A few things become immediately apparent.
+ First, the overall shape of the plot is consistent with the form of a galactic
+ rotation curve for distances relatively close to the galactic center, but
+ it cannot be regarded as a complete rotation curve for the galaxy.
+ In other words, the relative lack of sensitivity of the observations implied
+ that the Hα line was only detectable at distances relatively close to the
+ galactic center, which is to be expected given the instrumentation used
+ and the fact that the amount of hydrogen gas decreases with distance from
+ the center.
+ More precise observations are needed in order to fill the empty space on
+ the right half of Figure 4.
+ These observations would be expected to produce points of approximately
+ constant velocity between 240 and 300 km/s.
+ A second aspect to note is the fact that even though there is a large margin
+ of error for the velocities obtained, their values are reasonable.
+ The 
+\begin_inset Quotes eld
+\end_inset
+
+steps
+\begin_inset Quotes erd
+\end_inset
+
+ that can be observed, where the same velocity was obtained for more than
+ one value of the radius, is a product of the poor sensitivity of the observatio
+ns, and the subsequent steps taken during the data reduction process in
+ order to obtain a clear signal.
+ 
+\end_layout
+
+\begin_layout Subsection
+Error analysis and prospects for improvement
+\end_layout
+
+\begin_layout Standard
+A consequence of the relationship between wavelength and pixel number derived
+ in 3.1 is that the number of angstroms contained in a single pixel is about
+ 1.5.
+ Because of the large value of the speed of light in comparison to the velocity
+ of a galaxy's rotation, this places a strict limit on the accuracy of the
+ velocities obtained, since a redshift of 1.5 angstroms is equivalent to
+ about 70 km/s in terms of velocity.
+ This means that when determining the location of the Hα line, an error
+ of one pixel produces a 70 km/s discrepancy between the actual velocity
+ and the calculated velocity.
+ In addition, the signal produced by the Hα line is not considerably larger
+ than the background noise, severely limiting the amount of radial points
+ that can be sampled.
+ These are the reasons why the plot obtained appears to be so crude in compariso
+n with galactic rotation curves that can be found in other studies.
+\end_layout
+
+\begin_layout Standard
+There are two ways to improve this study in order to obtain better results.
+ First, the resolution of the observations needs to be increased by using
+ both a more sensitive CCD and a larger telescope, as well as obtaining
+ more spectra with the use of different spectrometers.
+ Second, the method used for data reduction can be improved by using more
+ sophisticated code that could locate the Hα line more accurately, in order
+ to get a better estimate of the redshift of each of the radii sampled.
+ Analyzing the velocities of the gas at different radii of the other half
+ of the galaxy would also probably help.
+\end_layout
+
+\begin_layout Section
+Conclusion
+\end_layout
+
+\begin_layout Standard
+The purpose of this lab was to use the spectra of the galaxy NGC 7331 captured
+ by the HBO telescope in order to obtain its galactic rotation curve.
+ Even though the extracted curve is crude under certain standards, it is
+ nonetheless as good as can be expected given the sensitivity of the observation
+s, so the objective was fulfilled.
+ Better results can be obtained by following the advice given at the end
+ of section 4.2.
+\end_layout
+
+\begin_layout Section*
+References
+\end_layout
+
+\begin_layout Standard
+NASA/IPAC Extragalactic Database (NED).
+ 
+\begin_inset Quotes eld
+\end_inset
+
+NGC 7331
+\begin_inset Quotes erd
+\end_inset
+
+.
+ NASA/IPAC.
+ Accessed on 1/12/2015.
+ <http://ned.ipac.caltech.edu/cgi-bin/nph-objsearch?objname=NGC+7331&img_stamp=yes&
+extend=no>
+\end_layout
+
+\end_body
+\end_document

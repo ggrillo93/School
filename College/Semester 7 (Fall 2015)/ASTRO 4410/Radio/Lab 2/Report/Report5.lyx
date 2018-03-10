@@ -1,0 +1,2115 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 3cm
+\topmargin 3cm
+\rightmargin 3cm
+\bottommargin 5cm
+\headheight 1cm
+\headsep 1cm
+\footskip 2cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+ASTRO 4410 LAB 5
+\end_layout
+
+\begin_layout Date
+December 16th, 2015
+\end_layout
+
+\begin_layout Author
+Gianfranco Grillo
+\end_layout
+
+\begin_layout Abstract
+Galactic rotation curves are mysterious entities.
+ Their shape cannot be explained by a näive application of the law of universal
+ gravitation, as the amount and distribution of visible matter is inconsistent
+ with observed rotation curves measured for most spiral galaxies.
+ Instead of finding that the orbital velocity of material decreases with
+ increasing distance from the galactic center, studies have found that this
+ velocity is approximately constant; that is, that rotation curves are approxima
+tely flat, starting from a radius relatively close to the center.
+ The rotation curve of our own galaxy, the Milky Way, has been shown to
+ be consistent with this model.
+ This lab is an attempt to derive the magnitude of the rotational velocity
+ of the galaxy under the assumption that the curve is perfectly flat, based
+ on observations of hydrogen gas made with a Cornell University's radio
+ telescope.
+ The results will show that the assumption of a completely flat rotation
+ curve leads to some errors, at least in the case of the longitudes that
+ were scanned.
+ I will proceed to argue that nevertheless, the results make complete sense,
+ and will illustrate this by plotting the rotation curve of the galaxy assuming
+ that the Sun's rotational velocity is known.
+ I will also use the obtained data to estimate the radius of the galaxy.
+\end_layout
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout Standard
+Newton's Universal Law of Gravitation, one of the most impressive achievements
+ of human ingenuity, has been used with brilliant accuracy in order to predict
+ the motions of celestial bodies.
+ It allows us to make sense of the dynamics of our solar system, and can
+ be used to make predictions about the movements of everything from asteroids
+ and comets to moons and planets.
+ Newtonian dynamics and gravitation were responsible for taking us to the
+ moon.
+ Nonetheless, its predictions regarding some specific phenomena have been
+ proven incorrect.
+ Some of these incorrect predictions, like the perihelion precession of
+ Mercury, or the quantitative description of gravitational lensing, were
+ solved by Einstein's General Relativity, which in effect superseded Newtonian
+ gravity as the correct theory of gravitation.
+ However, not even General Relativity is able to explain, without the help
+ of certain untested hypotheses, the shape of the Milky Way's rotation curve
+ or, for that matter, the shape of the rotation curve of most galaxies that
+ we can observe.
+ That is, we expect the rotational velocity of the material in the galaxy
+ to decrease, after a certain radius, as a function of distance from the
+ center, but instead we see that it is more or less constant as a function
+ of increasing radius, as illustrated in Figure 1.
+ This lab reproduces this perplexing result, and explores the limitations
+ of treating the rotational velocity of objects in the galaxy as a constant,
+ using the radio telescope mounted on the roof of Cornell University's Space
+ Sciences Building.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/figure1.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Expected vs observed rotation curve of Milky way.
+ Obtained from [1], p.
+ 5.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Objectives
+\end_layout
+
+\begin_layout Enumerate
+Obtain spectra centered at 1420 MHz for different galactic longitudes.
+\end_layout
+
+\begin_layout Enumerate
+Calculate the rotational velocity of objects in the galaxy assuming a flat
+ rotation curve.
+\end_layout
+
+\begin_layout Enumerate
+Calculate the rotation velocity of the observed gas as a function of galactic
+ radius.
+\end_layout
+
+\begin_layout Enumerate
+Plot a portion of the Milky Way's rotation curve.
+\end_layout
+
+\begin_layout Enumerate
+Estimate the radius of the galaxy.
+\end_layout
+
+\begin_layout Section
+Setup
+\end_layout
+
+\begin_layout Subsection
+Date of observations and telescope characteristics
+\end_layout
+
+\begin_layout Standard
+The data for this lab was acquired on Monday, November 23rd, from approximately
+ 14:30 to 15:30, using the radio telescope mounted in the roof of Cornell
+ University's Space Sciences Building.
+ The antenna's reflector is a 3.8 m paraboloid with a helical feed at the
+ prime focus that accepts circularly polarized radiation between 1 and 2
+ GHz.
+ Behind the helix there is a circular ground plane where the antenna terminals
+ connect to a receiver box that contains a low-noise amplifier and a noise
+ diode that can be used for calibration purposes.
+ This antenna is mounted on a king post that allows it to move in azimuth
+ and elevation.
+ The signal produced by the low-noise amplifier is sent to an analog receiver
+ in a lab room in the floor directly below the roof.
+ The signal goes through a bandpass filter that selects a 57 MHz band around
+ 1420 MHz, and is then mixed into an intermediate frequency, and a second
+ bandpass filter centered at 260 MHz is used to eliminate aliasing.
+ The antenna's movement and orientation is controlled by a computer in the
+ same lab room, which is also used for producing the data files generated
+ by the observations.
+\end_layout
+
+\begin_layout Subsection
+Procedures for data acquisition
+\end_layout
+
+\begin_layout Standard
+The data acquisition consisted in having the antenna point towards nine
+ different galactic longitudes in the galactic plane, plus seven different
+ latitudes ranging from 0 to 12 degrees at a longitude of 55 degrees (in
+ galactic coordinates).
+ Sets of three or more spectra were obtained for each of the directions
+ at which the antenna was pointed.
+ Each of the spectra consists of 787 channels spaced over a 10 Mhz band
+ centered at 1420 MHz, the 21 cm hydrogen line.
+ The galaxy is composed mostly of hydrogen gas, so we expect to detect this
+ line near its rest frequency, but redshifted or blueshifted depending on
+ the velocity of the gas relative to us.
+ Finding this Doppler shift is central to achieving the lab's objectives,
+ as will be seen below.
+\end_layout
+
+\begin_layout Section
+Data reduction
+\end_layout
+
+\begin_layout Subsection
+Rotational velocity
+\end_layout
+
+\begin_layout Standard
+Figure 2 shows a diagram of the positions and velocities of the Sun and
+ a certain star at galactic latitude 
+\emph on
+b=
+\emph default
+0.
+ From the diagram, it becomes apparent that 
+\emph on
+V
+\emph default
+, the rotational velocity of the star, is related to its galactic latitude
+ 
+\emph on
+l
+\emph default
+ and the velocity of the Sun 
+\emph on
+V
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+
+\emph on
+0
+\end_layout
+
+\end_inset
+
+
+\emph default
+ by the following equation:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+V=V_{max}+V_{0}sin(l)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Here, 
+\emph on
+V
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+max
+\end_layout
+
+\end_inset
+
+
+\emph default
+ corresponds to the maximum observed velocity, the velocity when the angle
+ 
+\begin_inset Formula $\alpha=0$
+\end_inset
+
+.
+ Since we are looking at galactic hydrogen, and not at a particular star,
+ we will always observe some hydrogen that has 
+\begin_inset Formula $\alpha=0$
+\end_inset
+
+ with respect to us.
+ Assuming a flat rotation curve implies that 
+\begin_inset Formula $V=V_{0}$
+\end_inset
+
+, and equation (1) becomes
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+V_{0}=V_{max}+V_{0}sin(l)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Solving for 
+\emph on
+V
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+
+\emph on
+0
+\end_layout
+
+\end_inset
+
+
+\emph default
+ gives
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+V_{0}=\frac{V_{max}}{1-sin(l)}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The quantity 
+\emph on
+V
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+max
+\end_layout
+
+\end_inset
+
+
+\emph default
+ can be obtained from the spectra by looking at the minimum frequency at
+ which hydrogen is detected, and then calculating the velocity of hydrogen
+ at that point, which corresponds to the maximum velocity of the hydrogen
+ cloud.
+ This can be done via the equation
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+V_{max}=c\,\left(\frac{f_{rest}-f_{obs}}{f_{rest}}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where 
+\emph on
+f
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+
+\emph on
+rest
+\end_layout
+
+\end_inset
+
+
+\emph default
+ corresponds to the rest frequency of the 21 cm HI line, 1420.4 MHz, 
+\emph on
+c
+\emph default
+ corresponds to the speed of light, 
+\begin_inset Formula $3\cdot10^{5}$
+\end_inset
+
+kms
+\begin_inset script superscript
+
+\begin_layout Plain Layout
+-1
+\end_layout
+
+\end_inset
+
+, and 
+\emph on
+f
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+obs
+\end_layout
+
+\end_inset
+
+
+\emph default
+ corresponds to the minimum frequency of the detected hydrogen.
+ In practice, the value of 
+\emph on
+f
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+obs
+\end_layout
+
+\end_inset
+
+
+\emph default
+ will be determined by looking at the point at which the value of the hydrogen
+ line's signal reaches 20% of it's maximum value.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/Oort_constants_derivation_diagram.jpg
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Geometric illustration of galactic rotation.
+ Obtained from Wikimedia Commons.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Radius
+\end_layout
+
+\begin_layout Standard
+Assuming a flat rotation curve, the relationship between the maximum distance
+ from the center of the galaxy for the observed hydrogen cloud, or its maximum
+ radius, and its minimum velocity as per the spectrum obtained with the
+ antenna is given by
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+R_{max}=\frac{V_{0}sin(l)\, R_{\text{0}}}{V_{min}+V_{0}sin(l)}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where 
+\emph on
+R
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+
+\emph on
+max
+\end_layout
+
+\end_inset
+
+
+\emph default
+ is the hydrogen's cloud maximum distance from the galactic center, 
+\emph on
+R
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+
+\emph on
+0 
+\end_layout
+
+\end_inset
+
+
+\emph default
+is the distance of the Sun from the galactic center (
+\begin_inset Formula $\thickapprox8.5\, kpc$
+\end_inset
+
+) and 
+\emph on
+V
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+min 
+\end_layout
+
+\end_inset
+
+
+\emph default
+is the minimum velocity, which can be obtained from the spectrum in the
+ same way as the maximum velocity was in 4.1, via equation (4), but instead
+ of finding the point at which the value of the signal reaches 20% of it's
+ maximum value, the point to be found corresponds to the frequency at which
+ the signal falls to 20% of it's maximum value after passing through the
+ maximum.
+ In other words, 
+\emph on
+f
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+obs
+\end_layout
+
+\end_inset
+
+
+\emph default
+ here will correspond to the maximum frequency at which hydrogen can be
+ detected, while in 4.1 
+\emph on
+f
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+obs
+\end_layout
+
+\end_inset
+
+
+\emph default
+ corresponds to the minimum frequency at which hydrogen can be detected.
+ The value of 
+\emph on
+R
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+
+\emph on
+max
+\end_layout
+
+\end_inset
+
+
+\emph default
+ can be regarded as the point at which there is no more hydrogen to be found,
+ and provides a good estimate for the radius of the galaxy.
+\end_layout
+
+\begin_layout Subsection
+Corrections
+\end_layout
+
+\begin_layout Standard
+The fact that the Sun has a certain peculiar velocity with respect to the
+ other objects in our neighborhood implies that a certain correction must
+ be made to the velocities obtained in parts 4.1 and 4.2 above.
+ This is given by 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+V_{\text{ʘ}}=19.5\, kms^{-1}(cos(b)cos(23°)cos(l-57\text{°})+sin(b)sin23\text{°})
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where the 23° and 57° correspond to the Sun's galactic latitude and longitude,
+ respectively.
+ Subtracting this from
+\emph on
+ 
+\emph default
+the obtained
+\emph on
+ V
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+max 
+\end_layout
+
+\end_inset
+
+
+\emph default
+and 
+\emph on
+V
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+min 
+\end_layout
+
+\end_inset
+
+
+\emph default
+accounts for this motion and eliminates this source of error.
+ In addition to this, the Earth's orbital velocity and its rotation about
+ its own axis also affect the velocities obtained, to a degree dependent
+ on the time of the day and year, and the galactic longitude and latitude
+ being observed.
+ All of this was accounted for during the data reduction process via use
+ of JPL's Solar System ephemeris DE405.
+\end_layout
+
+\begin_layout Section
+Results and analysis
+\end_layout
+
+\begin_layout Subsection
+Determination of 
+\emph on
+V
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+
+
+\emph default
+assuming a flat rotation curve
+\end_layout
+
+\begin_layout Standard
+Some of the spectra obtained during the data acquisition process proved
+ to be faulty, so not all of the spectra was used.
+ Thus the analysis was done using six of the spectral sets: the ones correspondi
+ng to 
+\emph on
+l
+\emph default
+=25°, 
+\emph on
+l
+\emph default
+=30°, 
+\emph on
+l
+\emph default
+=40°, 
+\emph on
+l
+\emph default
+=55°, and 
+\emph on
+l
+\emph default
+=60°.
+ In all cases, 
+\emph on
+b
+\emph default
+=0.
+ Figures 3 and 4 show the spectrum obtained for 
+\emph on
+l
+\emph default
+=25° and 
+\emph on
+l
+\emph default
+=55°, respectively, after a bandpass fit.
+ Table 1 shows the results obtained for 
+\emph on
+V
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+0 
+\end_layout
+
+\end_inset
+
+
+\emph default
+as function of galactic longitude/distance from the galactic center.
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+The distance from the galactic center 
+\size normal
+\emph on
+R
+\emph default
+ is given by 
+\begin_inset Formula $R=R_{0}sin(l)$
+\end_inset
+
+, where 
+\emph on
+R
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+
+
+\emph default
+is the distance from the Sun to the galactic center, about 8.5 kpc.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Values for 
+\emph on
+V
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+
+
+\emph default
+obtained assuming a completely flat rotation curve.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="8" columns="3">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\emph on
+V
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+
+
+\emph default
+(km/s)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\emph on
+l 
+\emph default
+(°)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\emph on
+R 
+\emph default
+(kpc)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+197.6
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+25
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+3.6
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+212.6
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+30
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+4.2
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+243.1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+35
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+4.9
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+245.8
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+40
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+5.5
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+340.8
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+55
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+7.0
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+341.8
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+60
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+7.4
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $263.6\pm72.1$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+As shown in the table, the obtained value for the rotational velocity is
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+V_{0}=263.6\pm72.1\, kms^{-1}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Comparing this to Figure 1, which gives 
+\begin_inset Formula $V_{sun}=V_{0}\thickapprox220\, kms^{-1}$
+\end_inset
+
+, the obtained value is consistent with expectations since the expected
+ value is within the range allowed by the error bounds, and it is relatively
+ close to the average value found.
+ However, an honest assessment appears to suggest that 
+\emph on
+V
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+0 
+\end_layout
+
+\end_inset
+
+
+\emph default
+is directly proportional to 
+\emph on
+l
+\emph default
+, as illustrated in Figure 5.
+ Thus it seems that assuming a flat rotation curve leads to a contradiction,
+ since calculating the rotational velocities at different longitudes under
+ this assumption leads to the conclusion that the rotation curve is not,
+ in fact, perfectly flat, but instead is proportional to the longitude.
+ A better result could be obtained by taking into account measurements only
+ between the longitude range 
+\begin_inset Formula $30\text{°}<l<40\text{°}$
+\end_inset
+
+, but justifying this sort of range choice does not appear to be possible
+ without resorting to some sort of 
+\emph on
+ad hoc
+\emph default
+ argument.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/l=25.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Spectrum for 
+\emph on
+l
+\emph default
+=25°
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/l=55.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Spectrum for
+\emph on
+ l
+\emph default
+=55°
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/flatassumption.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Rotational velocity as a function of galactic longitude (assuming 
+\begin_inset Formula $V=V_{0}$
+\end_inset
+
+ in equation(1))
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Plotting the galactic rotation curve
+\end_layout
+
+\begin_layout Standard
+A better way of determining whether the results obtained are accurate is
+ to use them in order to plot a portion of the Milky Way's rotation curve
+ and compare it with accepted models.
+ Instead of assuming that the rotation curve is perfectly flat as was done
+ in 5.1, here it will be assumed that equation (1) holds in its original
+ form and that the value of 
+\emph on
+V
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+
+, 
+\emph default
+corresponding to the Sun's rotational velocity, is known.
+ With this assumptions, and with 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $V_{0}=220\, kms^{-1}$
+\end_inset
+
+, and using the same values for 
+\family default
+\series default
+\shape default
+\size default
+\emph on
+\bar default
+\strikeout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+V
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+max
+\end_layout
+
+\end_inset
+
+
+\emph default
+ as before, we obtain the rotational velocities shown in Table 2.
+ Plotting with respect to distance from the center yields Figure 6.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Values for rotational velocity 
+\emph on
+V
+\emph default
+ assuming 
+\begin_inset Formula $V_{0}=220\, kms^{-1}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="8" columns="3">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\emph on
+V
+\emph default
+ (km/s)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\emph on
+l 
+\emph default
+(°)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\emph on
+R 
+\emph default
+(kpc)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+207.0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+25
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+3.6
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+216.3
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+30
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+4.2
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+229.9
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+35
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+4.9
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+229.2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+40
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+5.5
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+241.8
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+55
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+7.0
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+236.3
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+60
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+7.4
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $226.8\pm17.4$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/rotation curve.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Obtained galactic rotation curve
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The velocities fall within a reasonable range of values given the expectations,
+ and the shape of the curve is approximately flat.
+ Clearly, this method produces much better results than the one used in
+ 5.1, and confirms that the data obtained is reasonably accurate.
+ Even more accurate results might be obtained by utilization of more sophisticat
+ed code in order to do the analysis, as well as by performing more closely
+ spaced measurements over a wider range of longitudes.
+ Nonetheless, these results show that a respectable galactic rotation curve
+ for the Milky Way galaxy can be obtained by using a 3.8 m telescope and
+ a relatively crude data reduction method.
+\end_layout
+
+\begin_layout Subsection
+Galactic radius
+\end_layout
+
+\begin_layout Standard
+Using equation (5), with 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $V_{0}=220\, kms^{-1}$
+\end_inset
+
+and 
+\family default
+\series default
+\shape default
+\size default
+\emph on
+\bar default
+\strikeout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+V
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+
+\emph on
+min 
+\end_layout
+
+\end_inset
+
+
+\emph default
+as determined by the data, an estimate for the galactic radius 
+\emph on
+R
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+
+\emph on
+max
+\end_layout
+
+\end_inset
+
+
+\emph default
+ for each of the longitudes of observation was obtained, as shown in Table
+ 3.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Values for 
+\emph on
+R
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+
+\emph on
+max
+\end_layout
+
+\end_inset
+
+
+\emph default
+for different longitudes of observation
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="8" columns="2">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\emph on
+R
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+
+\emph on
+max
+\end_layout
+
+\end_inset
+
+
+\emph default
+(kpc)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\emph on
+l 
+\emph default
+(°)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+17.1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+25
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+17.7
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+30
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+16.2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+35
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+15.7
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+40
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+14.2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+55
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+14.7
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+60
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $15.9\pm1.8$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The data obtained indicates that 
+\begin_inset Formula $R_{max}=15.9\pm1.8\, kpc$
+\end_inset
+
+.
+ Since the Milky Way's diameter is supposed to be 
+\begin_inset Formula $\thickapprox30\, kpc$
+\end_inset
+
+, it can be said that the measurements are in reasonable agreement with
+ the accepted value.
+ There is not much dispersion in the values obtained for each of the longitudes,
+ and there does not appear to be a clear relationship between longitude
+ and 
+\emph on
+R
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+
+\emph on
+max
+\end_layout
+
+\end_inset
+
+
+\emph default
+, so it seems fair to conclude that the data obtained is of good quality.
+ As in 5.2, more accurate results might be obtained by utilization of more
+ sophisticated code during the data reduction process, and by performing
+ more closely spaced measurements over a wider range of longitudes.
+\end_layout
+
+\begin_layout Section
+Conclusion
+\end_layout
+
+\begin_layout Standard
+The purpose of this lab was to use spectra of hydrogen gas captured by Cornell's
+ Space Sciences radio telescope at different galactic longitudes in order
+ to study the rotation curve of the Milky Way galaxy.
+ This was done by first attempting to obtain a single value for the rotational
+ velocity of hydrogen assuming that the rotation curve was perfectly flat,
+ then plotting a rotation curve dropping this assumption, and finally by
+ estimating the galactic radius on the basis of the observations.
+ It was found that assuming a perfectly flat rotation curve leads to a contradic
+tion, but that plotting the curve without assuming flatness results in an
+ approximately flat curve, so averaging the values found using the second
+ method leads to a better estimate of the rotational velocity of objects
+ orbiting the center of the galaxy than attempting to find this velocity
+ by assuming flatness from the start.
+ The values for 
+\emph on
+R
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+
+\emph on
+max
+\end_layout
+
+\end_inset
+
+
+\emph default
+ obtained were consistent with expectations and serve as a further indication
+ that the quality of data obtained was good.
+ Finally, it was suggested that better results might be obtained for all
+ of the parameters via utilization of a more sophisticated code for data
+ reduction and by performing more closely spaced measurements over a wider
+ range of galactic longitudes.
+\end_layout
+
+\begin_layout Section*
+References
+\end_layout
+
+\begin_layout Standard
+[1] Schneider, Peter.
+ 
+\emph on
+Extragalactic Astronomy and Cosmology: An Introduction
+\emph default
+.
+ Berlin: Springer, 2006.
+ Print.
+\end_layout
+
+\end_body
+\end_document

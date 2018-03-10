@@ -1,0 +1,1331 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 3cm
+\topmargin 3cm
+\rightmargin 3cm
+\bottommargin 5cm
+\headheight 1cm
+\headsep 1cm
+\footskip 2cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+ASTRO 4410 LAB 4
+\end_layout
+
+\begin_layout Date
+November 17th, 2015
+\end_layout
+
+\begin_layout Author
+Gianfranco Grillo
+\end_layout
+
+\begin_layout Abstract
+The first step in the path towards correct usage of a radio telescope in
+ order to perform astronomical observations consists in familiarization
+ with the equipment that is going to be used and determination of the radiometri
+cal parameters related to the antenna upon which the analysis of the observation
+s is going to depend on.
+ This experiment implements certain procedures in order to find some of
+ these parameters for the radio telescope on top of Cornell University's
+ Space Sciences Building, and uses a subset of these calculated values in
+ order to measure the temperature of the Sun at the 1.42 GHz frequency.
+ It also provides some of the necessary background data and experience for
+ performing more complicated observations in the future.
+\end_layout
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout Standard
+Radio telescopes, as their name suggests, are telescopes sensitive to the
+ radio frequency part of the electromagnetic spectrum, which ranges from
+ 300 GHz to 3 kHz.
+ They consist of an antenna, a receiver, and a signal processor.
+ The antenna intercepts the radio waves and transforms them into electrical
+ pulses, which pass through the receiver, which in turn produces a signal
+ that is analyzed by the signal processor.
+ The antenna and the receiver have some basic properties that need to be
+ experimentally determined in order to be able to extract meaningful measurement
+s from observations made by the telescope.
+ Among the most important of these are the system temperature, the constant
+ of proportionality that converts from the voltage produced by the antenna
+ into temperature units (the gain), and the effective temperature of the
+ antenna's calibration diode.
+ Another important property of the telescope is its response to signal attenuati
+on, which can be used to quantify the linearity of its behavior as a function
+ of time.
+ This gives us an idea on how reliably the signal is being produced on the
+ basis of the waves being captured by the antenna.
+ Finally, a reliable estimation of the antenna's beam width is necessary
+ in order to be able to determine the effective temperature of the objects
+ that are to be observed with the telescope.
+ The procedure for calculating the beam width also provides an opportunity
+ to test the accuracy of the measurements performed in order to estimate
+ the aforementioned parameters, which in this case is done by using the
+ beam width in conjunction with some of the parameters in order to calculate
+ the effective temperature of the Sun at a specific frequency of observation.
+\end_layout
+
+\begin_layout Section
+Objectives
+\end_layout
+
+\begin_layout Enumerate
+Estimate the radio telescope's system temperature, gain, and linearity response,
+ as well as the effective temperature of the calibration diode.
+\end_layout
+
+\begin_layout Enumerate
+Estimate the antenna's beam width.
+\end_layout
+
+\begin_layout Enumerate
+Measure the effective temperature of the Sun at a frequency of 1.42 GHz,
+ and compare with accepted value.
+\end_layout
+
+\begin_layout Section
+Setup
+\end_layout
+
+\begin_layout Subsection
+Date of observations and telescope characteristics
+\end_layout
+
+\begin_layout Standard
+The data for this lab was acquired on Thursday, November 5th, from approximately
+ 13:50 to 16:15, using the radio telescope mounted in the roof of Cornell
+ University's Space Sciences Building.
+ The antenna's reflector is a 3.8 m paraboloid with a helical feed at the
+ prime focus that accepts circularly polarized radiation between 1 and 2
+ GHz.
+ Behind the helix there is a circular ground plane where the antenna terminals
+ connect to a receiver box that contains a low-noise amplifier and a noise
+ diode that can be used for calibration purposes.
+ This antenna is mounted on a king post that allows it to move in azimuth
+ and elevation.
+ The signal produced by the low-noise amplifier is sent to an analog receiver
+ in a lab room in the floor directly below the roof.
+ The signal goes through a bandpass filter that selects a 57 MHz band around
+ 1420 MHz, and is then mixed into an intermediate frequency, and a second
+ bandpass filter centered at 260 MHz is used to eliminate aliasing.
+ The antenna's movement and orientation is controlled by a computer in the
+ same lab room, which is also used for producing the data files generated
+ by the observations.
+\end_layout
+
+\begin_layout Subsection
+Procedures for data acquisition
+\end_layout
+
+\begin_layout Standard
+Two runs of data acquisition were performed, the first one with the purpose
+ of fulfilling objective (1) above, namely estimating the system temperature,
+ the gain, the linearity response and the effective temperature of the calibrati
+on diode, and the second one with the purpose of fulfilling objectives (2)
+ and (3), namely measuring the antenna's beam width and measuring the effective
+ temperature of the Sun at 1.42 GHz.
+ The first run consisted in pointing the antenna at a fixed position in
+ the sky containing no strong radio sources for a period of 900 seconds,
+ throughout which a series of artificial alterations were made to the signal
+ coming from the antenna.
+ For instance, the noise diode was turned on for periods of about 30-40
+ seconds and the signal attenuation was increased by 3 dB for about 30 seconds
+ and later decreased by 3 dB for about 50 seconds.
+ Also, a rectangle of microwave absorber material was physically held between
+ the helical feed antenna and the reflector dish two times for a period
+ of 30-40 seconds.
+\end_layout
+
+\begin_layout Standard
+The second run of data acquisition had a duration of approximately 2 hours
+ and consisted in pointing the telescope at the position that the Sun would
+ have an hour in the future in order to observe the effect of a full Sun
+ crossing through the telescope's field of view.
+ Both data runs used a sampling period of 1 second and the data was recorded
+ on two .out scripts that later formed the basis of the data analysis.
+\end_layout
+
+\begin_layout Section
+Data reduction
+\end_layout
+
+\begin_layout Subsection
+System parameters and linearity
+\end_layout
+
+\begin_layout Standard
+The data reduction was performed using Python.
+ The data acquired during the first run was used to extract the values of
+ 5 different voltages that were used to calculate the effective temperature
+ of the system, its gain, the effective temperature of the calibration diode,
+ and the linearity response of the system.
+ Figure 1 shows a plot of the voltage amplitude as a function of time.
+ As can be seen, there are 5 different levels of approximately constant
+ voltage amplitude.
+ 4 of of these amplitudes are the result of one of the different artificial
+ alterations that were mentioned in 3.2.
+ Since certain alterations were performed more than once, and in order to
+ account for random variations in the readings, the procedure for measuring
+ the voltage amplitudes consisted in averaging the values obtained for the
+ amplitude over the periods of time in which the alteration was in place.
+ These voltages were then used to calculate the system parameters via the
+ following equations:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+V_{1}=gT_{sys}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+V_{2}=g(T_{sys}+T_{cal})
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+V_{3}=g(T_{sys}+T_{abs})
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where 
+\emph on
+V
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+
+\emph on
+1
+\end_layout
+
+\end_inset
+
+
+\emph default
+corresponds to the baseline voltage amplitude, that is, the readings obtained
+ when no alterations where made, 
+\emph on
+V
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+2
+\end_layout
+
+\end_inset
+
+
+\emph default
+corresponds to the voltage amplitude with the noise diode turned on, and
+ 
+\emph on
+V
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+3
+\end_layout
+
+\end_inset
+
+
+\emph default
+corresponds to the voltage amplitude obtained when the absorber was placed
+ between the reflector and the antenna feed.
+ The parameter 
+\emph on
+g 
+\emph default
+is the constant of proportionality used to convert from voltage amplitude
+ to current, or gain, 
+\emph on
+T
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+
+\emph on
+sys
+\end_layout
+
+\end_inset
+
+
+\emph default
+corresponds to the system temperature, 
+\emph on
+T
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+cal
+\end_layout
+
+\end_inset
+
+
+\emph default
+to the effective temperature of the calibration diode, and 
+\emph on
+T
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+abs
+\end_layout
+
+\end_inset
+
+
+\emph default
+to the temperature of the microwave absorber, which was assumed to be equal
+ to 300 K.
+ This equations can be manipulated to yield the parameter 
+\emph on
+g 
+\emph default
+in terms of known quantities:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{V_{3}-V_{1}}{T_{abs}}=g
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Which can then be used in order to calculate 
+\emph on
+T
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+sys
+\end_layout
+
+\end_inset
+
+
+\emph default
+using equation (1).
+ Rearranging (3) and substituting from (1), we find that 
+\emph on
+T
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+cal
+\end_layout
+
+\end_inset
+
+
+\emph default
+is given by:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+T_{cal}=\frac{V_{2}-V_{1}}{g}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This expression allows us to find the value of 
+\emph on
+T
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+cal 
+\end_layout
+
+\end_inset
+
+
+\emph default
+by plugging in the value for 
+\emph on
+g
+\emph default
+ found previously.
+\end_layout
+
+\begin_layout Standard
+The other two voltages, 
+\emph on
+V
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+
+\emph on
+4
+\end_layout
+
+\end_inset
+
+
+\emph default
+and 
+\emph on
+V
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+5
+\end_layout
+
+\end_inset
+
+
+\emph default
+, were obtained by changing the attenuation up and down by three decibels.
+ If the system were perfectly linear, one of the voltages should be exactly
+ half 
+\emph on
+g
+\emph default
+ times 
+\emph on
+T
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+sys
+\end_layout
+
+\end_inset
+
+
+\emph default
+, and the other should be exactly two times 
+\emph on
+g 
+\emph default
+multiplied by 
+\emph on
+T
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+sys
+\end_layout
+
+\end_inset
+
+.
+
+\emph default
+ That is
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+V_{4}=\frac{1}{2}gT_{sys}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+V_{5}=2gT_{sys}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Comparing the theoretical values with the actual measurements gives us an
+ idea of how constant 
+\emph on
+g
+\emph default
+ actually is and allows us to account for this as a possible error source.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/calibration run.png
+	scale 60
+	clip
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Voltage amplitude vs time for calibration run
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Beam width and the Sun's temperature
+\end_layout
+
+\begin_layout Standard
+Figure 2 shows the plot of voltage amplitude vs time for the second data
+ acquisition run.
+ Calculation of the beam width was done by first substracting the baseline
+ voltage, as shown on Figure 3, and then finding the value of the peak amplitude
+, subsequently dividing it by two in order to find the value of the half-maximum.
+ Then, the time that it took for the voltage to go from the first instance
+ of the half maximum to the second instance of it can be used in order to
+ calculate the beam width, in radians, via the following formula:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\theta_{A}=t\cdot\cos(\delta)\cdot\frac{2\pi}{3600}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where 
+\emph on
+t 
+\emph default
+corresponds to the time between half maxima, 
+\emph on
+
+\begin_inset Formula $\delta$
+\end_inset
+
+ 
+\emph default
+to the antenna's declination, and the numerical factor corresponds to the
+ number of radians per second that spanned by the antenna due to the Earth's
+ rotation.
+ This value can be used to calculate the solid angle of the antenna, via
+ the equation
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\Omega_{A}=\pi\left(\frac{\theta_{A}}{2}\right)^{2}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using this and the values of the parameters obtained earlier, the effective
+ temperature of the Sun at the frequency of observation can be calculated
+ from the expression
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+T_{sun}=\frac{A_{peak}}{g}\cdot\frac{\Omega_{A}}{\Omega_{S}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where 
+\emph on
+A
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+
+\emph on
+peak
+\end_layout
+
+\end_inset
+
+
+\emph default
+is the maximum amplitude of the curve in Figure 3, and 
+\emph on
+
+\begin_inset Formula $\Omega_{s}$
+\end_inset
+
+
+\emph default
+ is the solid angle of the Sun, equal to 
+\begin_inset Formula $6.87\cdot10^{-5}$
+\end_inset
+
+ steradians.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/sun.png
+	scale 60
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Voltage amplitude vs time for Sun drift scan
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/adjustedsun.png
+	scale 60
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Adjusted voltage amplitude vs time for Sun drift scan
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Results and analysis
+\end_layout
+
+\begin_layout Subsection
+System parameters
+\end_layout
+
+\begin_layout Standard
+The methods of data reduction described in 4.1 applied to the first data
+ run yields the following voltages (approximated to the nearest whole number):
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+V_{1}=7,875,268\:units
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+V_{2}=39,960,843\:units
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+V_{3}=21,700,626\:units
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using equations (1), (4), and (5), the following values for each of the
+ parameters are obtained (again approximated to the nearest whole number):
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+g=46,084\:\nicefrac{units}{K}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+T_{sys}=171\:K
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+T_{cal}=696\:K
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+There are several sources of error involved in this calculations.
+ First of all, they assume that the system is perfectly linear, that is,
+ that 
+\emph on
+g
+\emph default
+ is a constant, when in fact this is not necessarily true, as will be seen
+ in 5.2.
+ It was also assumed that the temperature of the sky was essentially 0 K,
+ since strictly speaking, the measurements made give 3 equations in 4 unknowns,
+ one of which is 
+\emph on
+T
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+
+\emph on
+sky
+\end_layout
+
+\end_inset
+
+.
+ 
+\emph default
+This is a reasonable assumption given that the cosmic background radiation
+ has a very low temperature at the observation frequency of 1.42 GHz that
+ was used.
+ However, it is possible that other radio sources from the sky could have
+ altered the results in small levels that would be indistinguishable from
+ noise.
+ To be able to calculate 
+\emph on
+T
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+
+\emph on
+sky
+\end_layout
+
+\end_inset
+
+
+\emph default
+it would be necessary to produce another voltage via some other artificial
+ alteration to the system, like another absorber with a different known
+ temperature.
+ The temperature of the absorber used was not directly measured but assumed
+ to be close to 300 K, which is another source of error that needs to be
+ kept in mind.
+ Finally, placing the absorber in front of the helical feed involved imperfect
+ human manipulation of it, and as a result was not always at the same distance
+ from the feed, meaning that the signal produced by the antenna varied more
+ than it did during the period of time when the other alterations were made.
+ This can be clearly appreciated in Figure 1: the periods of time during
+ which the absorber was put in place correspond to the last and the third
+ to last deviations from the baseline voltage.
+\end_layout
+
+\begin_layout Subsection
+Linearity
+\end_layout
+
+\begin_layout Standard
+The values found for 
+\emph on
+V
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+4
+\end_layout
+
+\end_inset
+
+
+\emph default
+and 
+\emph on
+V
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+
+\emph on
+5
+\end_layout
+
+\end_inset
+
+
+\emph default
+were the following (to 3 significant figures):
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+V_{4}=0.506\:units
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+V_{5}=1.98\:units
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus the percent deviation in linearity is calculated as 1.2% from 
+\emph on
+V
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+4
+\end_layout
+
+\end_inset
+
+
+\emph default
+and as 1% from 
+\emph on
+V
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+5
+\end_layout
+
+\end_inset
+
+.
+
+\emph default
+ This implies that even if all other sources of error were to be ruled out,
+ there would still be at least a 1.2% error in any of the measurements made
+ with this radio telescope.
+\end_layout
+
+\begin_layout Subsection
+Beam Width
+\end_layout
+
+\begin_layout Standard
+The value for 
+\begin_inset Formula $\theta_{A}$
+\end_inset
+
+, as defined in section 4.2, was found to be (to 3 significant figures):
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\theta_{A}=0.0706\:rad
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Which corresponds to an antenna solid angle 
+\begin_inset Formula $\Omega_{A}$
+\end_inset
+
+ of 
+\begin_inset Formula $3.92\cdot10^{-3}$
+\end_inset
+
+ steradians.
+ 
+\begin_inset Formula $\theta_{A}$
+\end_inset
+
+ is commonly approximated to an ideal value of 
+\begin_inset Formula $\nicefrac{\lambda}{D}$
+\end_inset
+
+, where 
+\emph on
+
+\begin_inset Formula $\lambda$
+\end_inset
+
+
+\emph default
+ corresponds to the observation wavelength, and 
+\emph on
+D
+\emph default
+ to the diameter of the antenna.
+ The theoretical value for 
+\begin_inset Formula $\theta_{A}$
+\end_inset
+
+ in this case is then given by:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\theta_{A}\thickapprox\frac{\lambda}{D}=\frac{c}{fD}=\frac{3\cdot10^{8}\,ms^{-1}}{1.42\cdot10^{9}\,Hz\cdot3.8\,m}=0.0552\:rad
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Which gives a 27.9% discrepancy between both values.
+ Given that the approximation is just that, an approximation, this discrepancy
+ does not appear to be unreasonable.
+ Apart from the universal sources of error mentioned before, in the particular
+ case of this calculation, it must be noted that the fact that because the
+ sampling and integration time for the measurements consisted of a little
+ more than a second, the value of the full width at half maximum is not
+ exact in the sense that the two points of half maximum used were not equal.
+ In other words, the line corresponding to the width that was measured was
+ not exactly parallel to the x-axis.
+ However, this is not expected to have had an important effect on the resulting
+ value, since it could only change the parameter 
+\emph on
+t 
+\emph default
+in equation (8) by a fraction of a second.
+\end_layout
+
+\begin_layout Subsection
+Temperature of the Sun
+\end_layout
+
+\begin_layout Standard
+The peak value of the curve from Figure 3 was found to be (to the nearest
+ whole number):
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+A_{peak}=112,621,731\,units
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using this and the values for 
+\emph on
+
+\begin_inset Formula $\Omega_{A}$
+\end_inset
+
+, 
+\begin_inset Formula $\Omega_{S}$
+\end_inset
+
+,
+\emph default
+ and 
+\emph on
+g
+\emph default
+ found previously, together with equation (10), the temperature of the Sun
+ was measured (to 3 significant figures) as:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+T_{sun}=140\cdot10^{3}\,K
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using the unadjusted peak value from Figure 2 and using a modified version
+ of equation (10), one can use this temperature to retroactively calculate
+ 
+\emph on
+T
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+sys
+\end_layout
+
+\end_inset
+
+
+\emph default
+, which was again found to be equal to 171 K, although this cannot be regarded
+ as a completely independent calculation since the resulting value still
+ depends on the parameter 
+\emph on
+g
+\emph default
+ and the voltage 
+\emph on
+V
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+
+\emph on
+1
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+This value for 
+\emph on
+T
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+sun
+\end_layout
+
+\end_inset
+
+
+\emph default
+differs significantly from the value of 
+\begin_inset Formula $70.5\cdot10^{3}$
+\end_inset
+
+K given in a paper by Zirin et al.
+ (see [1]).
+ However, the Sun's temperature is known to vary widely depending on what
+ part of its cycle it is in.
+ The observations for the Zirin et al.
+ paper were made during a solar minimum, while the observations on this
+ paper were made about three quarters of the way through the last cycle
+ that started on January 2008 (cycles usually last between 10 to 12 years).
+ A better point of comparison would be a 1960 paper written by N.
+ R.
+ Labrum (see [3]), who used observations near the solar maximum of 1958
+ to arrive at an upper limit temperature of
+\begin_inset Formula $160\cdot10^{3}$
+\end_inset
+
+K.
+ With this in mind, the temperature derived from the observations made in
+ this experiment still looks a little too high, since (without going into
+ details about the relative magnitude of the last solar maximum and the
+ solar maximum that occurred in 1958) we would expect that 
+\emph on
+T
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+sun
+\end_layout
+
+\end_inset
+
+
+\emph default
+now were half-way between 
+\begin_inset Formula $70.5\cdot10^{3}$
+\end_inset
+
+K and 
+\begin_inset Formula $160\cdot10^{3}$
+\end_inset
+
+K, which is equivalent to about
+\begin_inset Formula $115\cdot10^{3}$
+\end_inset
+
+K.
+ Given the numerous sources of error described previously, in particular
+ the assumption that the absorber temperature was 300 K and the 1% deviation
+ from linearity observed, and the fact that each of the errors were added
+ to each other in the course of our calculations, the result obtained does
+ not appear to be too far off from the accepted value as to be unreasonable.
+\end_layout
+
+\begin_layout Section
+Conclusion
+\end_layout
+
+\begin_layout Standard
+The purpose of this lab was to calculate some of the system parameters of
+ the radio telescope on top of Cornell's Space Sciences building, and use
+ it to perform a Sun crossing in order to measure its temperature at an
+ observational frequency of 1.42 GHz.
+ These objectives were fulfilled, and a value for the Sun's temperature
+ was obtained that does not perfectly agree with the expected value, but
+ nonetheless appears to be reasonable given the sources of error involved.
+ Further experiments along this line with stricter error controls should
+ be able to find a value closer to the expected one.
+\end_layout
+
+\begin_layout Section*
+References
+\end_layout
+
+\begin_layout Standard
+[1] Zirin, H., Baumert, B.
+ M.
+ and Hurford, G.
+ J.
+ 
+\emph on
+The Microwave Brightness Temperature Spectrum of the Quiet Sun,
+\emph default
+ 1991, ApJ, 370, 779.
+\end_layout
+
+\begin_layout Standard
+\noindent
+[2] Labrum, N.
+ R.
+ 
+\emph on
+The Radio Brightness of the Quiet Sun at 21 cm Wavelength near Sunspot Maximum,
+ 
+\emph default
+1960, Australian Journal of Physics, 13, 700.
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+\align left
+[3] Hathaway, David H.
+ 
+\emph on
+The Sunspot Cycle
+\emph default
+ NASA/Marshall Solar Physics.
+ NASA, 17 Nov.
+ 2015.
+ Web.
+ 18 Nov.
+ 2015.
+ <http://solarscience.msfc.nasa.gov/SunspotCycle.shtml>.
+\end_layout
+
+\end_body
+\end_document

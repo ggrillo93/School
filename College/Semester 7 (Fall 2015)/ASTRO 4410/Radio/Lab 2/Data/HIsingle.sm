@@ -1,0 +1,373 @@
+# 7 May 2014: in plot4 changed y-axis limits so max = 0.7
+HI	#
+	macro read sm_macros_from_web.sm
+	data HI.average
+	define fsamp read 2 1		 # MHz
+        define nchans read 3 1
+	define nave read 4 1
+        define df ($fsamp/$nchans)
+	define nsmooth (21)
+	setup_frequency_ranges
+	get_spectrum
+	limits -2.5 2.5 y
+	ticksize 1 1 0.1 0.5
+	expand 1.2
+	lw 2
+	box
+	xlabel Frequency (MHz)
+	ylabel <Spectrum> (arbitrary units)
+	histogram f y
+	smooth y ysmo $nsmooth
+	ctype "red"
+	lw 3
+	histogram f ysmo
+	ctype "default"
+
+get_spectrum #
+	define line1 5
+	define line2 ($line1 + $nchans - 1)
+	lines $line1 $line2
+	read {x 1 s 2}
+        vecminmax s smin smax
+	set y = ((s - $smin)/($smax-$smin))
+	set y = s
+        set f = (x-$nchans/2)*$df
+	set xfit = f if((f>$ffit1&&f<$ffit2)||(f>$ffit3&&f<$ffit4))
+	set yfit = y if((f>$ffit1&&f<$ffit2)||(f>$ffit3&&f<$ffit4))
+	# "sel" needed by fitpol
+	sel (xfit < xfit[dimen(xfit)-1])	
+	set fselect = f if(f>$f1&&f<$f2)
+	set yselect = y if(f>$f1&&f<$f2)
+	# find mean of off-line portion of spectrum for fit
+	# rescale the spectrum to put spectrum in (approx) units of Tsys
+	stats yfit yfitmean yfitsig yfitkurt
+	set y = y / $yfitmean
+	set yfit = yfit / $yfitmean
+	set yselect = yselect / $yfitmean
+	vecminmax y ymin ymax
+
+get_spectrum_min #Added by LGS
+        define line1 5
+        define line2 ($line1 + $nchans - 1)
+        lines $line1 $line2
+        read {x 1 s 2}
+        vecminmax s smin smax
+#        set y = ((s - $smin)/($smax-$smin))
+	set y = s
+	set f = (x-dimen(x)/2)*$df
+	stats y yfitmean yfitsig yfitkurt
+	set xfit = f if((f>$ffit1&&f<$ffit2)||(f>$ffit3&&f<$ffit4)||(f>$ffita&&f<$ffitb)||(f>$ffit5&&f<$ffit6))
+	set yfit = y if((f>$ffit1&&f<$ffit2)||(f>$ffit3&&f<$ffit4)||(f>$ffita&&f<$ffitb)||(f>$ffit5&&f<$ffit6))
+	# "sel" needed by fitpol
+	sel (xfit < xfit[dimen(xfit)-1])	
+	stats y yfitmean yfitsig yfitkurt
+	set y = y / $yfitmean
+	set yfit = yfit / $yfitmean
+	vecminmax y ymin ymax
+
+process_one
+	macro read sm_macros_from_web.sm
+	setup_frequency_ranges
+	get_spectrum
+	do_poly_fit xfit yfit
+	do_cos_fit xfitnew residfitnew
+	calc_plot_arrays
+
+setup_frequency_ranges
+	# define starting frequency ranges to fit baselines
+	define ffit1 -2.1
+	define ffit2 -0.2
+	define ffit3 1.1
+	define ffit4 2.0 
+        define f1 -2                    # lower edge for output 
+        define f2  2                    # upper edge for output
+	define fplot1 -2.4		# lower edge for plotting
+	define fplot2 2.4		# upper edge for plotting
+
+setup_rspec_freq_ranges
+        # define starting frequency ranges to fit baselines
+	define ffita -4.5
+	define ffitb -3
+        define ffit1 -2
+        define ffit2 -0.2
+        define ffit3 1.1
+        define ffit4 2
+	define ffit5 3
+	define ffit6 4.5
+
+        define f1 -5                    # lower edge for output
+        define f2  5                    # upper edge for output
+        define fplot1 -2.5              # lower edge for plotting
+        define fplot2 2.5               # upper edge for plotting
+
+do_poly_fit 2
+	# args = x y vectors for polynomial fit
+	# polynomial order is hardwired
+	# calculates residuals and fills xfitnew, yfitnew with
+	# non-outlier values 
+	set _xfit local
+	set _yfit local 
+	set _residfit local
+	set _xfit = $1
+	set _yfit = $2
+	define norder 7
+	fitpol $norder _xfit _yfit yhat
+
+	set dimen(_yfithat) = dimen(_xfit)
+	do i=0,$($norder-1) {set _yfithat = _yfithat + a[$i]*_xfit**($i)}
+	set _residfit = _yfit - _yfithat
+	stats _residfit rmean rsig rkurt
+	!echo $rmean $rsig
+	set xfitnew = _xfit if(_residfit<$($rmean+3.*$rsig))
+	set yfitnew = _yfit if(_residfit<$($rmean+3.*$rsig))
+	set residfitnew = _residfit if(_residfit<$($rmean+3.*$rsig))
+	echo dimen(xfitnew) = $(dimen(xfitnew))
+
+calc_plot_arrays
+        set dimen(yhatpoly) = dimen(f) 
+        set dimen(resid) = dimen(f) 
+	do i=0,$($norder-1) {set yhatpoly = yhatpoly + a[$i]*f**($i)}
+#	print {yhatpoly}
+#	print {y}
+#	print {a}
+
+	# residuals after polynomial fit:
+	set resid1 = y - yhatpoly
+	set residfit1 = resid1 if((f>$ffit1&&f<$ffit2)||(f>$ffit3&&f<$ffit4))
+
+	# residuals after cosine fit:
+#	set yhatcos = $ampmin * cos(2.*PI * (f - $phimin) / $pmin)
+#	set resid2 =  resid1 - yhatcos 
+#	set residfit2 = resid2 if((f>$ffit1&&f<$ffit2)||(f>$ffit3&&f<$ffit4))
+
+do_cos_fit 2	# fit cosine of the form A\cos(2\pi(f-f0)/p)
+	# parameter ranges searched in a grid search:
+	define amp0 0.013 define damp 0.0005 	# for normalized spectrum
+	define p0 0.38	 define dp 0.005 	# MHz
+	define phi0  0.  define dphi 0.02	# MHz
+	define ntrials1 11
+	define ntrials2 11
+	define ntrials3 5
+	define ncount 0
+	set _xfit local set _yfit local 
+	set _xfit = $1 set _yfit = $2
+	do nt=1,$ntrials1{
+	  define amp ($amp0+($nt-($ntrials1+1)/2)*$damp)
+	  do mt=1,$ntrials2{
+	    define p ($p0+($mt-($ntrials2+1)/2)*$dp)
+	    do lt=1,$ntrials3 {
+	    define phi ($phi0+($lt-($ntrials3+1)/2)*$dphi)
+	    #echo $nt $mt $lt $amp $p $phi
+	    set ycos = $amp*(cos(2.*PI*(_xfit-$phi)/$p))
+	    #set x2 = (residfit - ycos)**2
+	    set x2 = (_yfit- ycos)**2
+	    define chisq (sum(x2))
+	    define ncount ($ncount+1)
+	    if($ncount ==1) {
+		define chisqmin $chisq
+	  	define pmin $p
+		define ampmin $amp
+		define phimin $phi
+	    }
+	    if($chisq<$chisqmin) {
+                define chisqmin $chisq
+                define pmin $p
+                define ampmin $amp
+		define phimin $phi
+	    }
+	    #echo $nt $mt $amp $p $chisq
+	    #connect xfit ycos
+	}}}
+	echo $pmin $ampmin $phimin $chisqmin
+	#set ycos = $ampmin*(cos(2.*PI*(xfit-$phimin)/$pmin))
+	set yhatcos = $ampmin*(cos(2.*PI*(_xfit-$phimin)/$pmin))
+	set residcos = _yfit - yhatcos
+	stats residcos rcosmean rcossig rcoskurt
+	set xcosfitnew = _xfit if(residcos<$rcosmean+3*$rcossig)
+	set ycosfitnew = _yfit if(residcos<$rcosmean+3*$rcossig)
+	set xoutlier = _xfit if(residcos>$rcosmean+3*$rcossig)
+	set youtlier = _yfit if(residcos>$rcosmean+3*$rcossig)
+
+plot1	# plots only the flattened spectrum
+	define TeX_strings 1
+	expand 1.2
+	ctype "default"
+
+	window 1 -1 1 1
+	lw 2
+	limits $fplot1 $fplot2  -0.1 0.45
+	ticksize 1 1 0.1 0.2
+	box
+        xlabel Frequency (MHz)
+        ylabel \Delta T/T_{sys}
+	#set resid2norm = resid2/a[0]
+	connect f resid2
+
+	smooth resid2 resid2smo 21
+	ctype "red"
+	lw 3
+	connect f resid2smo
+
+	# outliers
+	ctype "cyan"
+	ptype 20 3
+	points xoutlier youtlier
+
+	ctype "default"
+	
+plot2	# plots raw and flattened spectra (two panels)
+	define TeX_strings 1
+	expand 1.2
+	ctype "default"
+	window 1 -2 1 2
+        limits $fplot1 $fplot2 0 $(1.1*$ymax) 
+        ticksize 0.5 1 0.2 1
+        lw 2
+        box 0 2
+        #toplabel "$!infile"
+        ylabel T / T_{sys}
+	connect f y
+	ctype "red"
+	connect xhat2 yhat2
+	ctype "default"
+	relocate $($fx1+0.075*($fx2-$fx1)) $($fy2-0.15*($fy2-$fy1))
+	putlabel 6 $nspectrum
+
+	window 1 -2 1 1
+	limits $fplot1 $fplot2  -0.1 0.45
+	ticksize 0.5 1 0.2 0.2
+	box
+        xlabel Frequency (MHz)
+        ylabel \Delta T / T_{sys}
+	connect f resid2
+
+	smooth resid2 resid2smo 11
+	ctype "red"
+	lw 2
+	connect f resid2smo
+
+	# outliers
+	ctype "cyan"
+	ptype 20 3
+	points xoutlier youtlier
+
+	ctype "default"
+	
+
+plot3	#
+	define TeX_strings 1
+	expand 1.2
+	ctype "default"
+	window 1 -3 1 3
+        limits xfit 0 $(1.1*$ymax) 
+        ticksize 0.5 1 0.2 1
+        lw 2
+        box 0 2
+        toplabel "$!infile"
+        ylabel T(\\nu)/T_{sys}
+	connect f y
+	ctype "red"
+	connect xhat2 yhat2
+	ctype "default"
+	relocate $($fx1+0.075*($fx2-$fx1)) $($fy2-0.15*($fy2-$fy1))
+	putlabel 6 $nspectrum
+
+	window 1 -3 1 2
+	limits xfit -0.1 0.45
+	ticksize 0.5 1 0.1 0.2
+	box 0 2
+        ylabel T(\\nu)/T_{sys}
+	connect f resid1
+	ctype "red"
+	connect xfit residfit1
+	ctype "default"
+
+
+	ctype "blue"
+	connect f yhatcos
+	ctype "default"
+
+	window 1 -3 1 1
+	limits xfit -0.1 0.45
+	box
+        xlabel Frequency (MHz)
+        ylabel T(\\nu)/T_{sys}
+	connect f resid2
+
+	smooth resid2 resid2smo 11
+	ctype "red"
+	lw 2
+	connect f resid2smo
+
+	# outliers
+	ctype "cyan"
+	ptype 20 3
+	points xoutlier youtlier
+
+	ctype "default"
+	
+plot4 #Added by LGS (Sep 2010) for use with rspec 
+        define TeX_strings 1
+        expand 1.2
+        ctype "default"
+
+        window 1 -1 1 1
+        lw 2
+        #limits $fplot1 $fplot2  -0.1 1 
+        limits $fplot1 $fplot2  -0.1 0.7
+        ticksize 0.5 1 0.1 0.5
+
+        box
+        xlabel Frequency (MHz)
+        ylabel \Delta T/T_{sys}
+        #set resid2norm = resid2/a[0]
+	connect f resid1
+
+plot5 #Added by LGS (Sep 2010) for use with rspec 
+        define TeX_strings 1
+        expand 1.2
+        ctype "default"
+
+        window 1 -1 1 1
+        lw 2
+	#Override definitons set above
+	define fplot1 -5
+	define fplot2 5
+        limits $fplot1 $fplot2  -0.1 2 
+        ticksize 0.5 1 0.1 0.5
+
+        box
+        xlabel Frequency (MHz)
+        ylabel \Delta T/T_{sys}
+        #set resid2norm = resid2/a[0]
+	points xfit yfit
+	points xfitnew yfitnew
+	connect f yhatpoly
+	connect f y
+
+test1	#
+	# got these from http://www.public.asu.edu/~rjansen/sm/default
+	macro read sm_macros_from_web.sm
+	set x = -0.25, 0.75, 0.001
+	set y = cos(2*PI*x/0.5) 
+	limits x y
+	box
+	#points x y
+	connect x y
+
+	sel (x<=x[dimen(x)-1])
+
+	set dimen(x0) = dimen(x)
+	set dimen(x1) = dimen(x)
+	set dimen(x2) = dimen(x)
+	set dimen(x3) = dimen(x)
+	set dimen(yfit) = dimen(x)
+	set x0 = 0*x + 1
+	set x1 = x
+	set x2 = x**2
+	set x3 = x**3
+	
+	fitpol 15 x y yfit
+	ctype "red"
+	connect x yfit
+	ctype "default"

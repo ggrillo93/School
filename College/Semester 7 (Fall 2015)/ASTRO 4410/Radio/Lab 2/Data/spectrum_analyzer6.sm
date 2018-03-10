@@ -1,0 +1,108 @@
+# 2014 May 1: JMC: edited so that box frame is not erased for each spectrum 
+#             that is plotted; had to change usage of $count and fix
+#             the actions for $count == 0; now works nicely. 
+# to do:
+# make this file self-contained by:
+#  1. embed HIsingle.sm routines into this file
+#  2. embed only the necessary routines in sm_macros_from_web.sm
+#     into this file
+spectrum_analyzer6 #
+	# supermongo script that loops over the specfied number of spectra:
+	# it runs the data acquisition program HI3 using the script 
+	# run_HI3_script and it displays the spectrum on the screen
+	# and outputs spectra with header information to a file
+	# spectra
+	#
+	# note the following have to be predefined before calling this routine:
+	#	nspectra
+	#	fsamp
+	#	nchans
+	#	outfile
+	# JMC 12-14 Sep 2005, 22,28 Dec 2005
+	!echo "Inside spectrum_analyzer6.sm"
+	define TeX_strings 1
+	define verbose 0
+	define count 0
+	define count -1
+	!echo $count
+	define nsmooth (11)
+        macro read HIsingle.sm
+	macro read sm_macros_from_web.sm	# eventually build into HIsingle.sm
+	!'rm' spectrum_analyzer.out
+	! touch spectrum_analyzer.out
+	while{$count<$nspectra-1} {
+	  define count ($count+1)
+	  echo "count" $count
+	  !echo "rspec_get_spec" $(($count)) $tsleep
+	  !rspec_get_spec $(($count)) $tsleep >> spectrum_analyzer.out
+#	  !rspec_get_spec $(($count+1)) $tsleep >> spectrum_analyzer.out
+	  if('$coordsys' == '0') {	
+	  !write_label_lb $coord1 $coord2 $count $outfile }
+	  if('$coordsys' == '1') {	
+	  !write_label $coord1 $coord2 $count $outfile 
+	  }
+	  !cat  HI.average | awk '{if(NR>4) print}'  >> $outfile
+	  data HI.average
+          define fsamp read 2 1            # MHz
+          define nchans read 3 1
+          define nave read 4 1
+          define df ($fsamp/$nchans)
+	  setup_rspec_freq_ranges
+	  !echo "Just after setup_frequency_ranges"
+#	  get_spectrum
+	  get_spectrum_min
+	  !echo "Just after get_spectrum"
+	  # next line: flat it out and force drawing of new box,etc. for labelling purposes
+	  #if($count > 1) {ltype erase connect f resid2 connect f resid2smo ltype 0}
+          do_poly_fit xfit yfit  
+#	  do_poly_fit xfitnew yfitnew
+
+	  !echo "do_poly_fit"
+
+#          do_cos_fit xfitnew residfitnew
+#	  !echo "Just after do_cos_fit"
+#	  !echo "Just before calc_plot_arrays"
+          calc_plot_arrays
+	#Hard code limits of plotting
+#	  define fplot1 -5
+#	  define fplot2 5
+
+          echo $count
+	  if($count > 0) { 		# subterfuge to force rebox
+	    #erase
+            ltype erase connect f resid1last 
+            ltype 0 connect f resid1
+	    #plot4
+	    if($nspectra==1){
+	    	!sleep 5
+	    }
+#	    plot5
+	    #toplabel Spectrum "#" $count
+            relocate $($fx1+0.025*($fx2-$fx1)) $($fy2-0.05*($fy2-$fy1))
+            ltype erase putlabel 6 $countlast
+            relocate $($fx1+0.025*($fx2-$fx1)) $($fy2-0.05*($fy2-$fy1))
+            putlabel 6 $count
+	  }else{
+	    lw 2
+	    plot4
+	    #connect f resid2
+            #smooth resid2 resid2smo 11
+            #ctype "red"
+            #lw 2
+            #connect f resid2smo
+
+            # outliers
+            ctype "cyan"
+            ptype 20 3
+            points xoutlier youtlier
+	  }
+          set resid1last = resid1
+          define countlast ($count+1)
+
+        ctype "default"
+
+
+	  echo tsleep = $tsleep
+#	  !sleep $tsleep
+	}
+

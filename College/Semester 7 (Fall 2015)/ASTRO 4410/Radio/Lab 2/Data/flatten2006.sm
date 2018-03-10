@@ -1,0 +1,449 @@
+# A410: use flatten1 and flatpsplot to process single spectra
+
+setup_frequency_ranges
+	define first 0
+	if($first==0) {
+	  macro read sm_macros_from_web.sm
+	  define first 1
+	}
+	# define starting frequency ranges to fit baselines
+	define ffit1 -2.1
+	define ffit2 -0.2
+	define ffit3 1.1
+	define ffit4 2.0 
+        define f1 -2                    # lower edge for output 
+        define f2  2                    # upper edge for output
+
+
+flatten1	# processes a single spectrum and writes to output file
+        verbose 0
+	define nskip 0
+        define nspectrum 1
+	define nsmooth 11
+	device x11
+        setup_frequency_ranges 
+        open_file
+	define flatfile flatten1.out
+	echo Enter file name to write the flattened spectrum into:
+	define flatfile ? 
+	# delete flatfile first: 
+	! rm $flatfile
+        get_spectrum 
+        setup_frequency_ranges
+        do_poly_fit xfit yfit
+	set xhat2 = xfitnew
+        set yhat2 = yfitnew
+        do_cos_fit xfitnew residfitnew
+        calc_plot_arrays
+	plot3
+        set xplot = f if($f1<=f&&f<=$f2)
+        set yplot = resid2 if($f1<=f&&f<=$f2)
+	smooth yplot yplotsmo $nsmooth
+	define print_noheader 1
+	#define flatheading "         f      Spectrum Smoothed-Spectrum" 
+	define flatheading "  f (baseband)  Spectrum Smoothed-Spectrum" 
+	write   $flatfile "--------------------------------------------------------------------------------"
+	write + $flatfile "Output from flatten1 for file" $infile 
+	write + $flatfile $tint_per_spectrum "integration time in spectrum (s)"
+	write + $flatfile $df  "sample interval in frequency (MHz)"
+	write + $flatfile $hstuff 
+	write + $flatfile "Frequency in MHz, Spectrum in units of Tsys, Smoothed spectrum: " $nsmooth"-pt smoothing"
+	write + $flatfile "--------------------------------------------------------------------------------"
+	write + $flatfile $flatheading
+	print + $flatfile {xplot yplot yplotsmo}
+
+flatten2	# processes a single spectrum and writes to output file
+	!echo "Inside flatten2"
+        verbose 0
+	define nskip 0
+        define nspectrum 1
+	define nsmooth 11
+	device x11
+        setup_rspec_freq_ranges 
+        open_file
+	define flatfile flatten1.out
+	echo Enter file name to write the flattened spectrum into:
+	define flatfile ? 
+	# delete flatfile first: 
+	! rm $flatfile
+        get_spectrum_min 
+#        setup_frequency_ranges
+        do_poly_fit xfit yfit
+	set xhat2 = xfitnew
+        set yhat2 = yfitnew
+#        do_cos_fit xfitnew residfitnew
+        calc_plot_arrays
+	plot3
+        set xplot = f if($f1<=f&&f<=$f2)
+        set yplot = resid2 if($f1<=f&&f<=$f2)
+	smooth yplot yplotsmo $nsmooth
+	define print_noheader 1
+	#define flatheading "         f      Spectrum Smoothed-Spectrum" 
+	define flatheading "  f (baseband)  Spectrum Smoothed-Spectrum" 
+	write   $flatfile "--------------------------------------------------------------------------------"
+	write + $flatfile "Output from flatten1 for file" $infile 
+	write + $flatfile $tint_per_spectrum "integration time in spectrum (s)"
+	write + $flatfile $df  "sample interval in frequency (MHz)"
+	write + $flatfile $hstuff 
+	write + $flatfile "Frequency in MHz, Spectrum in units of Tsys, Smoothed spectrum: " $nsmooth"-pt smoothing"
+	write + $flatfile "--------------------------------------------------------------------------------"
+	write + $flatfile $flatheading
+	print + $flatfile {xplot yplot yplotsmo}
+	!echo "Inside flatten2"
+
+flatpsplot	# after flatten1 is run, makes a postscript file
+	define TeX_strings 1
+	define flatpsfile flatpsplot.ps
+	echo Enter name of postscript file to put plot into
+	define flatpsfile ?
+	device postfile $flatpsfile
+	window 1 1 1 1
+	ctype "default"
+        ticksize 0.5 1 0.05 0.1
+	limits xplot yplot
+	lw 2
+	box
+	xlabel Frequency (MHz)
+	ylabel Spectrum (in units of T_{sys})
+	lw 3
+	connect xplot yplot
+	lw 2
+	ctype "red"
+	connect xplot yplotsmo
+	hardcopy
+
+process_many	# prompts for file, starting spectrum
+	# nb: can be sped up by truncating frequency range from the get-go;
+	# right now, all spectral channels out of the Echotek program are
+	# processed
+	# removes baseline and writes spectra out to file
+	verbose 0
+	define print_noheader 1
+	define nsmooth 8		# no. to smooth; half this to decimate
+	open_file
+	define nskip 0
+	define nskip ?
+	define nspectra 10
+	define nspectra ?
+	define outfile process_many.out
+	define outfile ?
+	define outfile_ave process_many.ave
+        setup_frequency_ranges
+	!'rm' $outfile
+	do ns=$(1+$nskip),$($nspectra+$nskip){
+	  define nspectrum ($ns)
+	  echo ns = $ns
+          get_spectrum
+	  # do polynomial fit twice: before and after outlier removal
+          do_poly_fit xfit yfit
+	  #print {a}
+	  set yhat1 = yhat
+	  set xxfit = xfitnew set yyfit = yfitnew
+	  sel (xxfit < xxfit[dimen(xxfit)-1])	
+	  do_poly_fit xxfit yyfit
+	  #print {a}
+	  set xhat2 = xfitnew
+	  set yhat2 = yfitnew
+          #do_cos_fit xfit residfit
+          do_cos_fit xfitnew residfitnew
+	  do_cos_fit xcosfitnew ycosfitnew
+	  if($ns==$(1+$nskip)) {
+	    echo "setting x,youtliers"
+	    set xoutliers = xoutlier
+	    set youtliers = youtlier
+	  }else{
+	    set xoutliers = xoutliers concat xoutlier
+	    set youtliers = youtliers concat youtlier
+	  }
+	  erase
+	  calc_plot_arrays
+	  plot3
+	  # smooth by factor nsmooth and decimate by nsmooth/2 
+	  smooth resid2 resid2smo $nsmooth
+	  define nchansdec ($nchans/($nsmooth/2))
+	  set dimen(resid2smodec) = $nchansdec
+	  set dimen(fsmodec) = $nchansdec
+	  do nf=0,$($nchansdec-1) {
+	    set resid2smodec[$nf] = resid2smo[$nf*$nsmooth/2]  
+	    set fsmodec[$nf] = f[$nf*$nsmooth/2]  
+	  }
+	  if($ns==$(1+$nskip)) {
+	    define nchansout 0
+	    do nc=0,$($nchansdec-1) {
+	      if(fsmodec[$nc]>=$f1&&fsmodec[$nc]<=$f2) {
+	 	define nchansout ($nchansout+1)
+	      }
+	    }
+	    write   $outfile $fsamp
+	    write + $outfile $tint_per_spectrum
+	    write + $outfile "Spectrum" $ns $nchansout $hstuff
+	    set spsum = resid2
+ 	  }else{
+	    write + $outfile "Spectrum" $ns $nchansout $hstuff
+	    set spsum = spsum + resid2
+          }
+	  
+	  do nc=0,$($nchansdec-1) {
+	    if(fsmodec[$nc]>=$f1&&fsmodec[$nc]<=$f2) {
+	      write + $outfile $(fsmodec[$nc])  $(resid2smodec[$nc]) 
+	    }
+	  }
+	}
+	set spsum = spsum/$nspectra
+	erase
+	window 1 1 1 1
+	set xplot = f if($f1<=f&&f<=$f2)
+	set yplot = spsum if($f1<=f&&f<=$f2)
+        ticksize 0.5 1 0.05 0.1
+	limits xplot yplot
+	box
+	xlabel Frequency (MHz)
+	ylabel Spectrum (in units of T_{sys})
+	connect xplot yplot
+	smooth yplot yplotsmo 10
+	print $outfile_ave {xplot yplot yplotsmo}
+
+process_one
+	verbose 0
+        setup_frequency_ranges
+	open_file
+	define nspectrum 1
+	echo "enter spectrum number in set:"
+	define nspectrum ?
+	get_spectrum
+	setup_frequency_ranges
+	do_poly_fit xfit yfit
+	do_cos_fit xfitnew residfitnew
+	calc_plot_arrays
+
+open_file	#
+	define infile "spectra.AzEL.180.90.53685.9187.out"	
+	define infile ?
+	data "$!infile"
+	!echo "open_file" $infile
+	define fsamp read 3 1
+        #define nchans read 5 1
+        define nchans read 14 1
+        define nave read 6 1
+	define tint_per_spectrum read 7 1
+	#define df ($fsamp/$nchans)
+	define f1output read 19 1
+	define f2output read 20 1
+	define df (($f2output-$f1output)/($nchans-1))
+
+
+get_header_line
+	define MJD read $header_line 4
+	define LST read $header_line 6
+	define RAhh read $header_line 12
+	define RAmm read $header_line 13
+	define RAss read $header_line 14
+	define DECdd read $header_line 16
+	define DECmm read $header_line 17
+	define DECss read $header_line 18
+	define l read $header_line 20
+	define b read $header_line 22
+	define LocalYY read $header_line 24
+	define LocalMM read $header_line 25
+	define LocalDD read $header_line 26
+	define Localhh read $header_line 28
+	define Localmm read $header_line 29
+	define Localss read $header_line 30
+	define UTCYY read $header_line 32
+	define UTCMM read $header_line 33
+	define UTCDD read $header_line 34
+	define UTChh read $header_line 36
+	define UTCmm read $header_line 37
+	define UTCss read $header_line 38
+	define hstuff {$MJD $LST $RAhh $RAmm $RAss $DECdd $DECmm $DECss $l $b $LocalYY $LocalMM $LocalDD $Localhh $Localmm $Localss $UTCYY $UTCMM $UTCDD $UTChh $UTCmm $UTCss} 
+
+
+get_spectrum #
+	#define line1 (13 + $nspectrum + ($nspectrum-1)*($nchans))
+	define line1 (21 + $nspectrum + ($nspectrum-1)*($nchans))
+	define line2 ($line1 + $nchans - 1)
+	define header_line ($line1 - 1)
+	get_header_line
+	echo "Galactic Coordinates" $l $b
+	lines $line1 $line2
+	read {x 1 s 2}
+        vecminmax s smin smax
+	set y = ((s - $smin)/($smax-$smin))
+	vecminmax y ymin ymax
+        set f = (x-$nchans/2)*$df
+	set xfit = f if((f>$ffit1&&f<$ffit2)||(f>$ffit3&&f<$ffit4))
+	set yfit = y if((f>$ffit1&&f<$ffit2)||(f>$ffit3&&f<$ffit4))
+	# "sel" needed by fitpol
+	sel (xfit < xfit[dimen(xfit)-1])	
+	set fselect = f if(f>$f1&&f<$f2)
+	set yselect = y if(f>$f1&&f<$f2)
+        # find mean of off-line portion of spectrum for fit
+        # rescale the spectrum to put spectrum in (approx) units of Tsys
+        stats yfit yfitmean yfitsig yfitkurt
+        set y = y / $yfitmean
+        set yfit = yfit / $yfitmean
+        set yselect = yselect / $yfitmean
+        vecminmax y ymin ymax
+
+
+
+do_poly_fit 2
+	# args = x y vectors for polynomial fit
+	# polynomial order is hardwired
+	# calculates residuals and fills xfitnew, yfitnew with
+	# non-outlier values 
+	set _xfit local set _yfit local set _residfit local
+	set _xfit = $1 set _yfit = $2
+	define norder 10 
+	define norder 8 
+	fitpol $norder _xfit _yfit yhat
+
+	set dimen(_yfithat) = dimen(_xfit)
+	do i=0,$($norder-1) {set _yfithat = _yfithat + a[$i]*_xfit**($i)}
+	set _residfit = _yfit - _yfithat
+	stats _residfit rmean rsig rkurt
+	set xfitnew = _xfit if(_residfit<$($rmean+3.*$rsig))
+	set yfitnew = _yfit if(_residfit<$($rmean+3.*$rsig))
+	set residfitnew = _residfit if(_residfit<$($rmean+3.*$rsig))
+	echo dimen(xfitnew) = $(dimen(xfitnew))
+
+calc_plot_arrays
+        set dimen(yhatpoly) = dimen(f) 
+        set dimen(resid) = dimen(f) 
+	do i=0,$($norder-1) {set yhatpoly = yhatpoly + a[$i]*f**($i)}
+	# residuals after polynomial fit:
+	set resid1 = y - yhatpoly
+	set residfit1 = resid1 if((f>$ffit1&&f<$ffit2)||(f>$ffit3&&f<$ffit4))
+
+	# residuals after cosine fit:
+	set yhatcos = $ampmin * cos(2.*PI * (f - $phimin) / $pmin)
+	set resid2 =  resid1 - yhatcos 
+	set residfit2 = resid2 if((f>$ffit1&&f<$ffit2)||(f>$ffit3&&f<$ffit4))
+
+do_cos_fit 2	# fit cosine of the form A\cos(2\pi(f-f0)/p)
+	# parameter ranges searched in a grid search:
+	define amp0 0.013 define damp 0.0005 	# for normalized spectrum
+	define p0 0.38	 define dp 0.005 	# MHz
+	define phi0  0.  define dphi 0.02	# MHz
+	define ntrials1 11
+	define ntrials2 11
+	define ntrials3 5
+	define ncount 0
+	set _xfit local set _yfit local 
+	set _xfit = $1 set _yfit = $2
+	do nt=1,$ntrials1{
+	  define amp ($amp0+($nt-($ntrials1+1)/2)*$damp)
+	  do mt=1,$ntrials2{
+	    define p ($p0+($mt-($ntrials2+1)/2)*$dp)
+	    do lt=1,$ntrials3 {
+	    define phi ($phi0+($lt-($ntrials3+1)/2)*$dphi)
+	    #echo $nt $mt $lt $amp $p $phi
+	    set ycos = $amp*(cos(2.*PI*(_xfit-$phi)/$p))
+	    #set x2 = (residfit - ycos)**2
+	    set x2 = (_yfit- ycos)**2
+	    define chisq (sum(x2))
+	    define ncount ($ncount+1)
+	    if($ncount ==1) {
+		define chisqmin $chisq
+	  	define pmin $p
+		define ampmin $amp
+		define phimin $phi
+	    }
+	    if($chisq<$chisqmin) {
+                define chisqmin $chisq
+                define pmin $p
+                define ampmin $amp
+		define phimin $phi
+	    }
+	    #echo $nt $mt $amp $p $chisq
+	    #connect xfit ycos
+	}}}
+	echo $pmin $ampmin $phimin $chisqmin
+	#set ycos = $ampmin*(cos(2.*PI*(xfit-$phimin)/$pmin))
+	set yhatcos = $ampmin*(cos(2.*PI*(_xfit-$phimin)/$pmin))
+	set residcos = _yfit - yhatcos
+	stats residcos rcosmean rcossig rcoskurt
+	set xcosfitnew = _xfit if(residcos<$rcosmean+3*$rcossig)
+	set ycosfitnew = _yfit if(residcos<$rcosmean+3*$rcossig)
+	set xoutlier = _xfit if(residcos>$rcosmean+3*$rcossig)
+	set youtlier = _yfit if(residcos>$rcosmean+3*$rcossig)
+
+plot3	#
+	define TeX_strings 1
+	expand 1.2
+	ctype "default"
+	window 1 -3 1 3
+        limits xfit 0 $(1.1*$ymax) 
+        ticksize 0.5 1 0.2 1
+        lw 2
+        box 0 2
+        toplabel "$!infile"
+        ylabel T(\\nu)/T_{sys}
+	connect f y
+	ctype "red"
+	connect xhat2 yhat2
+	ctype "default"
+	relocate $($fx1+0.075*($fx2-$fx1)) $($fy2-0.15*($fy2-$fy1))
+	putlabel 6 $nspectrum
+
+	window 1 -3 1 2
+	limits xfit -0.1 0.45
+	ticksize 0.5 1 0.1 0.2
+	box 0 2
+        ylabel T(\\nu)/T_{sys}
+	connect f resid1
+	ctype "red"
+	connect xfit residfit1
+	ctype "default"
+
+
+	ctype "blue"
+	connect f yhatcos
+	ctype "default"
+
+	window 1 -3 1 1
+	limits xfit -0.1 0.45
+	box
+        xlabel Frequency (MHz)
+        ylabel T(\\nu)/T_{sys}
+	connect f resid2
+
+	smooth resid2 resid2smo 11
+	ctype "red"
+	lw 2
+	connect f resid2smo
+
+	# outliers
+	ctype "cyan"
+	ptype 20 3
+	points xoutlier youtlier
+
+	ctype "default"
+	
+
+test1	#
+	# got these from http://www.public.asu.edu/~rjansen/sm/default
+	macro read sm_macros_from_web.sm
+	set x = -0.25, 0.75, 0.001
+	set y = cos(2*PI*x/0.5) 
+	limits x y
+	box
+	#points x y
+	connect x y
+
+	sel (x<=x[dimen(x)-1])
+
+	set dimen(x0) = dimen(x)
+	set dimen(x1) = dimen(x)
+	set dimen(x2) = dimen(x)
+	set dimen(x3) = dimen(x)
+	set dimen(yfit) = dimen(x)
+	set x0 = 0*x + 1
+	set x1 = x
+	set x2 = x**2
+	set x3 = x**3
+	
+	fitpol 15 x y yfit
+	ctype "red"
+	connect x yfit
+	ctype "default"

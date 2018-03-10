@@ -1,0 +1,563 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 3cm
+\topmargin 3cm
+\rightmargin 3cm
+\bottommargin 5cm
+\headheight 1cm
+\headsep 1cm
+\footskip 2cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+ASTRO 4410 LAB 3
+\end_layout
+
+\begin_layout Date
+December 2nd, 2015
+\end_layout
+
+\begin_layout Author
+Gianfranco Grillo
+\end_layout
+
+\begin_layout Section
+Objectives
+\end_layout
+
+\begin_layout Enumerate
+Plot the rotation curve of the galaxy NGC 7331
+\end_layout
+
+\begin_layout Enumerate
+Compare with accepted rotation curve.
+\end_layout
+
+\begin_layout Enumerate
+Find the galaxy's recession velocity.
+\end_layout
+
+\begin_layout Section
+Setup
+\end_layout
+
+\begin_layout Subsection
+Target object
+\end_layout
+
+\begin_layout Standard
+The target object was the spiral galaxy NGC 7331, located at a distance
+ of 12.2 ± 1.0 Mpc from Earth.
+ It is located in the constellation Pegasus, and it's 
+\end_layout
+
+\begin_layout Subsection
+Image acquisition
+\end_layout
+
+\begin_layout Standard
+Observations were made during the night of October 7th, 2015 at the Hartung-Boot
+hroyd Observatory (HBO) located at Mount Pleasant, Ithaca, NY.
+ The HBO houses the James R.
+ Houck telescope, a fork mounted cassegrain reflector telescope whose primary
+ mirror is 25 inches (0.635 meters) in diameter.
+ It has a f/13.5 lens, with a native plate scale of 24 arcsec/mm.
+ Photon detection was performed using an Andor iDus 440 CCD, which sports
+ a coated e2v CCD 42-10 BV sensor.
+ Image resolution was of 2048 by 512 pixels, with a pixel size of 13.5e-6
+ m, a plate scale of 0.3''/pixel, a field of view of 10.7' by 2.6', and a read
+ noise of 4 e
+\begin_inset script superscript
+
+\begin_layout Plain Layout
+-
+\end_layout
+
+\end_inset
+
+.
+ A spectrograph was used in order to decompose the light coming from the
+ target object into a spectrum (Figure 1).
+ This spectrum can be regarded as a three dimensional plot, with decreasing
+ wavelength from left to right along the x-axis, and the value of each pixel
+ correlates with the intensity of the corresponding spectral line.
+ The bright band that covers the entire image near the vertical center from
+ left to right is NGC 7331, so different values for the y-axis correlate
+ with different distances away from the galaxy's center.
+\end_layout
+
+\begin_layout Subsection
+Bias and flat noise
+\end_layout
+
+\begin_layout Standard
+Before observations began, 10 images with exposure time of 0.00001 seconds
+ were taken in order to obtain data that was later used to compensate for
+ bias.
+ No photons were allowed to enter the CCD while these images were taken.
+ In addition to this, 50 images of exposure time of 2 seconds under a flat
+ bright light field were performed in order to properly compensate for imperfect
+ions in the subsequent image acquisition.
+\end_layout
+
+\begin_layout Section
+Data reduction
+\end_layout
+
+\begin_layout Standard
+The data reduction was performed using Python.
+ The original 231 transit images containing the target star and several
+ others were inspected in order to look for obvious errors.
+ It was found that image number 132 was considerably brighter than the rest,
+ so it was not used in the analysis.
+ The bias was calculated by averaging, pixel by pixel, the 10 zero second
+ exposures performed before observation.
+ This bias was substracted, again pixel by pixel, from each of the transit
+ images.
+ Compensating for the flat noise involved finding the pixelwise median for
+ each of the flat images taken and then dividing by their average, again
+ pixel by pixel.
+ Then, each of the transit images were divided pixelwise by the flat noise.
+\end_layout
+
+\begin_layout Standard
+Tracking of the target star was performed by comparing the position of the
+ star in the first image vs the position of the star in the final image,
+ enabling the construction of a box that was able to encompass the star
+ in each of the 230 images without encompassing other surrounding stars.
+ This box was subsequently analyzed, image by image, in order to locate
+ its maximum value in each of them, thus finding the coordinates of the
+ star's center for every one of the images.
+ Finally, these coordinates were used to construct a new, smaller box centered
+ on the star with its edges effectively framing it, obtaining something
+ akin to a circle (the star) inscribed in a square (the box).
+ Obtaining the relative brightness of the star for each of the images was
+ then done simply by calculating the average of the values of the pixels
+ within that box.
+\end_layout
+
+\begin_layout Standard
+Compensating for atmospheric effects involved using the same tracking technique
+ described above on another star within the field that was always present
+ throughout the images, calculating its brightness in each case, then scaling
+ and subtracting that brightness to the target star's at the corresponding
+ observation time.
+ The scaling was done using the data points at t=175 (image number 175)
+ at which point none of the stars was undergoing transit.
+\end_layout
+
+\begin_layout Standard
+All the previous steps returned a list of 230 values which corresponded
+ to the adjusted relative brightness of the target star for each of the
+ acquired images.
+ Since the star was supposed to be undergoing a planetary transit during
+ the time the data was obtained, plotting this list of values as a function
+ of time should produce a planetary transit curve.
+\end_layout
+
+\begin_layout Section
+Results and Analysis
+\end_layout
+
+\begin_layout Subsection
+General analysis
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/completecurve.png
+	scale 60
+	clip
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Complete transit curve
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Figure 1 contains the complete planetary transfer curve extracted from the
+ observations.
+ It is immediately apparent that the results are not perfect.
+ In particular, there are two things that must be analyzed in more detail.
+ First of all, the choice of scale point caused the observed brightness
+ to start at about 101% instead of 100%, as would be expected.
+ However, careful observation reveals that there is only one point at or
+ near B=1.01, with the following point being near B=1.005, so the error is
+ not too big so as not to be possible to attribute it to noise that was
+ not taken into account during data processing.
+ For instance, it must be noted that there was no adjustment done in order
+ to compensate for limb darkening, and the code used to analyze the images
+ assumed that the center of the star was located at the pixel that had the
+ maximum relative brightness, which is not necessarily true.
+ Calculation of the planet's radius will be done by ignoring this 0.5% discrepanc
+y and taking the percentage darkening to be unity minus the minimum value
+ of the brightness that can be extracted from the plot.
+\end_layout
+
+\begin_layout Standard
+The other thing that demands an explanation is the shape of the curve after
+ t=175.
+ Instead of the star's brightness being constant from that point on, our
+ observations appear to imply that after reaching its original value, the
+ brightness starts going down again, which of course does not make sense
+ since the planetary transit was already over.
+ I do not have a completely satisfying explanation for this.
+ It is possible that it is just noise: that some atmospheric phenomenon
+ that was not accounted for (such as a cloud) produced uneven distortion
+ that only affected either the target start or the star used to compensate
+ for atmospheric effects.
+ A more detailed analysis, taking into account the brightness evolution
+ of more of the stars observed throughout the night could determine whether
+ this hypothesis is correct.
+ For now, though, it is possible to ignore this noise and use the curve
+ from Figure 2 in order to estimate the radius of the planet.
+\end_layout
+
+\begin_layout Subsection
+Calculation of planetary radius
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/adjustedcurve.png
+	scale 60
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Adjusted Transit Curve
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+An estimate of the planetary radius can be made by looking at the percentage
+ of brightness coming from the star that the planet was able to block, which
+ can be obtained by looking at the lowest point in the transit curve.
+ This can be quantified by the following equation:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{L_{T}}{L_{0}}=1-\left(\frac{R_{P}}{R_{S}}\right)^{2}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where L
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+
+is the star's original brightness, L
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+T
+\end_layout
+
+\end_inset
+
+is the star's brightness with the planet under transit, R
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+P
+\end_layout
+
+\end_inset
+
+is the planet's radius, and R
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+S
+\end_layout
+
+\end_inset
+
+is the star's radius.
+ Solving for R
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+P
+\end_layout
+
+\end_inset
+
+, we have:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+R_{P}=R_{S}\sqrt{1-\frac{L_{T}}{L_{0}}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+From the transit curve, the maximum value for 
+\begin_inset Formula $\nicefrac{L_{T}}{L_{0}}$
+\end_inset
+
+ is
+\begin_inset Formula 
+\begin{equation}
+\frac{L_{T}}{L_{0}}=0.9765\pm0.0035
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The radius of the star is (from the Extrasolar Planet Encyclopaedia)
+\begin_inset Formula 
+\begin{equation}
+R_{S}=(0.783\pm0.071)R_{Sun}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Plugging this into (2) gives
+\begin_inset Formula 
+\begin{equation}
+R_{P}=(0.120\pm0.014)R_{Sun}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The same Extrasolar Planet Encyclopaedia gives the radius of the planet
+ as
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+R_{P}=(1.08\pm0.02)R_{J}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+With R
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+J
+\end_layout
+
+\end_inset
+
+ being the radius of Jupiter.
+ Since
+\begin_inset Formula 
+\begin{equation}
+R_{Sun}=9.73R_{J}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+(5) can be written as
+\begin_inset Formula 
+\begin{equation}
+R_{P}=(1.17\pm0.14)R_{J}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Which, given the instrumentation used and the not very sophisticated method
+ used to analyze the data, is in reasonable agreement with the accepted
+ value.
+\end_layout
+
+\begin_layout Section
+Conclusion
+\end_layout
+
+\begin_layout Standard
+The purpose of this lab was to observe a planetary transit using the James
+ R.
+ Houck telescope at HBO, extract a planetary transit curve from the data
+ obtained and use this curve to find the radius of the planet in question,
+ in this case, WASP-10b.
+ The objectives were fulfilled and reasonable agreement was obtained between
+ the results obtained and those that were expected, save for a strange feature
+ of the curve that was mentioned in section 4.1, but which does not appear
+ to have affected the calculation of the planetary radius.
+ Further refinements in the data reduction process, as well as data from
+ other transit events for the same planet, would probably produce a better
+ estimate for the planetary radius, but this can be regarded as a good first
+ approximation.
+\end_layout
+
+\begin_layout Section*
+References
+\end_layout
+
+\begin_layout Standard
+exoplanet TEAM.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+WASP-10b
+\begin_inset Quotes erd
+\end_inset
+
+.
+ 
+\emph on
+The Extrasolar Planets Encyclopaedia.
+ 
+\emph default
+Observatoire de Paris.
+ Accessed on 10/20/2015.
+ <http://exoplanet.eu/catalog/wasp-10_b/>
+\end_layout
+
+\end_body
+\end_document

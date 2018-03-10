@@ -1,0 +1,1870 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 3cm
+\topmargin 3cm
+\rightmargin 3cm
+\bottommargin 5cm
+\headheight 1cm
+\headsep 1cm
+\footskip 2cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+ASTRO 4410 LAB 1
+\end_layout
+
+\begin_layout Author
+Gianfranco Grillo, Abhigya Maskay, Ishaan Bhattacharya, Grigoriy Tabak
+\end_layout
+
+\begin_layout Section
+Objectives
+\end_layout
+
+\begin_layout Enumerate
+Understand the way a charged couple device (CCD) works.
+\end_layout
+
+\begin_layout Enumerate
+Become familiar with the operation of a CCD and the way it captures images.
+\end_layout
+
+\begin_layout Enumerate
+Gather image data by direct operation of a CCD in a laboratory setting.
+\end_layout
+
+\begin_layout Enumerate
+Analyze data obtained through the use of a CCD in order to understand sources
+ of error present in the capture of astronomical data and the ways to compensate
+ for them.
+\end_layout
+
+\begin_layout Enumerate
+Calculate the read noise, bias, dark current, the gain factor G for converting
+ from data numbers into electrons, linearity, and blooming for a CCD.
+\end_layout
+
+\begin_layout Section
+Setup
+\end_layout
+
+\begin_layout Standard
+The experiment was performed using an Andor IDus 440 CCD mounted on a flat
+ table and attached to a camera lens.
+ The first three results were obtained by placing the CCD some 50 cm away
+ from a white piece of paper.
+ This white piece of paper was pasted to a wooden bar in order to keep it
+ flat and upright.
+ A light bulb connected to a variable power source was placed directly behind
+ the paper and the bar.
+ In an effort to create a flat field from which to acquire data from, the
+ brightness of the light bulb was adjusted and the variable power source
+ was set at a constant voltage for all measurements.
+ The lights of the room were turned off for the duration of the exposure
+ time on each occasion data was acquired.
+ Results for the blooming part were obtained using a different setup, with
+ the white piece of paper replaced by a pigeon hole that was placed around
+ the lightbulb in order to create a point source.
+ The CCD was connected to a computer that was used to control it and receive
+ the data it obtained.
+ The computer's screen was also turned off whenever measurements were made.
+ The CCD was set to a temperature of -40 °C.
+ The software used to obtain and save the data was the 'Andor Solis' package
+ developed by the CCD's manufacturers.
+\end_layout
+
+\begin_layout Section
+Results
+\end_layout
+
+\begin_layout Subsection
+Read noise and bias
+\end_layout
+
+\begin_layout Standard
+Data for this part of the lab was acquired from five exposures timed to
+ be as short as possible, which in practice corresponded to 0.00001 seconds.
+ The camera lens cap was kept in its covering position.
+ The read noise was calculated by taking the standard deviation of the values
+ of the pixels contained in the image obtained by the CCD and averaging
+ over the values recovered for each of the exposures.
+ The bias was calculated by measuring the average value of the pixels contained
+ in the images, and again averaging over the five exposures.
+ All of these results can be seen on Table 1.
+\begin_inset VSpace defskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="8" columns="3">
+<features islongtable="true" longtabularalignment="center">
+<column alignment="center" valignment="top" width="0pt">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row caption="true">
+<cell multicolumn="1" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Standard deviation and bias for zero second exposures
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Exposure #
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Standard deviation (
+\begin_inset Formula $\sigma_{R}$
+\end_inset
+
+) (DN)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Bias (DN)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.1899
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+188.7861
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.1931
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+189.0550
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+3
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.2006
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+188.9735
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+4
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.2649
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+188.6766
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+5
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.2130
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+188.6830
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Average
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.2123
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+188.8349
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace defskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Dark current
+\end_layout
+
+\begin_layout Standard
+The dark current is the current that flows through a CCD that is not due
+ to photon collisions but to thermal fluctuations in it.
+ Its value is given by the slope of the line obtained by graphing the average
+ number of counts DN per pixel in terms of the respective exposure time.
+ The average number of counts per image was calculated using all of the
+ image's pixels, and nine different images were taken, each using a different
+ exposure time.
+ The results are shown in Table 2 and Figure 1.
+ The value of the dark current was calculated as
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace defskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{d(DN)}{dt}=0.01990\:\frac{DN}{s}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace defskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="11" columns="2">
+<features islongtable="true" longtabularalignment="center">
+<column alignment="center" valignment="top" width="0pt">
+<column alignment="center" valignment="top" width="0pt">
+<row caption="true">
+<cell multicolumn="1" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Dark Current
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Exposure time (s)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Average counts per pixel (DN)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+189.4229
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+189.4311
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+5
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+189.5149
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+10
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+189.8589
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+20
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+189.8461
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+40
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+190.4565
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+80
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+191.4351
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+160
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+193.1236
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+320
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+195.6770
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace defskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/dark current.png
+	scale 60
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Average counts per pixel vs Exposure time
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace defskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Gain factor and photon transfer curve
+\end_layout
+
+\begin_layout Standard
+The gain factor 
+\emph on
+G
+\emph default
+ enables conversion from DN's to electrons.
+ In this experiment, its value was calculated by taking several pictures
+ of the white piece of paper with the light bulb behind it at constant brightnes
+s and varying the exposure time for each picture.
+ In total, 18 pictures were taken, with exposure times ranging from 0.1 seconds
+ to 100 seconds.
+ Examination of each of the pictures determined that a fairly uniform region
+ could be selected from the bottom right corner of each of them.
+ A 20 by 20 pixel box corresponding to this region was used to calculate
+ the noise and the signal for each of the pictures.
+ Noise was calculated as the standard deviation of the group of pixels and
+ the signal was calculated as its average value.
+ Plotting the log of the noise obtained as a function of the log of the
+ signal minus the bias obtained before results in the CCD photon transfer
+ curve, shown in Figure 2.
+ Removing the first five points of the photon transfer curve, which are
+ dominated by read noise, produces Figure 3.
+ In theory, the best fit line for Figure 3 should have a value of 1/2, because
+ this part of the transfer curve is dominated by photon noise, and photon
+ noise is proportional to the square root of 
+\emph on
+N
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+e
+\end_layout
+
+\end_inset
+
+
+\emph default
+, the number of signal electrons in a well, while the signal is directly
+ proportional to 
+\emph on
+N
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+e
+\end_layout
+
+\end_inset
+
+
+\emph default
+.
+ Thus this kind of graph can in theory be used to obtain the exact value
+ of the gain factor 
+\emph on
+G
+\emph default
+ by extending the 1/2 slope line and would be given by the value of the
+ point at which the line intercepts the x-axis.
+ Unfortunately, the value of the best fit line for Figure 3 is not 1/2 but
+ 0.618, which means that utilization of this method does not produce an accurate
+ result.
+ An attempt was made anyway and the value was found to be
+\begin_inset Formula 
+\[
+G=0.6369\:\frac{e^{-}}{DN}
+\]
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+In order to obtain another estimation that would allow to get a more accurate
+ value for the gain constant, an alternative approach was also tried, which
+ relied on using the formula 
+\begin_inset Formula 
+\[
+G=\frac{S(DN)}{\sigma_{S}^{2}(DN)-\sigma_{R}^{2}(DN)}
+\]
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+So 
+\emph on
+G 
+\emph default
+was obtained by plotting the signal S(DN) vs the square of the noise minus
+ the square of the read noise calculated earlier for each of the 20 by 20
+ pixel boxes obtained from the images.
+ This method produced a value for 
+\emph on
+G
+\emph default
+ of 
+\begin_inset Formula 
+\[
+G=0.5691\:\frac{e^{-}}{DN}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+That plot is shown by Graph 4.
+ The average of the two values of 
+\emph on
+G
+\emph default
+ gives
+\begin_inset Formula 
+\[
+G_{av}=0.6030\:\frac{e^{-}}{DN}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using 
+\emph on
+G
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+
+\emph on
+av
+\end_layout
+
+\end_inset
+
+
+\emph default
+as the gain constant, the value of the read noise can now be written as
+\begin_inset Formula 
+\[
+\sigma_{R}=0.7310\: e^{-}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+And the value of the dark current as
+\begin_inset Formula 
+\[
+\frac{d(DN)}{dt}=0.01200\:\frac{e^{-}}{s}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The full well capacity cannot be calculated using this data for reasons
+ that will be explained later.
+\end_layout
+
+\begin_layout Standard
+It must be noted here that the fact that the value of the slope of Figure
+ 3 is not 1/2 might be explained by an imperfect field produced during the
+ experiment.
+ In other words, the field measured by the CCD, with a physical basis on
+ the illuminated part of the white piece of paper, was not a flat field,
+ maybe because of experimental error.
+ This is supported by the fact that when the size of the box used to calculate
+ the signal and noise values is increased, the slope of Figure 3 increases,
+ even though the selected area is still within what looks like a uniform
+ region of the acquired image.
+ The increase in slope implies an increase in the standard deviation of
+ the pixels, which points towards the conclusion that the field produced
+ in the experiment was not flat.
+\end_layout
+
+\begin_layout Standard
+Figure 2 shows the complete photon transfer curve for the experiment, incorporat
+ing the points that were not plotted on Figures 3 and 4.
+ In theory, this plot should have contained three different regimes characterize
+d by three different curve shapes as exemplified by Figure 5.
+ The first regime is dominated by read noise, the second by photon noise,
+ and the third by fixed pattern noise.
+ As can be immediately seen, Figure 2 shows only two different regimes,
+ not three as was expected.
+ This can be readily explained by the fact that the exposure times used
+ were never high enough to reach the saturation level of the wells.
+ We have already examined the second region, which was used to approximate
+ the value of the gain constant.
+ The discrepancy between the expected shape of the curve and the observed
+ one for the first region is harder to explain.
+ It might be possible that the read noise is not a constant and changed
+ as a function of the signal, but it is not easy to see why this would be
+ the case.
+ Another, more plausible possibility is that the lack of flatness of the
+ field might have affected the relationship between the noise and the signal
+ for low values.
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace defskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/full PTC.png
+	scale 60
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Full photon transfer curve
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace defskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/PTC2.png
+	scale 60
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Photon noise dominated region of curve
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace defskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/determination of G.png
+	scale 60
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Estimation of G
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace defskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/examplePTC.png
+	scale 90
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Ideal photon transfer curve.
+ Source: Janesick, James R.
+ 
+\emph on
+Scientific Charged-coupled Devices
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace defskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Linearity
+\end_layout
+
+\begin_layout Standard
+The linearity of a CCD relates to the behavior of the signal it produces
+ as a function of the exposure time of the images it captures.
+ An ideal CCD would be perfectly linear, with its signal being directly
+ proportional to the exposure time.
+ The nonlinearity of the CCD can be expressed as a percentage through the
+ following equation:
+\begin_inset Formula 
+\[
+\gamma=\frac{Max\: positive\: deviation-Max\: negative\: deviation}{Maximum\: signal}\times100
+\]
+
+\end_inset
+
+ Where the maximum positive and negative deviations corresponds to the maximum
+ distance between a series of signal values from their best fit line in
+ a plot of signal vs exposure time, and the maximum signal is the largest
+ signal plotted.
+ Using the same set of data as for calculating the 
+\emph on
+G 
+\emph default
+factor, two 20 by 20 boxes were selected for each image, one on the upper
+ left corner and the other on the bottom right corner.
+ The signal vs exposure times were later plotted, and the nonlinearity of
+ each of these lines was calculated and then averaged.
+ Figures 6, 7 and 8 show plots for different sets of exposure times and
+ their respective nonlinearity values.
+ Figure 6 contains all images captured, while Figure 7 contains all images
+ with exposure times greater or equal to 5 seconds.
+ Finally, Figure 8 contains all images with exposure times less or equal
+ to 20 seconds.
+ The value of gamma was also calculated for three other sets.
+ These are shown in Table 3.
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace defskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/linearity1.png
+	scale 70
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Linearity curve for all measurements.
+ 
+\begin_inset Formula $\gamma=1.115\%$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace defskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/linearity2.png
+	scale 70
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Linearity curve for all measurements with t
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+E
+\end_layout
+
+\end_inset
+
+≥ 5.
+ 
+\begin_inset Formula $\gamma=1.000\%$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace defskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/linearity3.png
+	scale 70
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Linearity curve for all measurements with t
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+E
+\end_layout
+
+\end_inset
+
+≤ 20.
+ 
+\begin_inset Formula $\gamma=0.176\%$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace bigskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="7" columns="2">
+<features islongtable="true" longtabularalignment="center">
+<column alignment="center" valignment="top" width="0pt">
+<column alignment="center" valignment="top" width="0">
+<row caption="true">
+<cell multicolumn="1" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Nonlinearity
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Exposure time (s)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\begin_inset Formula $\gamma$
+\end_inset
+
+ (%)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+≤ 20
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.176
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+≤ 50
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.149
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+≤ 70
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.816
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+≤ 100
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.842
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+≤ 300
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.115
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace defskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+There does not appear to be a clear relationship between the nonlinearity
+ of the data sets and their exposure times.
+ One conclusion that can be drawn is that the data is almost perfectly linear
+ for the first few points, and then it increases to a value close to 1%.
+ Another conclusion that this data appears to point towards is that distortions
+ due to the opening and closing of the shutter are not noticeable.
+ Measurements with exposure times of less than 0.1 second might have produced
+ different results, but these were not made.
+\end_layout
+
+\begin_layout Subsection
+Blooming
+\end_layout
+
+\begin_layout Standard
+Blooming is the name given to a particular phenomenon that affects images
+ produced by a CCD that has been exposed to a photon field that contains
+ a high concentration of photons in a small area.
+ After a long enough exposure, these photons overwhelm the electron wells
+ that map that particular area of the field, and they start overflowing
+ with electrons that proceed to fall into adjacent wells, producing the
+ illusion of a signal in places where photons are not actually arriving
+ at.
+\end_layout
+
+\begin_layout Standard
+Observation of blooming in this experiment was done by exposing the CCD
+ to a point light source and then taking a total of four exposures, each
+ two times longer than the previous one, starting with a 1 second exposure.
+ Blooming was observed for both the 4 and 8 second exposures.
+ For each of the images captured, the pixel that contained the maximum counts
+ was located and its value measured.
+ Table 4 shows the results of these measurements and Figure 9 contains a
+ plot of the maximum counts vs the exposure time.
+ The relationship between signal and exposure time was found to be nonlinear,
+ which is to be expected since some of the electron wells in charge of measuring
+ the signal coming from the direction of the point source were overwhelmed.
+ Thus, they were unable to measure the total signal coming from the source,
+ instead redistributing electrons into adjacent wells, essentially sharing
+ data counts with them.
+ This means that the expected shape of the plot would be one were the difference
+ between the maximum data count for each of the exposures would decrease
+ as the exposure time increased, which corresponds to the actual shape observed.
+ This is made more explicit in Table 4.
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace defskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Figures/blooming.png
+	scale 60
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Maximum signal as a function of exposure time
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace defskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="6" columns="3">
+<features islongtable="true" longtabularalignment="center">
+<column alignment="center" valignment="top" width="0pt">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row caption="true">
+<cell multicolumn="1" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Exposure time and maximum signal
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Exposure time (s)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Maximum signal
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Signal gain
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+3862
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+6759
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2897
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+4
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+8929
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2170
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+8
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+9606
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+677
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+References
+\end_layout
+
+\begin_layout Standard
+Janesick, James R.
+ "CCD Transfer Curves and Optimization." 
+\emph on
+Scientific Charge-coupled Devices
+\emph default
+.
+ Bellingham, WA: SPIE, 2001.
+ 95-119.
+ Print.
+\end_layout
+
+\end_body
+\end_document

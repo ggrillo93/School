@@ -1,0 +1,1936 @@
+########   SuperMongo default file -- R.A. Jansen --  Sep  8, 2005   #########
+#
+# This file should be placed in a subdirectory named "sm" of the user's home
+# directory and named "default". It should be declared in a (hidden) confi-
+# guration file in the user's home directory named ".sm" as follows:
+#    macro2     <full_path_to_user's_home_directory>/sm/
+#
+# Remember to change the user name in macro 'startup2' below.
+
+#################    GENERIC    ############################################
+
+startup2	stty 24  verbose 0  define _verbose  0
+		define user  "R.A. Jansen"
+
+lsvec		# list the vectors currently stored in memory
+		list set
+
+lsdef		# list the variables currently stored in memory
+		list define
+
+dir		!\ls -alF --color
+
+ls		!ls
+
+rm		!rm
+
+#################    DATE & TIME    ########################################
+
+gdate		# Parse system date string into year, month, day and time
+		# R.A. Jansen -- Sep 2000.
+		foreach _v { _date vcmon vnmon } { set $_v local }
+		foreach _v { gmon gtime } { define $_v "xxx" }
+		set vcmon = { Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec }
+		set vnmon = { 1 2 3 4 5 6 7 8 9 10 11 12 }
+		define nmon local   set _date = { $!!date }
+		define gmon  $(_date[0])	define gday  $(_date[1])
+		define gtime <"$!!(_date[2])">	define gyear $(_date[3])
+		sel (vcmon=='$!gmon') \n  define gnmon $(vnmon[in])
+		if ($gday<10) { define gday  <"0"$gday> }
+		if ($gnmon<10) { define gnmon  <"0"$gnmon> }
+
+fdate	01	# Return FITS format Y2K compliant date string. If $1
+		# is defined and >0 return long format (including time).
+		# R.A.Jansen -- Sep 2000.
+		if ($?1) { define _long  $1 } else { define _long  0 }
+		gdate   define fdate <$gyear"-"$gnmon"-"$gday>
+		if ($_long>0) { define fdate  <$fdate"T"$gtime> }
+		set $0 = <"$!fdate">   define _long delete
+
+yfrac 6 	# Compute fractional year given $1=year, $2=month, $3=day,
+		# $4=hour, $5=min, and $6=sec.
+		foreach _v { mdays nday } { SET $_v LOCAL }
+		set mdays = { 31 28 31 30 31 30 31 31 30 31 30 31 }
+		if (($1%4)==0) { set mdays[1] = 29 }
+		if (($1%100)==0) { set mdays[1] = 28 }
+		if (($1%400)==0) { set mdays[1] = 29 }
+		set dimen(nday) = dimen($1)
+		do _i = 0,$2-2 { set nday = nday + mdays[$_i] }
+		set $0 = (nday+$3+($4+($5+$6/60)/60)/24)/365
+
+#################    DEVICES    ########################################
+
+X	01	# Set the device to my favorate default X-window
+		if ($?1) { define xclr "$1" } else { define xclr "black" }
+		device X11 -bg $xclr -fg white -g 800x800-1-1
+		#device X11 -bg $xclr -fg white -g 600x600-1-1
+		#device X11 -bg white -fg black -g 700x700-1-1
+
+stty	1	# Set termtype; $1=number of lines
+		termtype xterm $1
+
+CPS	1	# CPS <filename> sets device tp Color/Greyscale-EPS
+		device postfile_color $1
+
+EPS	1	# EPS <filename> sets device to Black&White EPS
+		device postfile $1
+
+#kermit		termtype vt100 1
+#		device hard4012
+#tek 		kermit
+#		!tek
+#text		termtype vt100 23
+#		!ktext
+#PS1		# Set the device to postscript printer ps1 (Kapteyn)
+#		device post_printer ps1
+
+#################    AUTOMATED TABLE READIN    #########################
+
+rfile	13	# Automated table readin. Use vector names given in the
+		# first line of file <filename>. Optional 2nd and 3rd
+		# arguments select the lines to be read [line1 line2].
+		# Received from: M.Franx (origin RHL?)
+		data $1
+		if ($?2==1 && $?3==1) { lines $2 $3 }
+		myget 1
+		define ncol 0
+		for ncol=1 ncol ncol=ncol+1 nextget
+		define row1 read 1 1
+		set in=0,(dimen($row1)-1)
+
+myget	1	# (Try to) read the first column from a data file. The
+		# name of the vector to read that column in, will be the
+		# 1st word of line 1 (after the '#' sign).
+		# Origin: RHL &&/|| M. Franx
+		DEFINE namecol READ 1 $1 
+		define verbose ($verbose -1)
+		READ $namecol $1
+		SET HELP $namecol Col 1 of $data_file
+		define verbose ($verbose +1)
+
+nextget		# (Try to) read the next column from a data file. The
+		# name of the vector to read that column in, will be the
+		# ($ncol+1)th word of line 1 (after the '#' sign).
+		# Origin: RHL &&/|| M. Franx
+		DEFINE ncol ($ncol + 1)
+		DEFINE namecol READ 1 $ncol 
+		if ($?namecol==0) {set ncol=-1 define ncol -1 RETURN}
+		define verbose ($verbose -1)
+		READ $namecol $ncol 
+		SET HELP $namecol Col $ncol of $data_file
+		define verbose ($verbose +1)
+
+rnfile	13	# Automated table readin. Vector names are constructed
+		# from the character "c" and the column number. Optional
+		# 2nd and 3rd arguments select the lines to be read.
+		# R.A. Jansen (adapted from 'rfile' by M. Franx).
+		data $1
+		if ($?2==1 && $?3==1) { lines $2 $3 }
+		mygetn 1
+		define ncol 0
+		for ncol=1 ncol ncol=ncol+1 nextgetn
+		#define row1 read 1 1
+		#set in=0,(dimen($row1)-1)
+
+mygetn 1	# (Try to) read the first column from a data file. The
+		# name of the vector to read that column in, is formed
+		# from the character "c" and the column number (1).
+		# R.A. Jansen (adapted from 'myget' by M. Franx)
+		DEFINE namecol "c"$1
+		define verbose ($verbose -1)
+		READ $namecol $1
+		SET HELP $namecol Col 1 of $data_file
+		define verbose ($verbose +1)
+
+nextgetn	# (Try to) read the next column from a data file. The
+		# name of the vector to read that column in, will be the
+		# ($ncol+1)th word of line 1 (after the '#' sign).
+		# R.A. Jansen (adapted from 'nextget' by M. Franx).
+		DEFINE ncol ($ncol + 1)
+		DEFINE namecol "c"$ncol
+		READ $namecol $ncol 
+		sel ($namecol>-9.99e9&&$namecol<9.99e9)
+		if ($ncol>1&&dimen(in)==0) {
+		   delete $namecol set ncol=-1 define ncol -1
+		   RETURN
+		}
+		define verbose ($verbose -1)
+		SET HELP $namecol Col $ncol of $data_file
+		define verbose ($verbose +1)
+
+
+#################    SELECTION OF ELEMENTS FROM VECTORS    #################
+
+sel	19	# Select elements from a vector and set an index array.
+		# Syntax: "sel (age<10)"  or  "sel (age<=10 && color<0)"
+		# Adapted from 'sel' by M. Franx (RAJ - Feb 1995).
+		foreach v ( 1 2 3 4 5 6 7 8 9 ) {
+		   if (!$?$v) { define $v <" "> }
+		}
+		define _selstr "$!!1 $!!2 $!!3 $!!4 $!!5 $!!6 $!!7 $!!8 $!!9"
+		if ($verbose>1) { echo sel : $1 $2 $3 $4 $5 $6 $7 $8 $9 }
+		set i=$1 $2 $3 $4 $5 $6 $7 $8 $9
+		define nd (dimen(i))
+		set i=0,($nd-1)
+		set in = i IF ($1 $2 $3 $4 $5 $6 $7 $8 $9)
+		if ($verbose>1) { print $logprint {i}	print $logprint {in} }
+
+prsel   19      # Print only selected values to the screen. Origin: M.Franx
+		define out < >
+		foreach v ( 1 2 3 4 5 6 7 8 9 ) {
+		   if ($?$v) {
+			set _$$v=$$v[in]
+			define out <$out _$$v>
+		   }
+		}
+		if ($?prformat == 0) { define prformat {""} }
+		if ($?prformat != 0) { print '"$!!prformat"' { $!!out } }
+		if ($?prformat == 0) { print { $!!out } }
+
+prfilesel 19    # Print only selected values to a output file $1
+		define file <$1>
+		define out < >
+		foreach v ( 2 3 4 5 6 7 8 9 ) {
+		   if ($?$v) {
+			set _$$v=$$v[in]
+			define out <$out _$$v>
+		   }
+		}
+		if ($?prformat == 0) { define prformat {""} }
+		if ($?prformat != 0) { print + $file '"$!!prformat"' { $!!out } }
+		if ($?prformat == 0) { print + $file { $!!out } }
+
+minmaxsel 13	# find minimum and maximum value in a vector. Results
+		# are returned as variables $min and $max if arguments
+		# $2 and $3 are missing.
+		SET _vec LOCAL  DEFINE _min LOCAL  DEFINE _max LOCAL
+		if (dimen(in)>0) { set _vec = ($1[in]) } else { set _vec = $1 }
+		vecminmax _vec _min _max
+		if ($?2!=0) { define $2 $_min } else { define min $_min }
+		if ($?3!=0) { define $3 $_max } else { define max $_max }
+
+pointsel 23	# plot selected points from a set of vectors ($1,$2).
+		# If ltype = $3 is defined and >=0, connect the points.
+		foreach _v { _xvec _yvec } { SET $_v LOCAL }
+		foreach _w { _lt _ltold } { DEFINE $_w LOCAL }
+		if ($?3) { define _lt  $3 } else { define _lt  -1 }
+		define _ltold  $ltype
+		if (dimen(in)>0) {
+		   set _xvec = ($1[in])   set _yvec = ($2[in])
+		} else {
+		   set _xvec = $1   set _yvec = $2
+		}
+		points _xvec _yvec
+		if ($_lt>=0) {
+		   ltype $_lt  connect _xvec _yvec  ltype $_ltold
+		}
+
+errbarsel 47	# Plot errorbars on selected elements of vectors ($1,$2)
+		# and errors thereon in $3 and $4. Optionally the line
+		# weight is set to $5 (default 1) and expand factor to
+		# $6 (default current value of expand). Specify $7 to
+		# plot errors in only one direction (1|2|3|4).
+		foreach _v { __x __y _ex _ey _or } { SET $_v LOCAL }
+		foreach _w { _lwn _xpn _lwo _xpo _sor } { DEFINE $_w LOCAL }
+		set __x = ($1[in])   set __y = ($2[in])
+		set _ex = ($3[in])   set _ey = ($4[in])
+		if ($?5!=0) { define _lwn $5 } else { define _lwn  1 }
+		if ($?6!=0) { define _xpn $6 } else { define _xpn  1 }
+		if ($?7!=0) { define _sor $7 } else { define _sor  0 }
+		define _lwo $lweight  define _xpo $expand
+		lweight $_lwn  expand $_xpn
+		if ($_sor==0) {
+		   foreach _or ( 1 3 ) { errorbar __x __y _ex $_or }
+		   foreach _or ( 2 4 ) { errorbar __x __y _ey $_or }
+		} else {
+		   if ($_sor==1||$_sor==3) { errorbar __x __y _ex $_sor }
+		   if ($_sor==2||$_sor==4) { errorbar __x __y _ey $_sor }
+		}
+		lweight $_lwo  expand $_xpo
+
+thin	2	# Return a "thinned" version of a vector $1, containing
+		# every n-th ($2) element of $1.
+		SET _i LOCAL
+		set _i=0,dimen($1)-1,$2
+		set $0=$1[_i]
+		
+
+#################    PLOTTING MACROS    ####################################
+
+ticks	4	# Abbreviation for ticksize command
+		ticksize $1 $2 $3 $4
+
+grestore 02	# Reset graphics environment to favorate default state.
+		# Optional arguments: $1=expand factor; $2=line weight.
+		# RAJ -- May 1997.
+		foreach _v { _xpn _lwt } { DEFINE $_v LOCAL }
+		if ($?1) { define _xpn $1 } else { define _xpn 1.001 }
+		if ($?2) { define _lwt $2 } else { define _lwt     1 }
+		foreach _v { fx1 fx2 fy1 fy2 } { DEFINE $_v DELETE }
+		foreach _v { lx0 lx1 lx2 dlx } { DEFINE $_v DELETE }
+		foreach _v { ly0 ly1 ly2 dly } { DEFINE $_v DELETE }
+		LOCATION 6000 31000 6000 31000
+		setcols  setgrey  ltype 0  ptype 20 3  angle 0
+		ticks 0 0 0 0  expand $_xpn  lweight $_lwt  
+
+gbox	48	# Draw window box at given window limits $1 $2 $3 $4.
+		# Optionally the axis parameters to 'box' may be given
+		# as $5 $6 $7 $8 (default: 1 2 0 0). RAJ -- May 1997.
+		foreach _v { i1 i2 i3 i4 } { define $_v local }	   
+		if ($?5) { define i1 $5 } else { define i1 1 }
+		if ($?6) { define i2 $6 } else { define i2 2 }
+		if ($?7) { define i3 $7 } else { define i3 0 }
+		if ($?8) { define i4 $8 } else { define i4 0 }
+		limits $1 $2 $3 $4  box $i1 $i2 $i3 $i4  setlabpos
+
+setlabpos 04	# define default label positions and increments relative
+		# to current window limits. RAJ -- May 1997.
+		FOREACH _v { _lbx _lby _lbdx _lbdy } { DEFINE $_v LOCAL }
+		if ($?1) { define _lbx  $1 } else { define _lbx  0.07 }
+		if ($?2) { define _lby  $2 } else { define _lby  0.10 }
+		if ($?3) { define _lbdx $3 } else { define _lbdx 0.01 }
+		if ($?4) { define _lbdy $4 } else { define _lbdy 0.01 }
+		define dlx  $($_lbdx*($fx2-$fx1))	# x-increment
+		define dly  $($_lbdy*($fy2-$fy1))	# y-increment
+		define lx0  $(0.5*($fx1+$fx2))		# center x-pos.
+		define ly0  $($fy2+0.05*($fy2-$fy1))	# center y-pos.
+		define lx1  $($fx1+$_lbx*($fx2-$fx1))	# lower x-pos.
+		define ly1  $($fy2-$_lby*($fy2-$fy1))	# upper y-pos.
+		define lx2  $($fx2-$_lbx*($fx2-$fx1))	# upper x-pos.
+		define ly2  $($fy1+$_lby*($fy2-$fy1))	# lower y-pos.
+		define clx  $(0.5*($fx1+$fx2))		# center x-pos.
+		define cly  $($fy2+0.05*($fy2-$fy1))	# center y-pos.
+		define llx  $($fx1+$_lbx*($fx2-$fx1))	# lower x-pos.
+		define uly  $($fy2-$_lby*($fy2-$fy1))	# upper y-pos.
+		define ulx  $($fx2-$_lbx*($fx2-$fx1))	# upper x-pos.
+		define lly  $($fy1+$_lby*($fy2-$fy1))	# lower y-pos.
+
+rylabel	23	# Offset y-label by (-1*$1) with respect to the default
+		# location. Optionally change orientation to $2. In that
+		# case, the label text is in $3, else in $2. RAJ-May'97.
+		if ($?3) { angle $2 } else { angle 90.0000 }
+		if ($?3) { define _txt <"$!!3"> } else { define _txt <"$!!2"> }
+		rputl $($fx1-$1*$dlx) $(0.5*($fy1+$fy2)) 5 ""$!!_txt""
+		angle 0.0000  define _txt delete
+
+rxlabel 23	# Offset x-label by $1 with respect to the default loca-
+		# tion. Optionally, change orientation to $2. RAJ-May'97.
+		if ($?3) { angle $2 } else { angle 0.0000 }
+		if ($?3) { define _txt <"$!!3"> } else { define _txt <"$!!2"> }
+		rputl $(0.5*($fx1+$fx2)) $($fy1+$1*$dly) 5 ""$!!_txt""
+		angle 0.0000  define _txt delete
+
+rdraw	4	# Draw line from ($1,$2) to ($3,$4); current attributes. RAJ.
+		relocate $1 $2  draw $3 $4
+
+rdot	24	# Place symbol (current ptype or ptype $3 $4) at ($1,$2). RAJ.
+		if ($?3&&$?4) { ptype $3 $4 }
+		relocate $1 $2  dot
+
+rputl	49	# Place text label at ($1,$2) with orientation $3. RAJ.
+		DEFINE lstr LOCAL  define lstr <"$4">
+		if ($?5) { define lstr <"$4 $5"> }
+		if ($?6) { define lstr <"$4 $5 $6"> }
+		if ($?7) { define lstr <"$4 $5 $6 $7"> }
+		if ($?8) { define lstr <"$4 $5 $6 $7 $8"> }
+		if ($?9) { define lstr <"$4 $5 $6 $7 $8 $9"> }
+		relocate $1 $2  putlabel $3 $lstr
+
+RPUTL	49	# Place text label at absolute (device) coordinates ($1,$2)
+		# with orientation $3. RAJ.
+		DEFINE lstr LOCAL  define lstr <"$4">
+		if ($?5) { define lstr <"$4 $5"> }
+		if ($?6) { define lstr <"$4 $5 $6"> }
+		if ($?7) { define lstr <"$4 $5 $6 $7"> }
+		if ($?8) { define lstr <"$4 $5 $6 $7 $8"> }
+		if ($?9) { define lstr <"$4 $5 $6 $7 $8 $9"> }
+		RELOCATE ( $1 $2 ) putlabel $3 $lstr
+
+rdotputl 69	# Place at ($1,$2) a symbol (ptype $3 $4) and adjacent
+		# text label (orientation $5 wrt. symbol). RAJ.
+		DEFINE lstr LOCAL  define lstr <"$6">
+		if ($?7) { define lstr <"$6 $7"> }
+		if ($?8) { define lstr <"$6 $7 $8"> }
+		if ($?9) { define lstr <"$6 $7 $8 $9"> }
+		rdot $1 $2 $3 $4  putlabel $5 " "$lstr" "
+
+timestamp	# Place time stamp straddling the upper right window. RAJ.
+		define _xpo $expand  ctype default  ltype 0  setlabpos
+		expand 0.6001  rputl $fx2 $($fy2+0.1*$dly) 7 $user" "$date
+		expand $_xpo
+
+copyright 01	# Place a copyright straddling the lower right window. RAJ.
+		foreach _v { _xpo lstr } { define $_v local }
+		if ($?1) { define lstr <"$!!1"> } else { define lstr "$!user" }
+		define _xpo $expand  ctype default  ltype 0  setlabpos
+		expand 0.6001  angle 90  gdate
+		putlabel 6 "\def\c{\bigcirc\kern-450\raise25c}"
+		rputl $($fx2+1.2*$dlx) $fy1 6 "\,\c\,"$gyear"\,\,"$lstr
+		angle 0.000  expand $_xpo
+
+startwin 2	# Start windowing. $1 and $2 are the number of windows
+		# in x and y, respectively.  M.Franx
+		define _wx $1  define _wy $2
+		define _wx1 0  define _wy1 $_wy
+		window $_wx $_wy $_wx1 $_wy1
+
+newwin	01	# New/next window. If page is full, new page and erase.
+		# If $1 is defined and >0, the windows will touch in the
+		# vertical (1), horizontal (2) or both (3) directions.
+		# Adapted from 'newwin' by M.Franx (RAJ -- Jan 1996).
+		FOREACH _v { _touch _t1 _t2 } { DEFINE $_v LOCAL }
+		if ($?1) { define _touch  $1 } else { define _touch  0 }
+		define _wx1  ($_wx1+1)
+		if ($_wx1>$_wx) { define _wy1 ($_wy1-1)  define _wx1 1 }
+		if ($_wy1<1) { page  erase  define _wy1 $_wy }
+		define _t1 1  define _t2 1
+		if ($_touch==1||$_touch==3) { define _t1 -1 }
+		if ($_touch==2||$_touch==3) { define _t2 -1 }
+		window $($_t2*$_wx) $($_t1*$_wy) $_wx1 $_wy1
+
+setshade 15	# Define parameters for shading commands and save
+		# current parameters. $1=shade angle, $2=shade density,
+		# $3=shade weight, $4=shade linetype, $5=shade color.
+		# Defaults are (45,400,2,0,"default"). RAJ.
+		if ($?1) { define _shang $1 } else { define _shang  45 }
+		if ($?2) { define _shden $2 } else { define _shden 400 }
+		if ($?3) { define _shwei $3 } else { define _shwei   2 }
+		if ($?4) { define _shltp $4 } else { define _shltp   0 }
+		if ($?5) { define _shclr $5 } else { define _shclr "default" }
+		define _angl $angle  define _lwei $lweight
+		define _ltyp $ltype  define _ctyp $ctype
+
+figlabel 19	# place a text label atop of the current figure (my toplabel)
+		DEFINE _xpo LOCAL  define _xpo $expand
+		if ( $?_wx ) { expand ( $expand/sqrt($_wx) ) }
+		if ( $?1) {define  lstr <"$1"> }
+		if ( $?2) {define  lstr <"$1 $2"> }
+		if ( $?3) {define  lstr <"$1 $2 $3"> }
+		if ( $?4) {define  lstr <"$1 $2 $3 $4"> }
+		if ( $?5) {define  lstr <"$1 $2 $3 $4 $5"> }
+		if ( $?6) {define  lstr <"$1 $2 $3 $4 $5 $6"> }
+		if ( $?7) {define  lstr <"$1 $2 $3 $4 $5 $6 $7"> }
+		if ( $?8) {define  lstr <"$1 $2 $3 $4 $5 $6 $7 $8"> }
+		if ( $?9) {define  lstr <"$1 $2 $3 $4 $5 $6 $7 $8 $9"> }
+		rputl (0.5*($fx1+$fx2)) ($fy2+0.04*($fy2-$fy1)) 5 $lstr
+		expand $_xpo
+
+bottomlabel 1	# place text label $1 at the bottom of the current plot
+		RELOCATE ( 17600 500 ) putlabel 5 ""$!!1""
+
+rboxold	45	# draw a rectangle of size $1 x $2 centered at ($3,$4)
+		# and rotated over $5 degrees. RAJ.
+		foreach _v { ba r phi } { define $_v local }
+		foreach _w { x1 y1 x2 y2 x3 y3 x4 y4 } { define $_w local }
+		if ($?5) { define ba  $5 } else { define ba  0.0 }
+		set r   = 0.5*sqrt(($1)**2+($2)**2)
+		set phi = (atan2d($2,$1)+$ba)
+		define x3 $($3+r*cosd(phi))   define y3 $($4+r*sind(phi))
+		define x1 $($3-r*cosd(phi))   define y1 $($4-r*sind(phi))
+		set phi = (atan2d($2,$1)-$ba)
+		define x2 $($3+r*cosd(phi))   define y2 $($4-r*sind(phi))
+		define x4 $($3-r*cosd(phi))   define y4 $($4+r*sind(phi))
+		CONNECT (<$x1 $x2 $x3 $x4 $x1>) (<$y1 $y2 $y3 $y4 $y1>)
+
+rbox	48	# draw a rectangle of size $1 x $2 centered at ($3,$4).
+		# If $5 is defined, rotate over $5 degrees. If $6>0, shade
+		# the box with density $7 and shade-angle $8. RAJ.
+		foreach _v { _ba _sh _sd _sa _r _phi _ang } { define $_v local }
+		foreach _w { x1 y1 x2 y2 x3 y3 x4 y4 } { define $_w local }
+		if ($?5) { define _ba  $5 } else { define _ba  0.0 }
+		if ($?6) { define _sh  $6 } else { define _sh    0 }
+		if ($?7) { define _sd  $7 } else { define _sd    0 }
+		if ($?8) { define _sa  $8 } else { define _sa  0.0 }
+		set _r   = 0.5*sqrt(($1)**2+($2)**2)
+		set _phi = (atan2d($2,$1)+$_ba)
+		define x3 $($3+_r*cosd(_phi))   define y3 $($4+_r*sind(_phi))
+		define x1 $($3-_r*cosd(_phi))   define y1 $($4-_r*sind(_phi))
+		set _phi = (atan2d($2,$1)-$_ba)
+		define x2 $($3+_r*cosd(_phi))   define y2 $($4-_r*sind(_phi))
+		define x4 $($3-_r*cosd(_phi))   define y4 $($4+_r*sind(_phi))
+		CONNECT (<$x1 $x2 $x3 $x4 $x1>) (<$y1 $y2 $y3 $y4 $y1>)
+		if ( $_sh > 0 ) {
+		   define _ang $angle  angle $_sa
+		   SHADE $_sd (<$x1 $x2 $x3 $x4 $x1>) (<$y1 $y2 $y3 $y4 $y1>)
+		   angle $_ang
+		}
+
+ghistold 47	# Create and plot histogram in current window given
+		# vector $1, range $2,$3 and increment $4. Optionally,
+		# the shading density and angle are given by $5 and $6.
+		# If $7 is provided and >0 normalize the histogram. RAJ.
+		foreach _v { _xhist _nhist } { set $_v local }
+		foreach _w { _angle _shden _shang _donorm } { DEFINE $_w LOCAL }
+		if ($?5) { define _shden $5 } else { define _shden 400 }
+		if ($?6) { define _shang $6 } else { define _shang  45 }
+		if ($?7) { define _donorm $7 } else { define _donorm 0 }
+		define _angle $angle
+		gethist $1 _xhist _nhist $2 $3 $4
+		if ($_donorm>0) { set _nhist = (_nhist/dimen($1)) }
+		histogram _xhist _nhist  angle $_shang
+		shade histogram $_shden _xhist _nhist  angle $_angle
+
+ghist	48	# Create and plot histogram in current window given
+		# vector $1, range $2,$3 and increment $4. Optionally
+		# the shading density and angle are given by $5 and $6.
+		# If $7 is provided and >0 normalize the histogram. If
+		# $8 is provided and >0, boxcar smooth histogram. RAJ.
+		foreach _v { _xhist _nhist __xh __nh } { set $_v local }
+		foreach _w { _angle _shden _shang _donorm } { DEFINE $_w LOCAL }
+		if ($?5) { define _shden $5 } else { define _shden 400 }
+		if ($?6) { define _shang $6 } else { define _shang  45 }
+		if ($?7) { define _donorm $7 } else { define _donorm 0 }
+		if ($?8) { define _smooth $8 } else { define _smooth 0 }
+		define _angle $angle
+		gethist $1 _xhist _nhist $2 $3 $4
+		if ($_smooth>0) {
+		   if ($_smooth==2) {
+		      gethist $1 __xh __nh ($2+0.5*$4) ($3+0.5*$4) $4
+		      set _nhist = 0.5*(_nhist+__nh)
+		   } else {
+		      smooth _nhist _nhists $_smooth   set _nhist = _nhists
+		   }
+		}
+		if ($_donorm>0) { set _nhist = (_nhist/dimen($1)) }
+		histogram _xhist _nhist  angle $_shang
+		shade histogram $_shden _xhist _nhist  angle $_angle
+
+gethist 6	# Create a histogram in $3, given input vector $1, a
+		# vector with bin centers $2, a given range running from
+		# $4 to $5, and binwidth (increment) $6.
+		set $2 = $4+$6/2,$5+$6/2,$6
+		set $3 = histogram($1:$2)
+
+plot	2	# Plot selected elements of vector $2 as a function of
+		# those in vector $1, using automatic window limits. MF.
+		limits ($1[in]) ($2[in])  box
+		if ($?style==0) { define style < "nocurve" > }
+		if ($style == < "curve" > ) { 
+		   connect ($1[in]) ($2[in]) 
+		} else {
+		   points ($1[in]) ($2[in])
+		}
+		xlabel $1
+		ylabel $2
+
+oplot	2	# Overplot selected elements of vector $2 as a function
+		# of those in vector $1 in the current window. M. Franx.
+		if ($?style==0) { define style < "nocurve" > }
+		if ($style == < "curve" > ) { 
+		   connect ($1[in]) ($2[in]) 
+		} else {
+		   points ($1[in]) ($2[in])
+		}
+
+plotall	2	# Plot vector $2 as a function of vector $1, using
+		# automatic window limits. M. Franx.
+		limits $1 $2  box
+		if ($?style==0) { define style < "nocurve" > }
+		if ($style == < "curve" > ) { 
+		   connect $1 $2
+		} else {
+		   points $1 $2
+		}
+		xlabel $1
+		ylabel $2
+
+plotlx	2	# Plot selected elements of vector $2 as a function of
+		# the decimal logarithm of those in vector $1, using
+		# automatic window limits. M. Franx.
+		set log$1 = lg($1)  limits (log$1[in]) ($2[in])  box
+		points (log$1[in]) ($2[in])
+		xlabel log($1)
+		ylabel $2
+
+plotly	2	# Plot the decimal logarithm of selected elements of
+		# vector $2 as a function of those in vector $1, using
+		# automatic window limits. M. Franx.
+		set log$2 = lg($2)  limits ($1[in]) (log$2[in])  box
+		points ($1[in]) (log$2[in])
+		xlabel $1
+		ylabel log($2)
+
+plotlxly 2	# Plot the decimal logarithm of selected elements of
+		# vector $2 as a function the decimal logarithm of those
+		# in vector $1, using automatic window limits. M. Franx.
+		set log$1 = lg($1)  set log$2 = lg($2)
+		limits (log$1[in]) (log$2[in])  box    
+		points (log$1[in]) (log$2[in])
+		xlabel log($1)
+		ylabel log($2)
+
+shrink 12	# shrink size of plot on terminal/plotter.
+		if ( ! $?2 ) { define 2 $1 }
+		define 3 (int(($gx1+$gx2)/2.-($gx2-$gx1)/2./$1))
+		define 4 (int(($gx1+$gx2)/2.+($gx2-$gx1)/2./$1))
+		define 5 (int(($gy1+$gy2)/2.-($gy2-$gy1)/2./$1))
+		define 6 (int(($gy1+$gy2)/2.+($gy2-$gy1)/2./$1))
+		location $3 $4 $5 $6
+
+limlim 2	# Plot (upper|lower|left|right) limit symbols for the
+		# selected elements in vector $1. The second argument
+		# determines the type of limit: 1=left, 3=right,
+		# 2=lower, 4=upper.  R.A. Jansen -- Jun 2000.
+		DEFINE usym LOCAL  DEFINE _LL LOCAL  DEFINE _WL LOCAL
+		SET _VV LOCAL  DEFINE _LL $2  SET _VV = $1
+		if ($_LL==1) {
+		   define usym {{ m 0 -100 0 100 m 0 0 -300 0 -130 -100 -260 0 -130 100 -300 0 }}
+		   define _WL $($fx1+0.05*($fx2-$fx1))
+		}
+		if ($_LL==3) {
+		   define usym {{ m 0 -100 0 100 m 0 0 300 0 130 -100 260 0 130 100 300 0 }}
+		   define _WL $($fx2-0.05*($fx2-$fx1))
+		}
+		if ($_LL==2) {
+		   define usym {{ m -100 0 100 0 m 0 0 0 -300 -100 -130 0 -260 100 -130 0 -300 }}
+		   define _WL $($fy1+0.05*($fy2-$fy1))
+		}
+		if ($_LL==4) {
+		   define usym {{ m -100 0 100 0 m 0 0 0 300 -100 130 0 260 100 130 0 300 }}
+		   define _WL $($fy2-0.05*($fy2-$fy1))
+		}
+		ptype $usym
+		if ($_LL==1||$_LL==3) {
+		   do i=0,dimen(in)-1 { relocate $_WL $(_VV[in[$i]]) dot }
+		} else {
+		   do i=0,dimen(in)-1 { relocate $(_VV[in[$i]]) $_WL dot }
+		}
+
+lowerlim 13	# Plot lower limit symbols for selected elements in
+		# vector $1. Optionally, the line width ($2) and expand
+		# factor ($3) can be given (default: 2 and 0.6). RAJ-2000.
+		FOREACH _v { _sz _wd _owd _osz } { DEFINE $_v LOCAL }
+		if ($?2) { define _wd $2 } else { define _wd 2.0001 }
+		if ($?3) { define _sz $3 } else { define _sz 0.6001 }
+		define _owd $lweight  define _osz $expand
+		lweight $_wd  expand $(5*$_sz) limlim ($1) 2
+		lweight $_owd expand $_osz
+
+upperlim 13	# Plot upper limit symbols for selected elements in
+		# vector $1. Optionally, the line width ($2) and expand
+		# factor ($3) can be given (default: 2 and 0.6). RAJ-2000.
+		FOREACH _v { _sz _wd _owd _osz } { DEFINE $_v LOCAL }
+		if ($?2) { define _wd $2 } else { define _wd 2.0001 }
+		if ($?3) { define _sz $3 } else { define _sz 0.6001 }
+		define _owd $lweight  define _osz $expand
+		lweight $_wd  expand $(5*$_sz) limlim ($1) 4
+		lweight $_owd expand $_osz
+
+leftlim 13	# Plot left limit symbols for selected elements in
+		# vector $1. Optionally, the line width ($2) and expand
+		# factor ($3) can be given (default: 2 and 0.6). RAJ-2000.
+		FOREACH _v { _sz _wd _owd _osz } { DEFINE $_v LOCAL }
+		if ($?2) { define _wd $2 } else { define _wd 2.0001 }
+		if ($?3) { define _sz $3 } else { define _sz 0.6001 }
+		define _owd $lweight  define _osz $expand
+		lweight $_wd  expand $(5*$_sz) limlim ($1) 1
+		lweight $_owd expand $_osz
+	
+rightlim 13	# Plot right limit symbols for selected elements in
+		# vector $1. Optionally, the line width ($2) and expand
+		# factor ($3) can be given (default: 2 and 0.6).
+		FOREACH _v { _sz _wd _owd _osz } { DEFINE $_v LOCAL }
+		if ($?2) { define _wd $2 } else { define _wd 2.0001 }
+		if ($?3) { define _sz $3 } else { define _sz 0.6001 }
+		define _owd $lweight  define _osz $expand
+		lweight $_wd  expand $(5*$_sz) limlim ($1) 3
+		lweight $_owd expand $_osz
+
+rhex	37	# draw a hexagon of size $1 (flat-to-flat) centered at
+		# ($2,$3). If $4 is defined, rotate over $4 degrees. If
+		# $5>0, shade the box with density $6 and shade-angle
+		# $7. RAJ -- Dec 2001.
+		foreach _v { _ha _sh _sd _sa _r _phi _ang _sx _sy } { define $_v local }
+		if ($?4) { define _ha  $4 } else { define _ha  0.0 }
+		if ($?5) { define _sh  $5 } else { define _sh    0 }
+		if ($?6) { define _sd  $6 } else { define _sd    0 }
+		if ($?7) { define _sa  $7 } else { define _sa  0.0 }
+		set _sx = { 0.57735027 0.28867513 -0.28867513 -0.57735027 -0.28867513 0.28867513 0.57735027 }
+		set _sy = { 0.00 0.50 0.50 0.00 -0.50 -0.50 0.00 }
+		set _sx = $2+_sx*$1    set _sy = $3+_sy*$1
+		connect _sx _sy
+		if ( $_sh > 0 ) {
+		   define _ang $angle  angle $_sa
+		   SHADE $_sd _sx _sy
+		   angle $_ang
+		}
+
+bla		set _r   = 0.5*$1      set _phi = (0.25*pi+$_ha)
+		define x3 $($3+_r*cosd(_phi))   define y3 $($4+_r*sind(_phi))
+		define x1 $($3-_r*cosd(_phi))   define y1 $($4-_r*sind(_phi))
+		set _phi = (atan2d($2,$1)-$_ba)
+		define x2 $($3+_r*cosd(_phi))   define y2 $($4-_r*sind(_phi))
+		define x4 $($3-_r*cosd(_phi))   define y4 $($4+_r*sind(_phi))
+		CONNECT (<$x1 $x2 $x3 $x4 $x1>) (<$y1 $y2 $y3 $y4 $y1>)
+
+wfpc2old 01	# Draw a footprint of the WFPC2 CCD assembly, optionally
+		# with each CCD subdivided into $1 x $1 subsections. The
+		# centers of each subdivision are returned in vectors
+		# <id>_x0 and <id>_y0, where <id> is one of pc1, wf2, wf3
+		# or wf4. If optional argument $2 is defined and >0 
+		# indicate the read-out direction by numbering the sub-
+		# sections. RAJ -- Oct 24 2003.
+		foreach _v { _sx _sy _d1 _d2 _dd _x _y } { set $_v local }
+		limits 0 100 0 100  box 4 4 4 4
+		# Draw footprint of WFPC2 CCD assembly...
+		ltype 0  lweight 2  ctype default
+		set _sx = { 72.8 72.8 50 50 0 0 100 100 72.8 }
+		set _sy = { 50 72.8 72.8 100 100 0 0 50 50 }
+		connect _sx _sy
+		rdraw 0 50 100 50  rdraw 50 0 50 100
+		if ($?1) { set _d1 = int($1) } else { set _d1 = 0 }
+		if ( _d1 > 1 && _d1 < 1000 ) {
+		   # Subdivide each CCD into $1x$1 subsections...
+		   ltype 1  lweight 1
+		   set _dd = 1,_d1-1,1
+		   set _d1 = _dd*50./_d1
+		   set _d2 = _d1*(0.0455/0.0996)
+		   do _i = 0,dimen(_dd)-1 {
+		      rdraw $(_d1[$_i]) 0 $(_d1[$_i]) 100
+		      rdraw 0 $(_d1[$_i]) 100 $(_d1[$_i])
+		      rdraw $(_d1[$_i]+50.) 0 $(_d1[$_i]+50.) 50
+		      rdraw 0 $(_d1[$_i]+50.) 50 $(_d1[$_i]+50.)
+		      rdraw $(_d2[$_i]+50.) 50 $(_d2[$_i]+50.) 72.8
+		      rdraw 50 $(_d2[$_i]+50.) 72.8 $(_d2[$_i]+50.)
+		   }
+		   # return subsection centers in read-out order...
+		   set _dd = 1,int($1),1
+		   set _d1 = _dd*50./int($1)
+		   set _d2 = _d1*(0.0455/0.0996)
+		   set _y = 50. + _d2 - 0.5*_d2[0]   set dimen(pc1_y0) = 0
+		   do _i = 1,dimen(_d1) { set pc1_y0 = pc1_y0 concat _y }
+		   set pc1_x0 = pc1_y0  sort { pc1_x0 }
+		   set _y = 50. - _d1 + 0.5*_d1[0]   set dimen(wf3_y0) = 0
+		   do _i = 1,dimen(_d1) { set wf3_y0 = wf3_y0 concat _y }
+		   set wf3_x0 = -1*wf3_y0  sort { wf3_x0 }  set wf3_x0 = -wf3_x0
+		   set _x = 50. + _d1 - 0.5*_d1[0]   set dimen(wf2_x0) = 0
+		   do _i = 1,dimen(_d1) { set wf2_x0 = wf2_x0 concat _x }
+		   set wf2_y0 = wf2_x0-100.  sort { wf2_y0 }  set wf2_y0 = -wf2_y0
+		   set _x = 50. - _d1 + 0.5*_d1[0]   set dimen(wf4_x0) = 0
+		   do _i = 1,dimen(_d1) { set wf4_x0 = wf4_x0 concat _x }
+		   set wf4_y0 = 50.+wf4_x0  sort { wf4_y0 }
+		}
+		ltype 0  lweight 2
+
+wfpc2	02	# Draw a footprint of the WFPC2 CCD assembly, optionally
+		# with each CCD subdivided into $1 x $1 subsections. The
+		# centers of each subdivision are returned in vectors
+		# <id>_x0 and <id>_y0, where <id> is one of pc1, wf2, wf3
+		# or wf4. If optional argument $2 is defined and >0,
+		# indicate the read-out direction by numbering the sub-
+		# sections. RAJ -- Oct 24 2003.
+		foreach _v { _sx _sy _d1 _d2 _dd _x _y } { set $_v local }
+		if ($?2) { define rdshw $2 } else { define rdshw 0 }
+		limits 0 100 0 100  box 4 4 4 4
+		# Draw footprint of WFPC2 CCD assembly...
+		ltype 0  lweight 2  ctype default
+		set _sx = { 27.16 27.16 50 50 100 100 0 0 27.16 }
+		set _sy = { 50 72.84 72.84 100 100 0 0 50 50 }
+		connect _sx _sy
+		rdraw 0 50 100 50  rdraw 50 0 50 100
+		if ($?1) { set _d1 = int($1) } else { set _d1 = 0 }
+		if ( _d1 >= 1 && _d1 < 1000 ) {
+		   # Subdivide each CCD into $1x$1 subsections...
+		   ltype 1  lweight 1
+		   if ( _d1 > 1 ) {
+		      set _dd = 1,_d1-1,1
+		   } else {
+		      set _dd = 1  
+		   }
+		   set _d1 = _dd*50./_d1
+		   set _d2 = _d1*(0.0455/0.0996)
+		   if ( dimen(_dd) > 1 ) {
+		     do _i = 0,dimen(_dd)-1 {
+		       rdraw $(_d1[$_i]) 0 $(_d1[$_i]) 50
+		       rdraw 0 $(_d1[$_i]) 100 $(_d1[$_i])
+		       rdraw $(_d1[$_i]+50.) 0 $(_d1[$_i]+50.) 100
+		       rdraw 50 $(_d1[$_i]+50.) 100 $(_d1[$_i]+50.)
+		       rdraw $(_d2[$_i]+27.16) 50 $(_d2[$_i]+27.16) 72.84
+		       rdraw 27.16 $(_d2[$_i]+50.) 50 $(_d2[$_i]+50.)
+		     }
+		   }
+		   # return subsection centers in read-out order...
+		   set _dd = 1,int($1),1
+		   set _d1 = _dd*50./int($1)
+		   set _d2 = _d1*(0.0455/0.0996)
+		   set _y = 50. + _d2 - 0.5*_d2[0]   set dimen(pc1_y0) = 0
+		   do _i = 1,dimen(_d1) { set pc1_y0 = pc1_y0 concat _y }
+		   set pc1_x0 = pc1_y0-100.  sort { pc1_x0 }  set pc1_x0=-pc1_x0
+		   set _x = 50. - _d1 + 0.5*_d1[0]   set dimen(wf2_x0) = 0
+		   do _i = 1,dimen(_d1) { set wf2_x0 = wf2_x0 concat _x }
+		   set wf2_y0 = -wf2_x0  sort { wf2_y0 }  set wf2_y0 = -wf2_y0
+		   set _y = 50. - _d1 + 0.5*_d1[0]   set dimen(wf3_y0) = 0
+		   do _i = 1,dimen(_d1) { set wf3_y0 = wf3_y0 concat _y }
+		   set wf3_x0 = wf3_y0+50.  sort { wf3_x0 }
+		   set _x = 50. + _d1 - 0.5*_d1[0]   set dimen(wf4_x0) = 0
+		   do _i = 1,dimen(_d1) { set wf4_x0 = wf4_x0 concat _x }
+		   set wf4_y0 = wf4_x0  sort { wf4_y0 }
+		}
+		if ($rdshw>0) {
+		   ltype 0  expand $(0.65*$expand)  lweight 1
+		   do _i=0,dimen(pc1_x0)-1 {
+		      rputl $(pc1_x0[$_i]) $(pc1_y0[$_i]) 5 "$!($_i+1)"
+		      rputl $(wf2_x0[$_i]) $(wf2_y0[$_i]) 5 "$!($_i+1)"
+		      rputl $(wf3_x0[$_i]) $(wf3_y0[$_i]) 5 "$!($_i+1)"
+		      rputl $(wf4_x0[$_i]) $(wf4_y0[$_i]) 5 "$!($_i+1)"
+		   }
+		   expand $($expand/0.65)
+		}
+		ltype 0  lweight 2
+
+#################    MATH AND STATISTICS FUNCTION   ########################
+
+dotprod 2	# function to return the dot product of two vectors.
+		SET tmp12 LOCAL  set tmp12 = ( $1 * $2 )
+		set $0 = SUM( tmp12 )
+
+dexp	1	# function to return the exponential base 10 of $1. RAJ.
+		set $0 = (10**($1))
+
+nint	1	# function to return the nearest integer to real $1. RAJ.
+		set $0 = (int($1+0.5*$1/abs($1)))
+
+min	1	# function to return minimum value in vector $1; index
+		# number of the minimum element is stored as $inmin
+		FOREACH _v { __v __i } { SET $_v LOCAL }
+		set __v = $1  set __i = 0,dimen(__v)-1,1
+		sort { __v __i }
+		set $0 = __v[0]   define inmin  $(__i[0])
+
+max	1	# function to return maximum value in vector $1; index
+		# number of the maximum element is stored as $inmax
+		FOREACH _v { __v __i } { SET $_v LOCAL }
+		set __v = $1  define __nv  (dimen(__v))
+		if ($__nv>0) {
+		   set __i = 0,$__nv-1,1
+		   sort { __v __i }
+		   set $0 = __v[($__nv-1)]
+		   define inmax  $(__i[($__nv-1)])
+		}
+		define __nv delete
+
+mean	1	# function to calculate the mean of the selected
+		# elements in vector $1.
+		set __s = SUM($1[in])/DIMEN(in)
+		set $0 = __s[0]
+		delete __s
+
+median	1	# function to calculate the median of the selected
+		# elements in vector $1. An estimate of sigma (semi-
+		# quartile range) is output as $SIGQR; the quartile
+		# points themselves as $QUP25 and $QUP75.
+		FOREACH _v { __k __q1 __q3 } { DEFINE $_v LOCAL }
+		set __temp = $1[in]   define __k  (int(dimen(in)/2.0))
+		sort < __temp >
+		if (($__k)*2 == dimen(in) ) {
+		# even number of selected points in vector
+		   set $0 = (__temp[$__k] + __temp[$__k-1])/2.0
+		   if (dimen(in)>2) {
+		      define __q1  (0.5*(__temp[int(0.25*dimen(in))] + \
+					__temp[int(0.25*dimen(in))-1]))
+		      define __q3  (0.5*(__temp[int(0.75*dimen(in))] + \
+					__temp[int(0.75*dimen(in))-1]))
+		   } else {
+		      define __q1  (__temp[0])
+		      define __q3  (__temp[1])
+		   }
+		} else {
+		   set $0 = __temp[$__k]
+		   define __q1  (__temp[int(0.25*dimen(in))])
+		   define __q3  (__temp[int(0.75*dimen(in))])
+		}
+		define QUP25 ($__q1)
+		define QUP75 ($__q3)
+		define SIGQR (($__q3-$__q1)/2.0)
+		delete __temp
+
+medhist 5	# Calculate a histogram of the mean and median values of
+		# the selected elements in vector $2 as a function of
+		# the  selected elements in $1, in range $3--$4 with
+		# bins of width $5. Calculated are the mean and median
+		# in each bin, and the quartile points. These are output
+		# as vectors _Avg, _Med, _Qpl and _Qph, with bin centers
+		# in _Bin and the number of elements in that bin in _Npt.
+		foreach _v { __x __y _s _x1 _x2 } { SET $_v LOCAL }  
+		set __x = ($1[in])  set __y = ($2[in])
+		set _s = $(($4-$3)/abs($4-$3))
+		set dimen(_Avg) = $(int(_s*($4-$3)/$5))
+		set dimen(_Med) = dimen(_Avg)  set dimen(_Qpl) = dimen(_Avg)
+		set dimen(_Qph) = dimen(_Avg)  set dimen(_Bin) = dimen(_Avg)
+		set dimen(_Npt) = dimen(_Avg)
+		do i=0,dimen(_Avg)-1 {
+		   set _x1 = ($3+_s*$5*$i)  set _x2 = ($3+_s*$5*($i+1))   
+		   set _Bin[$i] = $(0.5*(_x1+_x2))
+		   sel ((_s*__x)>(_s*_x1)&&(_s*__x)<(_s*_x2))
+		   set _Avg[$i] = $(mean(__y))  set _Med[$i] = $(median(__y))
+		   set _Qpl[$i] = $QUP25	set _Qph[$i] = $QUP75
+		   set _Npt[$i] = $(dimen(in))
+		}
+
+statsel	12	# function to return as text the common statistics
+		# (mean, median, rms, min, max) of the selected elements
+		# in vector $1. If $2 is supplied (0,1,2) the verbosity
+		# of the output can be controled (header|noheader|_selstr)
+		FOREACH _v { _vsel _mm _md _ma _mn _mx _rs } { SET $_v LOCAL }
+		FOREACH _w { nohead _vname } { DEFINE $_w LOCAL }
+		if ($?2) { define nohead $2 } else { define nohead 0 }
+		if (dimen(in)==0) {
+		   if ($nohead>0) { echo "dimen(in) = 0" }
+		   return
+		}
+		define _vname <"$!!1">
+		set _vsel = ($1[in])  set _rs = rms($1)    set _mm = mean($1)
+		set _md = median($1)  set _ma = madev($1)
+		set _mn = min(_vsel)  set _mx = max(_vsel)
+		if ($nohead>1) {
+		   echo "  Nsel    mean      median       rms     madev       min	max"
+		   echo "======================================================================="
+		}
+		if ($nohead>0) { echo $_selstr : $_vname }
+		echo $(sprintf('%6g',$(dimen(_vsel)))) $(sprintf('%10g',$(_mm))) $(sprintf('%10g',$(_md))) $(sprintf('%8g',$(_rs))) $(sprintf('%8g',$(_ma))) $(sprintf('%10g',$(_mn))) $(sprintf('%10g',$(_mx)))
+
+wmean	2	# function to calculate the weighted mean of the
+		# selected elements in vector $1, with weights in $2. RAJ.
+		FOREACH _v { __s __pw __sw } { SET $_v LOCAL }
+		set __pw = $1/$2   set __sw = 1.0/$2
+		set __s  = SUM(__pw[in])/SUM(__sw[in])
+		set $0 = __s[0]
+
+wrms	2	# function to calculate the rms on the weighted mean of
+		# the selected elements in $1, with weights in $2. RAJ.
+		FOREACH _v { __s __pw __w2 } { SET $_v LOCAL }
+		define 3 (wmean($1,$2))
+		set __w2 = 1.0/($2[in]*$2[in])
+		set __s  = sqrt( SUM(__w2*($1[in]-$3)**2)/SUM(__w2) )
+		set $0 = __s[0]
+
+rms	1	# function to calculate the rms on the mean of the
+		# selected elements in vector $1. RAJ.
+		define 2 (mean($1))
+		set $0 = (sqrt( SUM( ($1[in]-$2)**2 )/(DIMEN(in)-1) ))
+
+madev	1	# function to calculate the median absolute deviation of
+		# the selected elements in vector $1. The median is also
+		# stored as $MED. RAJ -- Apr 1999.
+		define MED  $(median($1))
+		set $0 = (SUM(abs($1[in]-$MED))/dimen(in))
+
+vsort	1	# function to return a sorted version of a given vector $1.
+		SET __v LOCAL  set __v = $1  sort { __v }
+		set $0 = __v
+
+interp2	4	# Linearily interpolate $3 into ($1,$2), giving $4. Note
+		# that x must be increasing.  Points beyond the range of
+		# x are extrapolated linearily.
+		if (dimen($1)<2) { user abort Use vectors with at least 2 elements }
+		if (dimen($1)!=dimen($2)) { user abort $1 and $2 have different dimensions }
+		foreach _v { _x1 _x2 _y1 _y2 _index } { set $_v local }
+		set _index = ifloor($1,$3)
+		set _x1 = $1[(_index<0 ? 0 : _index>=dimen($1)-1 ? dimen($1)-2 : _index)]
+		set _y1 = $2[(_index<0 ? 0 : _index>=dimen($1)-1 ? dimen($1)-2 : _index)]
+		set _x2 = $1[(_index<0 ? 1 : _index>=dimen($1)-1 ? dimen($1)-1 : _index+1)]
+		set _y2 = $2[(_index<0 ? 1 : _index>=dimen($1)-1 ? dimen($1)-1 : _index+1)]
+		set $4 = _y1+($3-_x1)*((_y2-_y1)/(_x1==_x2 ? 1 : _x2-_x1))
+
+interp3 4	# Quadratically interpolate $3 into ($1,$2), giving $4.
+		# Note that x must be increasing. Points beyond the
+		# range of x are extrapolated.
+		if (dimen($1)<3) { user abort Use vectors with at least 3 elements }
+		if (dimen($1)!=dimen($2)) { user abort $1 and $2 have different dimensions }
+		foreach _v { _index _x1 _y1 _x2 _y2 _x3 _y3 } { set $_v local }
+		foreach _v { __p __q __r __S __T __U } { set $_v local }
+		set _index = ifloor($1,$3)
+		set _x1 = $1[(_index<0 ? 0 : _index>=dimen($1)-2 ? dimen($1)-3 : _index)]
+		set _y1 = $2[(_index<0 ? 0 : _index>=dimen($1)-2 ? dimen($1)-3 : _index)]
+		set _x2 = $1[(_index<0 ? 1 : _index>=dimen($1)-2 ? dimen($1)-2 : _index+1)]
+		set _y2 = $2[(_index<0 ? 1 : _index>=dimen($1)-2 ? dimen($1)-2 : _index+1)]
+		set _x3 = $1[(_index<0 ? 2 : _index>=dimen($1)-2 ? dimen($1)-1 : _index+2)]
+		set _y3 = $2[(_index<0 ? 2 : _index>=dimen($1)-2 ? dimen($1)-1 : _index+2)]
+		set __S = (_y1/((_x1-_x2)*(_x1-_x3)))
+		set __T = (_y2/((_x2-_x1)*(_x2-_x3)))
+		set __U = (_y3/((_x3-_x1)*(_x3-_x2)))
+		set __p = (__S*_x2*_x3 + __T*_x1*_x3 + __U*_x1*_x2)
+		set __q = (-1*__S*(_x2+_x3) - __T*(_x1+_x3) - __U*(_x1+_x2))
+		set __r = ( __S + __T + __U )
+		set $4  = __p + __q*$3 + __r*($3**2)
+
+resample 4 	# Resample a set of vectors ($1,$2) on a new grid $3,
+		# giving $4, while preserving the total signal in $2.
+		# The new grid need not be regularly spaced, but it must
+		# be monotonic. NB: the values in $3 are bin =centers=.
+		foreach _v { _l1 _f1 _l2 _f2 _c1 _c2 } { set $_v local }
+		foreach _w { _nn _ii _d1 _d2 _dd } { set $_w local }
+		set _l1 = $1   set _f1 = $2   set _l2 = $3
+		set _nn = (0)  set _ii = 0,dimen(_l2)
+		set _d1 = _l2 concat _nn   set _d2 = _nn concat _l2
+		set _dd = 0.5*(_d1-_d2) if (_ii<dimen($3))
+		set _dd[0] = _dd[1]	# fix for first data point
+		set _l2 = (_l2+_dd)
+		set _c1 = cumulate(_f1)    interp2 _l1 _c1 _l2 _c2
+		set _f2 = _nn concat _c2   set _f1 = _c2 concat _nn
+		set _f2 = (_f1-_f2)
+		set $4 = _f2 if (_ii<dimen($3))
+
+convol 2	# return the convolution of vector $1 with $2 using Fast
+		# Fourier Transform and convolution theorem: g*h<=>G(f)H(f)
+		# Adapted from 'gauss_convolve' (RAJ -- Jan 2001).
+		foreach _v { _g _ig _h _ih _k _hh } { SET $_v LOCAL }
+		foreach _v { _G _H _iG _iH _GH _iGH } { SET $_v LOCAL }
+		set _g = $1   set _h = $2
+		# first we need to recenter _h on its 0-th vector element:
+		set _k=0,dimen(_h)-1
+		set _hh = _h if (_k<dimen(_h)/2)
+		set _h  = _h if (_k>=dimen(_h)/2)
+		set _hh = _hh concat _h
+		set _h  = dimen(_hh)*_hh/sum(_hh)
+		# execute the forward FFT's:
+		set _ig = 0*_g   fft 1 _g _ig _G _iG
+		set _ih = 0*_h   fft 1 _h _ih _H _iH
+		set _GH = _G*_H-_iG*_iH   set _iGH = _G*_iH+_iG*_H
+		# execute the inverse FFT:
+		fft -1 _GH _iGH $0 _hh
+
+
+#################    LEAST SQUARES FITTING    ##############################
+
+eval     1      # evaluate y, given x value, in the fitted LSQ solution.
+		define 2 ($a * $1 + $b)
+		echo Result from fit x=$1 y= $2
+
+lsqshow  02	# draw the LSQ fit as a line in the current graph.
+		foreach _v { _wn _cn _wo _co } { DEFINE $_v LOCAL }
+		if ($?1!=0) { define _wn $1     } else { define _wn $lweight }
+		if ($?2!=0) { define _cn "$!!2" } else { define _cn "default" }
+		define _co $ctype  define _wo $lweight
+		setgrey  ctype $_cn  lweight $_wn
+		rdraw $fx1 $($fx1*$a+$b) $fx2 $($fx2*$a+$b)
+		ctype $_co  lweight $_wo
+
+lsqstat 2	# Do least squares fit to selected elements of vectors
+		# ($1,$2) and show statistics for the data points. 'sel'
+		# needs to be run prior to calling this macro.
+		if (dimen(in)<3) {
+		   echo "WARNING: vector 'in' contains less than 3 elements!"
+		   return
+		}
+		lsq $1 $2
+		statsel $1 2  statsel $2 1
+		echo " "
+		echo "LSQ: a="$(sprintf('%6.4f',$a))\
+		"+-"$(sprintf('%6.4f',$sig_a))"  b="$(sprintf('%6.4f',$b))\
+		"+-"$(sprintf('%7.4f',$sig_b))"  MAD="$(sprintf('%6.4f',$madev))\
+		"  RMS="$(sprintf('%6.4f',$rms))
+		echo " "
+
+lsq	15	# Do a least squares fit to a set of vectors (RHL; modified
+		# by MF; further modified by RAJ 98/03/10).
+		# Syntax: lsq x y [ x2 y2 [rms]] Fit line y2=$a*x2+$b to x y
+		# Optionally, calculate rms residual as $rms.
+		# See 'rxy' to find product moment correlation coeff, and
+		# 'spear' for Spearman's corr. coeff., and significance.
+		# If $lsqshow is defined, plot fitted line; if $lsqlist
+		# is defined, label the plot with the fit constants.
+		# NB: this macro presumes 'sel' has been run just before it
+		#     was invoked!
+		if ($?1==0) {define 1 $xvec}
+		if ($?2==0) {define 2 $yvec}
+		SET _n = DIMEN(($1[in]))	      # number of points
+		SET _sx = SUM($1[in])		      # sigma x
+		SET _sy = SUM($2[in])		      # sigma y
+		SET _sxy = SUM($1[in]*$2[in])	      # sigma xy
+		SET _sxx = SUM($1[in]*$1[in])	      # sigma xx
+		DEFINE a ( (_n*_sxy - _sx*_sy)/(_n*_sxx - _sx*_sx) )
+		DEFINE b ( (_sy - $a*_sx)/_n )
+		set pred$2=$a*$1+$b
+		set _tmpx = ($1[in])
+		set _tmpy = ($2[in])
+		DEFINE rms   ( sqrt(SUM(($a*_tmpx + $b - _tmpy)**2)/(_n-1)) )
+		DEFINE med   ( median($a*$1 + $b - $2) )
+		DEFINE madev ( SUM(abs($a*_tmpx + $b - $med - _tmpy))/_n )
+		DEFINE sig_a ( sqrt((_n*($rms*$rms))/(_n*_sxx - _sx*_sx)) )
+		DEFINE sig_b ( sqrt((($rms*$rms)*_sxx)/(_n*_sxx - _sx*_sx)) )
+		IF($?3 && $?4) {
+		   SET $4=$a*$3+$b
+		   IF($?5) {
+		      DEFINE $5  ($rms)
+		   }
+		}
+		FOREACH v ( _n _sx _sy _sxy _sxx _tmpx _tmpy ) { DELETE $v }
+		if ($verbose>0) {
+		   echo LSQ: $2 = a * $1 + b --> 
+		   echo a=$(sprintf('%11g',$a))+-$(sprintf('%11g',$sig_a))  b=$(sprintf('%11g',$b))+-$(sprintf('%11g',$sig_b))  (rms=$(sprintf('%11g',$rms)))
+		}
+		if ($?lsqshow) {
+		   define y ($a * $fx1 + $b)
+		   relocate $fx1 $y
+		   define y ($a * $fx2 + $b)
+		   draw $fx2 $y
+		   if ( $?lsqlist ) { figlabel fit $2 = $(sprintf('%7.4f',$a)) * $1 + $(sprintf('%7.4f',$b)) }
+		}
+
+wlsq	16	# do a weighted least squares fit to a set of vectors
+		# syntax: lsq x y w [ x2 y2 [rms]] Fit line y2=$a*x2+$b to x y
+		# with weights w.  Calculates rms residual as $rms, as well as
+		# $sig_a, $sig_b, and $CHI2.  See 'rxy' to find product moment
+		# correlation coeff, and 'spear' for Spearman's corr. coeff.,
+		# and significance.  If $lsqshow is defined, plot fitted line;
+		# if $lsqlist is defined, label the plot with the fit constants.
+		# NB: Assumes that 'sel' was run just before 'wslq' is invoked!
+		if ($?1==0) {define 1 $xvec}
+		if ($?2==0) {define 2 $yvec}
+		SET _n   = DIMEN(($1[in]))              	#number o points
+		SET _S   = SUM($3[in])      			#sum of weights
+		SET _Sx  = SUM($1[in]*$3[in])			#weighted sum x
+		SET _Sy  = SUM($2[in]*$3[in])			#weighted sum y
+		SET _x   = _Sx / _S      set _y = _Sy / _S
+		SET _Sxy = SUM($3[in]*($1[in]-_x)*($2[in]-_y))	#weighted sum xy
+		SET _Sxx = SUM($3[in]*($1[in]-_x)**2)		#weighted sum xx
+		DEFINE a ( _Sxy /_Sxx )
+		DEFINE b ( _y - $a * _x )
+		DEFINE CHI2 ( SUM($3[in]*($2[in]-$a*$1[in]-$b)**2) )
+		DEFINE rms  ( sqrt($CHI2/_S) )
+		IF(dimen($1) > 2) { 
+		   DEFINE sig_a ( sqrt($CHI2/((_n-2)*_Sxx)) )
+		   DEFINE sig_b ( $sig_a*sqrt(_Sxx/_S+_x*_x) )
+		} else { 
+		   DEFINE sig_a 0
+		   DEFINE sig_b 0
+		}
+		IF($?4 && $?5) { SET $5[in]=$a*$4[in]+$b }
+		if($?6) { DEFINE $6  ( $rms ) }
+		FOREACH v ( _S _Sx _Sy _Sxy _Sxx _x _y ) { DELETE $v }
+		if ($verbose>0) {
+		   echo LSQ: $2 = a * $1 + b --> 
+		   echo a=$(sprintf('%11g',$a))+-$(sprintf('%11g',$sig_a))  b=$(sprintf('%11g',$b))+-$(sprintf('%11g',$sig_b))  (rms=$(sprintf('%11g',$rms)))
+		}
+		if ($?lsqshow) {
+		   define y ($a * $fx1 + $b)
+		   relocate $fx1 $y
+		   define y ($a * $fx2 + $b)
+		   draw $fx2 $y
+		   if ( $?lsqlist ) { figlabel fit $2 = $(sprintf('%7.4f',$a)) * $1 + $(sprintf('%7.4f',$b)) }
+		}
+
+
+lsqsel	15	# do a least squares fit to a set of vectors MF
+		# syntax: lsq x y [ x2 y2 [rms]] Fit line y2=$a*x2+$b to x y
+		# optionally, calculate rms residual as $rms
+		# see rxy to find product moment correlation coeff,
+		# and spear for Spearman's corr. coeff., and significance
+		if ($?1==0) {define 1 $xvec}
+		if ($?2==0) {define 2 $yvec}
+		FOREACH x ( $1 $2 ) { set _$1 = $1 IF ($select) }
+		SET _n = DIMEN(_$1)              # number of points
+		SET _sx = SUM(_$1)               # sigma x
+		SET _sy = SUM(_$2)               # sigma y
+		SET _sxy = SUM(_$1*_$2)          # sigma xy
+		SET _sxx = SUM(_$1*_$1)          # sigma xx
+		DEFINE a ( (_n*_sxy - _sx*_sy)/(_n*_sxx - _sx*_sx) )
+		DEFINE b ( (_sy - $a*_sx)/_n )
+		IF($?3 && $?4) {
+		   SET $4=$a*$3+$b
+		   IF($?5) {
+		      DEFINE $5 ( sqrt(sum(($a*$1 + $b - $2)**2)/dimen($2)) ) 
+		   }
+		}
+		FOREACH v ( _n _sx _sy _sxy _sxx ) { DELETE $v }
+		echo LSQ fit: $2 = a * $1 + b  --> a=$a b=$b (rms=$rms)
+		define y ($a * $fx1 + $b)
+		relocate $fx1 $y
+		define y ($a * $fx2 + $b)
+		draw     $fx2 $y
+
+lsqzero	15	# do a least squares fit through 0,0 to a set of vectors RAJ
+		# syntax: lsq x y [ x2 y2 [rms]] Fit line y2=$a*x2 to x y
+		# optionally, calculate rms residual as $rms
+		# see rxy to find product moment correlation coeff,
+		# and spear for Spearman's corr. coeff., and significance
+		if ($?1==0) {define 1 $xvec}
+		if ($?2==0) {define 2 $yvec}
+		SET _n   = DIMEN($1[in])                # number of points
+		SET _sxy = SUM($1[in]*$2[in])           # sigma xy
+		SET _sxx = SUM($1[in]*$1[in])           # sigma xx
+		DEFINE a  (_sxy/_sxx)
+		DEFINE b  0.
+		IF($?3 && $?4) {
+		   SET $4=$a*$3+$b
+		   IF($?5) {
+		      DEFINE $5 ( sqrt(sum(($a*$1[in] + $b - $2[in])**2)/dimen(in)) ) 
+		   }
+		}
+		FOREACH v ( _n _sxy _sxx ) { DELETE $v }
+		echo LSQ fit: $2 = a * $1 -->  a=$a  (rms=$rms)
+		define y ($a * $fx1 + $b)
+		relocate $fx1 $y
+		define y ($a * $fx2 + $b)
+		draw     $fx2 $y
+
+fitpol 34	# do a least squares polynomial fit of order $1 to a set
+		# of vectors $2 $3. If specified, $4 will contain fit
+		# (MF; rewrite by RAJ 01/07/04).
+		# Fit a polynomial Y = SUM_i{ a[i]*(X**i);  i=0,$order .
+		foreach _v { _x _y } { set $_v local }
+		define _o  $1   set _x = $2[in]   set _y = $3[in]
+		set dimen(_xa) = $_o.s
+		do _i = 0,$_o-1 {
+		   define _tmp  "__x"$_i
+		   set $_tmp = _x**($_i)
+		   set _xa[$_i] = <"$!_tmp">
+		}
+		linfit _xa _y a var_a
+		if ($?4) {
+		   set $4 = 0*$2
+		   do _i = 0,$_o-1 { set $4 = $4 + a[$_i]*($2**($_i)) }
+		}
+		echo LSQ fit $3 = SUM_i=0^$($_o-1) { a[i]*($2**i) }
+		if ($verbose>0) { print { a var_a } }
+		define _tmp delete
+
+
+fitpol_mf 13	# do a least squares polynomial fit to a set of vectors MF
+		# syntax: lpol x y [ x2 y2 [rms]] Fit line y2=$a0+$a1*x+ ...
+		if ($?1==0) {define 1 $xvec}
+		if ($?2==0) {define 2 $yvec}
+		if ($?3==0) {define 3 2}
+		set x1=($1[in]*0+1)
+		set x2=($1[in])
+		set x3=($1[in]**2)
+		set xarray={ x1 x2 x3  }
+		set tmp1=($1[in])
+		set tmp2=($1[in]*0+1)
+		set __y = $2[in]
+		linfit xarray __y a var_a
+		echo LSQ fit $2 = a0 + a1  * $1 + a2 * $1^2 ...
+		print $logprint {a var_a}
+
+		set x2=($1[in])
+		sort { x2 }
+		define min (x2[0])
+		define max (x2[dimen(x2)-1])
+		set x2=1,100
+		set x2=x2/100.*($max-$min)+$min
+		set f2=a[0]+a[1]*x2+a[2]*x2*x2
+		connect x2 f2
+
+fitsq2 	14	# do a least squares fit to  2 vector MF
+		# syntax: fitsq2 x y z [rms]  Fit line z=$a0+$a1*x+$2*y
+		set x1=($1[in]*0+1)
+		set x2=($1[in])
+		set x3=($2[in])
+		set x4=($3[in])
+		set xarray={ x1 x2 x3  }
+		set tmp1=( $1[in] )
+		set tmp2=( $1[in] *0+1 )
+		linfit xarray x4 a var_a
+		echo LSQ fit $3 = a0 + a1  * $1 + a2 * $2 ...
+		print $logprint {a var_a}
+		set pred$3 = a[0] + a[1] * $1 + a[2] * $2  
+		DEFINE rms ( sqrt(sum((a[0] + a[1] * $1 + a[2] * $2  - $3)**2)/dimen($2)) )
+		echo rms = $rms
+ 		IF($?4) {
+
+		      DEFINE $4 ( sqrt(sum((a[0] + a[1] * $1 + a[2] * $2  - $3)**2)/dimen($2)) ) 
+		}
+
+fitsq3 	15	# do a least squares fit to a 2 vectors MF
+		# syntax: fitsq2 x y z [rms]  Fit line z=$a0+$a1*x+$2*y
+		set x1=($1[in]*0+1)
+		set x2=($1[in])
+		set x3=($2[in])
+		set x4=($3[in])
+		set x5=($4[in])
+		set xarray={ x1 x2 x3 x4 }
+		set tmp1=( $1[in] )
+		set tmp2=( $1[in] *0+1 )
+		linfit xarray x5 a var_a
+		echo LSQ fit $4 = a0 + a1  * $1 + a2 * $2  + a3 * $3 ...
+		print $logprint {a var_a}
+		set pred$3 = a[0] + a[1] * $1 + a[2] * $2  + a[3] * $3
+		DEFINE rms ( sqrt(sum((a[0] + a[1] * $1 + a[2] * $2 + a[3] * $3  - $4)**2)/dimen($2)) )
+		echo rms = $rms
+ 		IF($?4) {
+
+		      DEFINE $4 $rms
+		}
+
+linfit	4	# Marijn Franx's linfit: linear least squares fit
+		# $1 : list of vectors of the linear system
+		# $2 : right side vector
+		# $3 : unknown vector
+		# $4 : variance on $3
+		# res_$2 : differences between $2 and $2_predicted
+		# pred_$2 : predicted value of $2
+		# the normal equation matrix is in EN (EN_0 EN_1 etc)
+		#
+		# For example, Given  Y = a0 + a1 X + a2 U + a3 sin(V) + e, 
+		# a is obtained by:
+		#
+		# set sV = sin(v)
+		# set ONE = 0 * X + 1
+		# set vec = { ONE X U sV }
+		# linfit vec Y a var_a
+		# set e = D_Y
+		# error in sig_e
+		#
+		define n (dimen($1))
+		define nm (dimen($1)-1)
+		set dimen($3) = $n
+		set dimen($4) = $n
+		do i=0,$nm { set $4[$i] = dotprod( $($1[($i)]), $2 ) }
+		eqnorm $1 EN
+		qminv EN
+		do i=0,$nm { set $3[$i] = dotprod( EN_$i, $4 ) }
+		set res_$2 = $2
+		do i=0,$nm { set res_$2 = res_$2 - $3[$i] * $($1[($i)]) }
+		set D2 = dotprod( res_$2, res_$2 ) / (dimen( res_$2 ))
+		do i=0,$nm { set $4[$i] = D2 * EN_$i[$i] }
+		set sig_$3=sqrt($4)
+		set pred_$2=$2-res_$2
+		delete D2
+
+reslinfit 3	# calculate residuals from linfit - so selection
+		# $1 : list of vectors of the linear system
+		# $2 : right side vector
+		# $3 : solution
+		# res_$2 : differences between $2 and $2_predicted
+		# pred_$2 : predicted value of $2
+		# the normal equation matrix is in EN (EN_0 EN_1 etc)
+		#
+		define nm (dimen($1)-1)
+		set res_$2 = $2
+		do i=0,$nm { set res_$2 = res_$2 - $3[$i] * $($1[($i)]) }
+		set pred_$2=$2-res_$2
+
+harmfit 14	# Marijn Franx' harmonics fit to vectors $1=y, $2=phi and
+		# $3=nharm.  Syntax: harmfit y phi nharm [rms]
+		# Fit line y = $a0 + $a1*x + $2*y
+		# First set up array of sin/cos(phi); omit sin(0 phi) ..
+		                set _x0=$2[in]*0+1
+                define ndim ($3)
+                define iout 1
+                define nd ($3*2+1)
+                set dimen(xar)=$nd.s
+                set dimen(nar)=$nd.s
+                set xar[0]={ _x0 }
+                set nar[0]={ c0 }
+                do i=1,$ndim {
+                        define iout ($iout + 1)
+                        set _x$iout=(cos($i*$2[in]))
+                        set xar[$iout-1]=<_x$iout>
+                        set nar[$iout-1]=<cos_$i>
+                        define iout ($iout + 1)
+                        set _x$iout=(sin($i*$2[in]))
+                        set xar[$iout-1]=<_x$iout>
+                        set nar[$iout-1]=<sin_$i>
+                }
+                set _y=($1[in])  
+                linfit xar _y a var_a
+                set var_a=sqrt(var_a)
+                echo LSQ fit $3 = c0 + c1  * cos$2 + s1 * sin$2 ...
+                print $logprint {nar a var_a}
+                        
+                define iout 1
+                set pred$1=a[0]+phi*0
+                do i=1,$ndim {
+                        define iout ($iout + 1)  
+                        set pred$1=pred$1+(cos($i*phi))*a[$iout-1]
+                        define iout ($iout + 1)
+                        set pred$1=pred$1+(sin($i*phi))*a[$iout-1]
+                }
+
+                # NOT YET CORRECTED
+                DEFINE rms ( sqrt(sum((a[0] + a[1] * _x2 + a[2] * _x3  - _y)**2)/dimen(_x2)) )
+                echo rms = $rms
+                IF($?4) {
+                      DEFINE $4 ($rms)
+                }
+                DEFINE meanorg ( sum(_y)/dimen(_y) )
+                DEFINE rmsorg ( sqrt(sum((_x4-$meanorg)**2)/dimen(_x2)) )
+                echo rmsorg = $rmsorg
+		
+#################    COLOR ASSIGNMENT    ##################################
+
+loadlut		# macro to load a rainbow lut-table and associated
+		# wavelengths in the optical spectrum (in Angstroms).
+		# R.A. Jansen -- Jun 1996
+		#data /home/jansen/sm/rainbow.lut
+		data /home/raj/sm/rainbow.lut
+		read {_r 1 _g 2 _b 3 _c 4.s}
+		ctype=(_r+256*_g+65536*_b)
+		ctype=_c
+		#data /home/jansen/sm/rainbow.dat
+		data /home/raj/sm/rainbow.dat
+		read { _llim 1 }
+		FOREACH v (_r _g _b) { DELETE $v }
+
+add_ctype 4	# define a new colour $1 with (r,g,b) = ($2, $3, $4)
+		# M.A. Zwaan & R.A. Jansen -- Jun 1996
+		IF (SUM(CTYPE(STRING) == '$1') > 0) { del_ctype $1 }
+		CTYPE = CTYPE() CONCAT $2 + 256*($3 + 256*$4)
+		CTYPE = CTYPE(STRING) CONCAT '$1'
+
+setcols		# define additional colors beyond the 8 default colors.
+		add_ctype dbrown       220  45   0
+		add_ctype brown        255  85   0
+		add_ctype maroon       172   0   0
+		add_ctype dred         220   0   0
+		add_ctype dorange      255 128   0
+		add_ctype orange       255 165   0
+		add_ctype gold         255 215   0
+		add_ctype paleyellow   200 200 186
+		add_ctype lgreen       149 255  15
+		add_ctype palegreen    200 255 200
+		#add_ctype haziergreen 200 255 200
+		add_ctype dgreen         0 172   0
+		add_ctype lcyan          0 240 255
+		add_ctype turqoise	 0 224 208
+		add_ctype skyblue        0 172 255
+		add_ctype indigo       106  80 236
+		add_ctype violet       255 160 255
+		add_ctype dviolet      148   0 211
+
+setgrey		# define greyscale ctypes
+		add_ctype grey         200 200 200
+		add_ctype lightgrey    228 228 228
+		add_ctype mediumgrey   164 164 164
+		add_ctype darkgrey     100 100 100
+
+setrgb	3	# define color on gliding scale 1=red 2=green 3=blue
+		set ctypear=255*({0 $!!1} + 256*({0 $!!2} + 256*{0 $!!3}))
+		ctype=ctypear
+		ctype 1
+
+startrgb	# reset ctype rainbow lookup lut.
+		define _rgb delete
+
+nextrgb 1	# set ctype to the next color in a rainbow lookup table
+		# where the rainbow is divided into $1 discrete colors.
+		FOREACH _v { _i _c _cr _cg _cb } { SET $_v LOCAL }
+		FOREACH _w { __cr __cg __cb } { DEFINE $_w LOCAL }
+		if ($?_rgb==0) { define _rgb 0 } else { define _rgb $($_rgb+1) }
+		rfile /home/raj/sm/rainbow.lut
+		set n = (n/54.0)  set _c = (0.16+($_rgb/$1))
+		set _i = reverse(n)  sort { _i r g b }
+		interp2 n r _c _cr   define __cr  $(int($(_cr)))
+		interp2 n g _c _cg   define __cg  $(int($(_cg)))
+		interp2 n b _c _cb   define __cb  $(int($(_cb)))
+		#echo $_rgb --> _c=$(_c) RGB = $__cr $__cg $__cb
+		add_ctype tmpcolor $__cr $__cg $__cb
+		ctype tmpcolor
+
+colorone 1	# define color on a gliding scale between 0 (blue) and 1
+		# (red).  1=red+256*green+256**2*blue
+		FOREACH _v { _c _cr _cg _cb } { SET $_v LOCAL }
+		FOREACH _w { __cr __cg __cb } { DEFINE $_w LOCAL }
+		rfile /home/raj/sm/rainbow.lut
+		set n = (n/54.0)  set _c = ($1)
+		interp2 n r _c _cr   define __cr  $(int($(_cr)))
+		interp2 n g _c _cg   define __cg  $(int($(_cg)))
+		interp2 n b _c _cb   define __cb  $(int($(_cb)))
+		#echo $1 --> RGB = $__cr $__cg $__cb
+		add_ctype tmpcolor $__cr $__cg $__cb
+		ctype tmpcolor
+
+#################    ERROR CALCULATION    ######################
+
+fracerr	4	# function to return error on fraction $1/$2, where the
+		# error on $1 is $3 and the error on $2 is $4.
+		SET _e1 LOCAL  SET _e2 LOCAL
+		set _e1 = ($4*$1)/($2*$2)  set _e2 = ($3/$2)
+		set $0  = sqrt( _e1*_e1 + _e2*_e2 )
+
+multerr	4	# function to return error on product $1*$2, where the
+		# error on $1 is $3 and the error on $2 is $4.
+		set $0 = sqrt( ($1*$4)**2 + ($2*$3)**2 )
+
+logerr	23	# function to return the error on decimal logarithm
+		# lg($1), with $2 the error on $1 and $3 the sign to
+		# apply in the small error approximation: -1 indicates
+		# the lower and +1 the upper error. If the small error
+		# approximation does not hold or if the sign is not
+		# provided, the formal error, d/dx(lg(x)) = (1/ln(10))*
+		# (dx/x), is returned. If $1 is negative, 0 is returned.
+		DEFINE _s LOCAL
+		if ($?3!=0) { define _s $3 } else { define _s 0 }
+		set $0 = ($1<0) ? 0 : ( ($_s!=0)?((abs($2)<abs(0.1*$1))? \
+		   lg(($1+$_s*$2)/$1):(1/ln(10))*($2/$1)):(1/ln(10))*($2/$1) )
+
+dexperr	2	# function to return the error on decimal exponent,
+		# 10**($1), with $2 the error on $1.
+		set $0 = abs($2)*ln(10)*10**($1)
+
+polerr	39	# function to return error on a polynomial of the form:   
+		# poly(x) = a0 + a1*x + a2*x^2 + a3*x^3 ... + a7*x^7,
+		# where $1=x and the error on x is $2, and a1 thru a7
+		# are $3 thru $7. Note that a0 ought not be provided.
+		# The errors on the coefficients are presumed to be 0.
+		FOREACH _v { _a1 _a2 _a3 _a4 _a5 _a6 _a7 } { SET $_v LOCAL }
+		FOREACH _v { _e1 _e2 _e3 _e4 _e5 _e6 _e7 } { SET $_v LOCAL }
+		if ($?3) { set _a1 = $3 } else { set $0  = 0.00  return }
+		if ($?4) { set _a2 = $4 } else { set _a2 = 0.00 }
+		if ($?5) { set _a3 = $5 } else { set _a3 = 0.00 }
+		if ($?6) { set _a4 = $6 } else { set _a4 = 0.00 }
+		if ($?7) { set _a5 = $7 } else { set _a5 = 0.00 }
+		if ($?8) { set _a6 = $8 } else { set _a6 = 0.00 }
+		if ($?9) { set _a7 = $9 } else { set _a7 = 0.00 }
+		#echo $(_a1) $(_a2) $(_a3) $(_a4) $(_a5) $(_a6) $(_a7)
+		set _e1 = (_a1**2)
+		set _e2 = (2*_a2*$1)**2
+		set _e3 = (3*_a3*($1**2))**2
+		set _e4 = (4*_a4*($1**3))**2
+		set _e5 = (5*_a5*($1**4))**2
+		set _e6 = (6*_a6*($1**5))**2
+		set _e7 = (7*_a7*($1**6))**2
+		set $0 = $2*sqrt( _e1 + _e2 + _e3 + _e4 + _e5 + _e6 + _e7 )
+
+
+#################    ASTRONOMY & COSMOLOGY    ##########################
+
+magtoamag 23	# function returning the absolute magnitude, given an
+		# aparent magnitude ($1), recessional velocity in km/s
+		# or redshift z (for z<<1) ($2), and value for H0 ($3).
+		# The latter is optional and defaults to 100 km/s/Mpc.
+		SET _cz LOCAL  DEFINE _h0 LOCAL
+		if ($?3) { define _h0  $3 } else { define _h0  100 }
+		if ($2<1.0) { set _cz = 299792.5*$2 } else { set _cz = $2 }
+		set $0 = $1 - 5*lg(_cz) + 5*lg($_h0) - 25
+
+amaghubval 23	# function converting a given absolute magnitude ($1),
+		# appropriate for H0=$2 to that appropriate for H0=$3.
+		# The latter is optional and defaults to 100 km/s/Mpc.
+		DEFINE _h0 LOCAL
+		if ($?3) { define _h0  $3 } else { define _h0  100 }
+		set $0 = $1 - 5*lg($2) + 5*lg($_h0)
+
+fluxtolum 2	# function to return the decimal log of the luminosity
+		# in ergs/s, given a flux $1 in ergs/s/cm^2 and distance
+		# $2 in Mpc.
+		set $0 = (lg($1)+2*lg($2)+lg(4*pi)+2*lg(3.08572*1e24))
+
+cztodist 12	# function returning distance in Mpc which corresponds
+		# to given cz in km/s or redshift z (for z<<1) ($1).
+		# $2=H0 is optional (defaults to 100 km/s/Mpc).
+		SET _cz LOCAL  DEFINE _h0 LOCAL
+		if ($?2) { define _h0  $2 } else { define _h0  100 }
+		if ($1<1.0) { set _cz = 299792.5*$1 } else { set _cz = $1 }
+		set $0 = _cz/$_h0
+
+distocz 12	# function returning cz in km/s which corresponds to
+		# given distance $1 in Mpc. $2=H0 is optional (defaults
+		# to 100 km/s/Mpc).
+		DEFINE _h0 LOCAL
+		if ($?2) { define _h0  $2 } else { define _h0  100 }
+		set $0 = $1*$_h0
+		
+sectokpc 23	# function returning the radius in kpc that corresponds
+		# to given radius $1 in arcsec and cz in km/s or z (for
+		# z<<1) $2. $3=H0 is optional (defaults to 100km/s/Mpc).
+		SET _cz LOCAL  DEFINE _h0 LOCAL
+		if ($?3) { define _h0  $3 } else { define _h0  100 }
+		if ($2<1.0) { set _cz = 299792.5*$2 } else { set _cz = $2 }
+		set $0 = (10*(100/$_h0)*_cz*$1*pi/(3600*180))
+
+kpctosec 23	# function returning the radius in arcsec that corresponds
+		# to given radius $1 in kpc for given cz in km/s or z (for
+		# z<<1) $2. $3=H0 is optional (defaults to 100 km/s/Mpc).
+		SET _cz LOCAL  DEFINE _h0 LOCAL
+		if ($?3) { define _h0  $3 } else { define _h0  100 }
+		if ($2<1.0) { set _cz = 299792.5*$2 } else { set _cz = $2 }
+		set $0 = (0.1*($_h0/100)*($1/_cz)*3600*180/pi)
+
+veltodw 23	# function to return the FWHM in wavelength corresponding
+		# to a given velocity dispersion $1 in km/sec (FWHM) for
+		# a line at wavelength $2 Angstrom, produced in a galaxy
+		# at z=$3 (default: z=0).
+		DEFINE _z LOCAL
+		if ($?3) { define _z  $3 } else { define _z  0 }
+		set $0 = 2.354*($1*(1+$_z)*$2/299792.5)
+
+angdist	4	# calculate the angular separation in arcsec on the sky
+		# of object 2 wrt. object 1, given ($1,$2) the RA in
+		# decimal hours and DEC in decimal degrees of object 1,
+		# and ($3,$4) the corresponding coordinates of object 2.
+		SET cosc LOCAL
+		set cosc = sind(abs($4))*sind(abs($2)) + \
+				cosd($4)*cosd($2)*cosd(15*($3-$1))
+		set $0 = 3600.*(180./pi)*acos(cosc)
+
+wmapangle 1	# calculate apparent angle in arcsec of stick of 1 kpc in
+		# WMAP cosmology (Spergel et al. 2003) with H0=72, k=0,
+		# and Omega_m=0.29 (this is just a look-up table for results
+		# obtained from IDL Astrolib routine 'zang'). RAJ.
+		foreach _v { __z __d __v __w } { set $_v local }
+		set __v = $1
+		set __z = { 0.001 0.002 0.003 0.004 0.005 \
+		0.007 0.010 0.015 0.020 0.025 0.030 0.040 \
+		0.05 0.06 0.07 0.08 0.09 0.10 \
+		0.11 0.12 0.13 0.14 0.15 0.16 0.17 0.18 0.19 0.20 \
+		0.21 0.22 0.23 0.24 0.25 0.26 0.27 0.28 0.29 0.30 \
+		0.31 0.32 0.33 0.34 0.35 0.36 0.37 0.38 0.39 0.40 \
+		0.41 0.42 0.43 0.44 0.45 0.46 0.47 0.48 0.49 0.50 \
+		0.51 0.52 0.53 0.54 0.55 0.56 0.57 0.58 0.59 0.60 \
+		0.61 0.62 0.63 0.64 0.65 0.66 0.67 0.68 0.69 0.70 \
+		0.71 0.72 0.73 0.74 0.75 0.76 0.77 0.78 0.79 0.80 \
+		0.81 0.82 0.83 0.84 0.85 0.86 0.87 0.88 0.89 0.90 \
+		0.91 0.92 0.93 0.94 0.95 0.96 0.97 0.98 0.99 1.00 \
+		1.25 1.50 1.75 2.00 2.25 2.50 2.75 3.00 3.25 3.50 \
+		3.75 4.00 4.25 4.50 5.00 5.50 6.00 6.50 7.00 7.50 \
+		8.00 8.50 9.00 9.50 10.0 10.5 11.0 11.5 12.0 13.0 \
+		14.0 15.0 16.0 17.0 18.0 19.0 20.0 }
+		set __d = { 49.5986 24.8295 16.5731 12.4449 9.96804 \
+		7.13731 5.01429 3.36310 2.53754 2.04223 1.71206 1.29940 \
+		1.05187 0.886900 0.769112 0.680813 0.612172 0.557292 \
+		0.512421 0.475056 0.443465 0.416412 0.392988 0.372514 0.354468 0.338447 0.324130 0.311262 \
+		0.299637 0.289084 0.279464 0.270661 0.262576 0.255126 0.248242 0.241862 0.235934 0.230414 \
+		0.225261 0.220442 0.215926 0.211686 0.207699 0.203943 0.200401 0.197055 0.193889 0.190891 \
+		0.188049 0.185350 0.182786 0.180347 0.178024 0.175811 0.173699 0.171684 0.169758 0.167917 \
+		0.166156 0.164469 0.162853 0.161305 0.159819 0.158393 0.157024 0.155708 0.154444 0.153228 \
+		0.152058 0.150932 0.149848 0.148803 0.147797 0.146827 0.145891 0.144989 0.144118 0.143278 \
+		0.142467 0.141683 0.140927 0.140196 0.139489 0.138806 0.138146 0.137508 0.136891 0.136294 \
+		0.135716 0.135157 0.134616 0.134093 0.133587 0.133097 0.132622 0.132163 0.131718 0.131287 \
+		0.130871 0.130467 0.130076 0.129697 0.129331 0.128976 0.128633 0.128300 0.127978 0.127666 \
+		0.122488 0.120622 0.120636 0.121813 0.123756 0.126226 0.129074 0.132200 0.135534 0.139029 \
+		0.142650 0.146369 0.150167 0.154029 0.161901 0.169915 0.178027 0.186208 0.194436 0.202698 \
+		0.210983 0.219284 0.227594 0.235909 0.244227 0.252545 0.260860 0.269172 0.277480 0.294080 \
+		0.310654 0.327200 0.343718 0.360206 0.376666 0.393097 0.409500 }
+		# interpolate requested redshift in lookup table...
+		spline __z __d __v __w
+		set $0 = __w
+
+cosmoangle 2    # calculate apparent angle in arcsec of stick of 1 kpc.
+		# Argument 1=z, 2=q0. H0=50/H0  (MF; annotated by RAJ):
+		if ( $?H0 == 0) { define H0  50  echo "H0=50 km/sec,Mpc" }
+		# General expression for apparent angle:
+		#                  H0            q0^2*(1+z)^2
+		#    dtheta = dr * -- * --------------------------------
+		#                   c   q0*z + (q0-1)*(sqrt(2*q0*z+1)-1)
+		# which for q0=0.5 reduces to:
+		#                  H0       (1+z)
+		#    dtheta = dr * -- * ---------------
+		#                  2c   1 - 1/sqrt(1+z)
+		# In a q0=0 universe:
+		#                  H0     (1+z)**2
+		#    dtheta = dr * -- * -------------
+		#                   c    z*(1 + z/2)
+		if ( $2 == 0 ) {
+		   set $0=( $H0/3e5 * (1+$1)**2/($1*(1.+$1/2.)))
+		} else {
+		   if ( $2 == 0.5 ) {
+			set $0 = ( $H0/(2*3e5) * (1+$1)/(1 - 1/sqrt(1+$1)) )
+		   } else {
+			set $0 = ( $H0/3e5 * ($2*$2*(1.+$1)**2)/($2*$1+($2-1.)*(sqrt(2.*$2*$1+1.)-1.)) )
+		   }
+		}
+		# Convert dr in pc to dr in kpc and radians to arcsec:
+		set $0 = $0*0.001*(180./pi)*3600.
+
+cosmosize 2	# calculate comoving distance in kpc corresponding to an
+		# observed angular separation of 1 arcsec. Argument 1=z,
+		# 2=q0. H0=50/H0. (RAJ)
+		if ( $?H0 == 0) { define H0  50  echo "H0=50 km/sec,Mpc" }
+		# General expression for linear separation:
+		#                  c    q0*z + (q0-1)*(sqrt(2*q0*z+1)-1)
+		#    dr = dtheta * -- * --------------------------------
+		#                  H0            q0^2*(1+z)^2
+		#    dr_comov = dr * (1+z)
+		# which for q0=0.5 reduces to:
+		#                        2c   
+		#    dr_comov = dtheta * -- * (1 - 1/sqrt(1+z) )
+		#                        H0   
+		if ( $2 == 0 ) {
+		   set $0=0.
+		} else {
+		   if ( $2 == 0.5 ) {
+			set $0 = ( (2*3e5/$H0) * (1 - 1/sqrt(1+$1)) )
+		   } else {
+			set $0 = ( (3e5/$H0) * ($2*$1+($2-1)*(sqrt(2*$2*$1+1)-1))/($2*$2*(1+$1)) )
+		   }
+		}
+		# Convert dr in Mpc to dr in kpc and arcsec to radians:
+		set $0 = $0*1000*(pi/180)/3600
+
+cosmoz 2	# calculates z as a function of relative time. 1=z, 2=q0 (MF)
+		if ($2 == 0.5 ) {
+		   set $0=(1./$1)**(2./3.)-1.
+		} else { 
+		   if ( $2 == 0 ) {
+			set $0=(1./$1)-1.
+		   } else {
+			set $0=0
+		   }
+		}
+
+cosmot 2	# calculates relative time as a function of z. 1=z, 2=q0 (MF)
+		if ($2 == 0.5 ) {
+		   set $0=1./(1.+$1)**(3./2.)
+		} else { 
+		   if ( $2 == 0 ) {
+			set $0=1./(1.+$1)
+		   } else {
+			set $0=0
+		   }
+		}
+
+cosmoangdz 2	# calculate the transverse angular distance on the sky
+		# in arcsec corresponding to a given redshift difference
+		# $1 along the line of sight at mean redshift $2 in a 
+		# Omega=1 universe. (P.J.)
+		set $0 = (180./pi)*3600.*($1/(2*(1+$2)*(sqrt(1+$2)-1)))
+
+##hubtype 1	# returns common Hubble type, given a numeric one.
+##	        if ($?1==0) { set $0 = 'error' }
+##		set Ttyp = < -7 -6 -5 -4 -3 -2 -1 0 1 2 3 4 5 6 7 8 9 10 11 15 20 99 100 -99 >
+##		set Htyp = < "'E..'" "'cE'" "'E'" "'cD'" "'S0-'" "'S0'" "'S0+'" "'S0/a'" "'Sa'" "'Sab'" "'Sb'" "'Sbc'" "'Sc'" "'Scd'" "'Sd'" "'Sdm'" "'Sm'" "'Im'" "'Irr'" "'Pec'" "'S..'" "'Pec'" "'BL-Lac'" "'star'" >
+##		sel (Ttyp==$1)
+##		if (dimen(in)==1) {
+##		   set $0 = <$(Htyp[in])>
+##		} else {
+##		   set $0 = 'error'
+##		}
+
+hubtype 1	# returns common Hubble type, given a numeric one (on the
+		# de Vaucouleurs 16-step scale). RAJ.
+		if ($?1==0) { set $0 = 'error' }
+		set Ttyp = < -7 -6 -5 -4 -3 -2 -1 0 1 2 3 4 5 6 7 8 9 10 11 15 20 99 100 -99 >
+		set Htyp = < "'E..'" "'cE'" "'E'" "'cD'" "'S0-'" "'S0'" "'S0+'" "'S0/a'" "'Sa'" "'Sab'" "'Sb'" "'Sbc'" "'Sc'" "'Scd'" "'Sd'" "'Sdm'" "'Sm'" "'Im'" "'Irr'" "'Pec'" "'S..'" "'Pec'" "'BL-Lac'" "'star'" >
+		set dimen(_o) = $(dimen($1)).s
+		do _i=0,dimen($1)-1 {
+		   sel (Ttyp==$1[$_i])
+		   if (dimen(in)==1) {
+		      set _o[$_i] = <$(Htyp[in])>		
+		   } else {
+		      set _o[$_i] = 'error'
+		   }
+		}
+		set $0 = _o   delete _o
+
+degtosex 2	# return RA and DEC in sexagesimal notation when provided
+		# in degrees as $1 and $2. If only one pair of RA,DEC is
+		# given, the result is stored in variables $_RA and $_DEC.
+		define _fmt local
+		foreach _v { _sign _decd _decm _decs \
+			_rah _ram _ras } { set $_v local }
+		set _rah  = abs(int($1/15))
+		set _ram  = int((abs($1/15) - _rah)*60)
+		set _ras  = ((abs($1/15) - _rah)*60 - _ram)*60
+		set _sign = (abs(int($2))==int($2)) ? '+' : '-'
+		set _decd = abs(int($2))
+		set _decm = int((abs($2) - _decd)*60)
+		set _decs = ((abs($2) - _decd)*60 - _decm)*60
+		define _fmt "%02d:%02d:%05.2f %1s%02d:%02d:%04.1f\n"
+		if ($verbose>0) { print '$!_fmt' { _rah _ram _ras _sign _decd _decm _decs } }
+		set dimen(_RA)  = $(dimen($1)).s
+		set dimen(_DEC) = $(dimen($1)).s
+		do _i = 0,dimen(_RA)-1 {
+		   define _tmp  $(sprintf('%02d',$(_rah[$_i])))":"$(sprintf('%02d',$(_ram[$_i])))":"$(sprintf('%05.2f',$(_ras[$_i])))
+		   set _RA[$_i] = <"$!_tmp">
+		   define _tmp  "$!(_sign[$_i])"$(sprintf('%02d',$(_decd[$_i])))":"$(sprintf('%02d',$(_decm[$_i])))":"$(sprintf('%04.1f',$(_decs[$_i])))
+		   set _DEC[$_i]= <"$!_tmp">
+		}
+
+sextodeg 2	# return RA and DEC in degrees when provided in sexagesimal
+		# notation as $1 and $2. NB: does not work on vectors with
+		# multiple elements as yet.
+		foreach _v { _sign _decd _decm _decs \
+			_rah _ram _ras } { set $_v local }
+		set _rah  = $(substr(string($1),0,2))
+		set _ram  = $(substr(string($1),3,2))
+		set _ras  = $(substr(string($1),6,5))
+		set _sign = substr(string($2),0,1)
+		set _decd = $(substr(string($2),1,2))
+		set _decm = $(substr(string($2),4,2))
+		set _decs = $(substr(string($2),7,4))
+		set _RA   = (15*((_ras/60 + _ram)/60 + _rah))
+		set _DEC  = ((_decs/60 + _decm)/60 + _decd)
+		set _DEC  = ( _sign == '-' ) ? (-1*_DEC) : _DEC
+		if ($verbose>0) { print '%14.10f %14.10f\n' { _RA _DEC } }
+
+planck	2	# Return Planck function value (in erg/s,cm^2,AA) for
+		# wavelength $1 (in cm) for a black body temperature $2
+		# (in K).                        8*pi*h*c^2/lambda^5
+		# Planck function:  B_nu(T) = -------------------------
+		#                             exp(h*c/(lambda*k*T)) - 1
+		foreach _v { _h _c _k _pi _bfac } { set $_v local }
+		set _h   = 6.62606876e-27
+		set _c   = 2.99792458e10
+		set _k   = 1.3806503e-16
+		set _pi  = 3.14159265359
+		set _bfac= exp(_h*_c/($1*_k*$2)) - 1
+		set $0   = (8*_pi*_h*(_c**2)/(($1)**5))/_bfac
+
+
+################    TEXT STRING HANDLING    ###############################
+
+paddstr	2	# function to return input character string $1, padded
+		# with blank space (at the right) to a length of $2
+		# characters.
+		FOREACH _v { oldstr newstr blank } { DEFINE $_v LOCAL }
+		if ($?1) { define oldstr "$!!1" } else { define oldstr ? \
+			{ Give string: } }
+		if ($?2) { define nchar  "$!!2" } else { define nchar  ? \
+			{ Give length of output string: } }
+		define blank "                                                 "
+		define newstr "$!!oldstr""$!!blank"
+		set $0 = substr('$newstr',0,$nchar)
+
+
+################    DATA REPRESENTATION    ################################
+
+numtobin 1      # function to return binary representation of a numeric
+                # value $1 (rounded off to nearest integer). Padding to
+                # 8-bit bytes is left to the user. Parameter cbin is
+		# kept around to avoid the numeric interpretation (i.e.
+		# binary(2000) = 1.11110103e+10 instead of 11111010000).
+                foreach _v { _mod _div } { define $_v local }
+                define cbin  $(int((($1)%2)))
+                define _div  $(int(nint($1)/2))
+                while { $_div>0 } {
+                   define _mod  $(int(($_div%2)))
+                   define _div  $(int(($_div/2)))
+                   define cbin  <$_mod""$cbin>
+                }
+                set $0 = <"$!cbin">
+
+numtohex 1      # function to return hexadecimal representation of a 
+                # numeric value $1 (rounded off to nearest integer). 
+		# MAJOR BUG: refuses to return hexadecimal values '1d',
+		# '1e', '2d', '2e', ... etc as these are interpreted
+		# as 1e0,1d0 = 1, 2e0,2d0 = 2 etc.  WORKAROUND: the
+		# constant chex is kept around and may be used.
+                foreach _v { _mod _div } { define $_v local }
+		set _hex local  set _hex = { "0" 1 2 3 4 5 6 7 8 9 a b c "d" "e" f }
+                define chex  $(_hex[$(int(($1)%16))])
+                define _div  $(int(nint($1)/16))
+                while { $_div>0 } {
+                   define _mod  $(int(($_div%16)))
+                   define _div  $(int(($_div/16)))
+                   define chex  <"$!(_hex[$_mod])""$!chex">
+                }
+                set $0 = <"$!!chex">
+
+
+################    VARIOUS    #########################################
+
+example 1 # example plot of surface brightness profile
+	device x11
+	erase
+	ltype 0
+	ctype default
+	define _ctype 0
+	define ltype 0
+
+	rfile "$!!1"
+	expand 1.001 limits 0 150 28.5 16 box
+	xlabel r (arcsec)
+	ylabel \mu_B (mag/arcsec)
+	connect r sb
+	errorbar r sb eesb 2
+	errorbar r sb eesb 4
+	toplabel $data_file
+	define ylab  $fy2
+	define xlab  (0.51333*($fx2-$fx1))
+
+exampleo 1 # overplot another surface brightness profile
+	rfile "$!!1"
+	if ($ctype<1) {
+	   define _ctype ($_ctype+1)
+	   if ($_ctype<3) { define _ctype 3 }
+	   if ($_ctype>8) { define ltype ($ltype+1) define _ctype 3 }
+	   ctype $_ctype
+	   ltype $ltype
+	}
+	connect r sb
+	errorbar r sb eesb 2
+	errorbar r sb eesb 4
+	echo "overplotting "$data_file
+	define ylab  ($ylab+0.1*($fy1-$fy2))
+	relocate $xlab $ylab
+	putlabel 5 $data_file
+	ctype default
+
+
+vfield 4 # plot a vector field: vfield x y len angle
+        # len is length of vector (in units of 600 SCREEN pixels)
+        # angle is in +ve direction from +x axis
+        DEFINE ptype | PTYPE { 0 0 300 0 m 200 50 300 0 200 -50 }
+        DEFINE angle | ANGLE $4
+        DEFINE expand | EXPAND $3
+        POINTS $1 $2
+        FOREACH v { angle expand ptype } { $v $$v DEFINE $v DELETE }
+
+
+#################    OBSOLETE    #######################################
+
+setbox	2	# draw window box given x- and y- vectors $1 and $2.
+		erase  limits ($1[in]) ($2[in])  box  timestamp
+		set _xpoints = $1  set _ypoints = $2
+
+
+#################    FINANCIAL   #######################################
+
+stocks	01	# Plot two-panel graph of DowJones and Nasdaq indices.
+		# If $1 is defined and >0, plot as a function of years
+		# since Jan 01 2000.
+		SET _dt LOCAL  SET _si LOCAL  SET _dj LOCAL  SET _nq LOCAL
+		if ($?1) { define pdt  $1 } else { define pdt  1 }
+		rfile /usr/local/etc/stockindices
+		if ($pdt>0) { set _dt = day2000 } else { set _dt = in }
+		sel (DowJones<1e8)
+		set _dj = (DowJones[in])   set _dt = (_dt[in])
+		expand 1.001  lweight 2  ptype 10 3
+		window 1 -2 1 2  limits _dt _dj
+		ticksize 0.08333 0.50000 0 0  box 3 2 1 0
+		ticksize 0 0 0 0  box 0 2 3 3 \n  setlabpos
+		smooth _dj _si 7
+		points _dt _dj  ctype red  connect _dt _si  ctype default
+		expand 1.500  ctype cyan  rputl $lx0 $ly1 5 "Dow Jones"
+		expand 1.001  ctype default timestamp
+
+		rfile /usr/local/etc/stockindices
+		if ($pdt>0) { set _dt = day2000 } else { set _dt = in }
+		sel (Nasdaq<1e8)
+		set _nq = (Nasdaq[in])   set _dt = (_dt[in])
+		window 1 -2 1 1  limits _dt _nq
+		ticksize 0.08333 1.00000 0 0  box 3 2 0 0
+		ticksize 0 0 0 0  box 1 2 3 3 \n  setlabpos
+		smooth _nq _si 7
+		points _dt _nq  ctype red  connect _dt _si  ctype cyan
+		expand 1.500  rputl $lx0 $ly1 5 "Nasdaq" \n ctype default
+		if ($pdt>0) { xlabel "Years since Jan 01, 2000" }
+		window 1 1 1 1
+
+		# Draw reference line for June 2004 (buy in into TIAA-CREF)
+		ltype 1  rdraw 4.6 $fy1 4.6 $fy2  ltype 0
+
+exchrate 01	# Plot a graph of the exchange rate from US$ to Euro.
+		# If $1 is defined and >0, plot exchange rate from US$
+		# to Dutch Guilder.
+		if ($?1) { define pdt  $1 } else { define pdt  0 }
+		LOCATION 2750 29250 3000 30250   FORMAT 1 "%.2f"
+		rfile /usr/local/etc/exchangerates
+		set fdollar = 1/fdollar
+		set dollar = 1/dollar
+		expand 1.001  lweight 2  ptype 10 3
+		if ($pdt>0) {
+		   limits day2000 fdollar  box 1 2 0 0 \n  setlabpos
+		   ylabel "US$/D{\it fl}."
+		   smooth fdollar _fd 7
+		   points day2000 fdollar  ctype red  connect day2000 _fd
+		} else {
+		   limits day2000 dollar  box 1 2 0 0 \n  setlabpos
+		   ylabel "US$/Euro"
+		   smooth dollar _fd 7
+		   points day2000 dollar  ctype red  connect day2000 dollar
+		}
+		ctype default  xlabel "Years since Jan 01, 2000"
+		expand 1.500   figlabel "Exchange rates"
+		timestamp
+		expand 1.001 rylabel -111 270 "Euro/US$ "
+		define __x  $($fx2-2*$dlx)
+		rdraw $__x 0.9 $fx2 0.9  putl 6 " 1.111"
+		rdraw $__x 1.0 $fx2 1.0  putl 6 " 1.000"
+		rdraw $__x 1.1 $fx2 1.1  putl 6 " 0.909"
+		rdraw $__x 1.2 $fx2 1.2  putl 6 " 0.833"
+		rdraw $__x 1.3 $fx2 1.3  putl 6 " 0.769"
+		rdraw $__x 1.4 $fx2 1.4  putl 6 " 0.714"
+		rdraw $__x 1.5 $fx2 1.5  putl 6 " 0.667"

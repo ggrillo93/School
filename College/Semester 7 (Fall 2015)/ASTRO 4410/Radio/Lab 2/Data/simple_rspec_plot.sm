@@ -1,0 +1,137 @@
+# TO DO: allow spectrum with header to be read in
+# i.e. read in xxx.out in addition to xxx.raw or tempspec.band
+# the latter two have no header info; the first one does
+# this would allow better plot labelling
+
+# simple2 = 3 panel plot with: 
+# broadband spectrum in top panel,
+# narrower band + fit in second panel
+# residuals from fit in bottom panel
+
+
+simple	# plots a single raw spectrum of rspec data
+	data tempspec.band
+	#data tempspec.band.bryan_scott
+	lines 1 99999
+	read {ftemp 1 stemp 2}
+	limits ftemp stemp
+	#limits 1400 1440 stemp
+	expand 1.2
+
+	LOCATION 3500 31000 3500 31000
+	LOCATION $($gx1 + 2500) $gx2 $gy1 $gy2
+	window 1 2 1 2
+	box 
+	ylabel Spectrum (arbitrary units)
+	histogram ftemp stemp
+
+	window 1 2 1 1
+	limits 1415 1425 stemp
+	box
+	expand 1.2
+	xlabel Frequency (MHz)
+	ylabel Spectrum (arbitrary units)
+	histogram ftemp stemp
+	id
+
+simple2	# plots a single raw spectrum of rspec data
+	# fits and removes a polynomial
+	define TeX_strings 1
+	#macro read HIsingle.sm
+	macro read sm_macros_from_web.sm
+	data tempspec.band
+	#data tempspec.band.bryan_scott
+	lines 1 99999
+	read {ftemp 1 stemp 2}
+	limits ftemp stemp
+	#limits 1400 1440 stemp
+	expand 1.2
+
+	LOCATION 3500 31000 3500 31000
+	LOCATION $($gx1 + 2500) $gx2 $gy1 $gy2
+	window 1 3 1 3
+	box 
+	ylabel Spectrum
+	histogram ftemp stemp
+
+	window 1 3 1 2
+	limits 1415 1425 stemp
+	box
+	expand 1.2
+	xlabel Frequency (MHz)
+	ylabel Spectrum 
+	histogram ftemp stemp
+
+	setup_rspec_freq_ranges
+	set f = ftemp-1420.
+	set y = stemp
+	set xfit = f if((f>$ffit1&&f<$ffit2)||(f>$ffit3&&f<$ffit4)||(f>$ffita&&f<$ffitb)||(f>$ffit5&&f<$ffit6))
+        set yfit = y if((f>$ffit1&&f<$ffit2)||(f>$ffit3&&f<$ffit4)||(f>$ffita&&f<$ffitb)||(f>$ffit5&&f<$ffit6))
+        
+	vecminmax yfit yfitmin yfitmax
+	set yfit = yfit / $yfitmax
+	sel (xfit < xfit[dimen(xfit)-1])
+	do_poly_fit xfit yfit
+	set yfit = yfit * $yfitmax
+	set xfit_rf = xfit+1420.
+	# subtract and divide
+	set feval = ftemp if(1416<ftemp && ftemp < 1424)
+	set fbase = feval - 1420.
+	set seval = stemp if(1416<ftemp &&  ftemp < 1424 )
+	set dimen(yfithat) = dimen(feval)
+	do i=0,$($norder-1) {set yfithat = yfithat + a[$i]*fbase**($i)} 
+	set yfithat = yfithat*$yfitmax
+	set yresid = seval - yfithat
+	set ynorm = yresid / yfithat
+	ctype red connect feval yfithat ctype default
+
+	window 1 3 1 1
+	limits 1415 1425 ynorm
+	box
+	expand 1.2
+	xlabel Frequency (MHz)
+	ylabel T(\\nu) / T_{sys}
+	histogram feval ynorm
+	id
+
+setup_rspec_freq_ranges
+        # define starting frequency ranges to fit baselines
+        define ffita -4.0
+        define ffitb -3
+        define ffit1 -2
+        define ffit2 -0.2
+        define ffit3 1.3
+        define ffit4 2.0
+        define ffit5 2.2
+        define ffit6 4.0
+
+        define f1 -5                    # lower edge for output
+        define f2  5                    # upper edge for output
+        define fplot1 -2.5              # lower edge for plotting
+        define fplot2 2.5               # upper edge for plotting
+
+#
+do_poly_fit 2
+        # args = x y vectors for polynomial fit
+        # polynomial order is hardwired
+        # calculates residuals and fills xfitnew, yfitnew with
+        # non-outlier values
+        set _xfit local
+        set _yfit local
+        set _residfit local
+        set _xfit = $1
+        set _yfit = $2
+        define norder 7
+        define norder 9
+        fitpol $norder _xfit _yfit yhat
+
+        set dimen(_yfithat) = dimen(_xfit)
+        do i=0,$($norder-1) {set _yfithat = _yfithat + a[$i]*_xfit**($i)}
+        set _residfit = _yfit - _yfithat
+        stats _residfit rmean rsig rkurt
+        !echo $rmean $rsig
+        set xfitnew = _xfit if(_residfit<$($rmean+3.*$rsig))
+        set yfitnew = _yfit if(_residfit<$($rmean+3.*$rsig))
+        set residfit = _residfit
+        set residfitnew = _residfit if(_residfit<$($rmean+3.*$rsig))
+        echo dimen(xfitnew) = $(dimen(xfitnew))
