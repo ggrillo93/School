@@ -1,0 +1,264 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 3cm
+\topmargin 3cm
+\rightmargin 3cm
+\bottommargin 5cm
+\headheight 1cm
+\headsep 1cm
+\footskip 2cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+The magnitude of the electric field at the photosensor is given by the sum
+ of the electric fields of each of the waves,
+\begin_inset Formula 
+\begin{equation}
+E=E_{1}+E_{2}+E_{3}+E_{4}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The intensity is proportional to the square modulus of (1)
+\begin_inset Formula 
+\begin{eqnarray}
+\left|E\right|^{2} & = & (E_{1}+E_{2}+E_{3}+E_{4})(E_{1}^{*}+E_{2}^{*}+E_{3}^{*}+E_{4}^{*})\\
+ & = & \left|E_{1}\right|^{2}+\left|E_{2}\right|^{2}+\left|E_{3}\right|^{2}+\left|E_{4}\right|^{2}+2Re(E_{1}E_{2}^{*})+2Re(E_{1}E_{3}^{*})\\
+ &  & +2Re(E_{1}E_{4}^{*})+2Re(E_{2}E_{3}^{*})+2Re(E_{2}E_{4}^{*})+2Re(E_{3}E_{4}^{*})
+\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In this particular case, we can write the (time-averaged) electric fields
+ as
+\begin_inset Formula 
+\begin{eqnarray}
+E_{1} & = & E_{01}e^{ik_{1}x}\\
+E_{2} & = & E_{01}e^{ik_{1}(x+2\Delta x)}\\
+E_{3} & = & E_{02}e^{ik_{2}x}\\
+E_{4} & = & E_{02}e^{ik_{2}(x+2\Delta x)}
+\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Substituting into (3), and after performing some trigonometric algebra,
+ we get
+\begin_inset Formula 
+\begin{eqnarray}
+\left|E\right|^{2} & = & 2\left[E_{01}^{2}+E_{02}^{2}+E_{01}^{2}\cos(2k_{1}\Delta x)+E_{02}^{2}\cos(2k_{2}\Delta x)\right.\nonumber \\
+ &  & \left.+4E_{01}E_{02}\cos\left(k_{1}\Delta x\right)\cos\left(k_{2}\Delta x\right)\cos\left((k_{1}-k_{2})(\Delta x+2x)\right)\right]
+\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We define 
+\begin_inset Formula $a=\frac{E_{01}}{E_{02}}$
+\end_inset
+
+, and rewrite this as
+\begin_inset Formula 
+\begin{eqnarray}
+I\propto\frac{1}{2}\left|\frac{E}{E_{02}}\right|^{2} & = & 1+a^{2}+a\cos(2k_{1}\Delta x)+\cos(2k_{2}\Delta x)\nonumber \\
+ &  & +4a\cos\left(k_{1}\Delta x\right)\cos\left(k_{2}\Delta x\right)\cos\left((k_{1}-k_{2})(\Delta x+2x)\right)
+\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The 
+\begin_inset Formula $2x$
+\end_inset
+
+ factor in the last term is just an offset that does not affect the shape
+ of the curve, so we can set 
+\begin_inset Formula $x=0$
+\end_inset
+
+.
+ Rewriting in terms of 
+\begin_inset Formula $\nu_{0}$
+\end_inset
+
+, the frequency of the central mode, and 
+\begin_inset Formula $\Delta\nu$
+\end_inset
+
+, the frequency separation between the modes, we have that
+\begin_inset Formula 
+\begin{eqnarray}
+I & \propto & 1+a^{2}+a\cos\left(\frac{4\pi\nu_{0}\Delta x}{c}\right)+\cos\left(\frac{4\pi(\nu_{0}+\Delta\nu)\Delta x}{c}\right)\nonumber \\
+ &  & +4a\cos\left(\frac{2\pi\nu_{0}\Delta x}{c}\right)\cos\left(\frac{2\pi(\nu_{0}+\Delta\nu)\Delta x}{c}\right)\cos\left(\frac{2\pi\Delta\nu\Delta x}{c}\right)
+\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For an HeNe laser with nominal wavelength 
+\begin_inset Formula $\lambda_{0}=632.8$
+\end_inset
+
+ nm, and cavity length 
+\begin_inset Formula $L=10$
+\end_inset
+
+ cm, we have that 
+\begin_inset Formula $\nu_{0}=4.74\times10^{14}$
+\end_inset
+
+ Hz and 
+\begin_inset Formula $\Delta\nu=\frac{c}{2L}=1.50\times10^{9}$
+\end_inset
+
+ Hz.
+ Figure 1 shows a plot of (10) after normalization, using these values,
+ and 
+\begin_inset Formula $a=1$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename normalizedint.png
+	scale 60
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Normalized intensity vs 
+\begin_inset Formula $\Delta x$
+\end_inset
+
+ with 
+\begin_inset Formula $\nu_{0}=4.74\times10^{14}$
+\end_inset
+
+ Hz and 
+\begin_inset Formula $\Delta\nu=1.50\times10^{9}$
+\end_inset
+
+ Hz.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

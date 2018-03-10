@@ -1,0 +1,2563 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 3cm
+\topmargin 3cm
+\rightmargin 3cm
+\bottommargin 5cm
+\headheight 1cm
+\headsep 1cm
+\footskip 2cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Project 2: Polarization of Light
+\end_layout
+
+\begin_layout Date
+September 27th, 2017
+\end_layout
+
+\begin_layout Author
+Gianfranco Grillo
+\end_layout
+
+\begin_layout Abstract
+We present the results of a series of five experiments designed to investigate
+ different aspects of the polarization of light.
+ In the first experiment, we perform a verification of Malus's Law and find
+ the extinction ratio between two identical polarizers.
+ Our results are consistent with Malus's Law, and we calculate the extinction
+ ratio as x, which is close to the nominal value.
+ The second experiment measures the index of refraction 
+\begin_inset Formula $n$
+\end_inset
+
+ of a glass prism by finding its Brewster's angle, obtaining a value of
+ 
+\begin_inset Formula $n=1.46\pm0.05$
+\end_inset
+
+.
+ In the third experiment, we measure the reflectance coefficient of a blackened
+ flat in two different ways, one by fitting a curve according to Fresnel's
+ equations, and another by finding the azimuthal angle.
+ We find general agreement between the two methods.
+ In the fourth experiment, we qualitatively examine the polarization of
+ light by scattering.
+ Finally, we study the effects of birefringent materials on incident light,
+ and determine the phase shift 
+\begin_inset Formula $\phi$
+\end_inset
+
+ introduced by an overhead transparency on linearly polarized light.
+ We find that 
+\begin_inset Formula $\phi=70\pm10^{\circ}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout Standard
+According to classical electromagnetism, light consists in electromagnetic
+ waves of a particular frequency that propagate in a direction perpendicular
+ to the oscillations of the electric field and the magnetic field.
+ As long as they are perpendicular with respect to each other and the direction
+ of propagation, the electric and magnetic fields can oscillate in an arbitrary
+ orientation.
+ The geometrical characteristics of this orientation are known as the wave's
+ polarization.
+ Monochromatic polarized light traveling in an arbitrarily defined z-direction
+ can be described in a straightforward manner in terms of the amplitudes
+ of the x- and y-components of their electric fields, as well as the phase
+ difference between them.
+ In this project, we use a monochromatic laser beam of wavelength 632.8 nm
+ and perform a series of measurements that can be successfully modeled under
+ this framework.
+\end_layout
+
+\begin_layout Standard
+We perform the data analysis using Python and the associated library SciPy
+ ([1]) and Uncertainty package ([2]).
+\end_layout
+
+\begin_layout Section
+Theoretical background
+\end_layout
+
+\begin_layout Subsection
+Electromagnetic waves
+\end_layout
+
+\begin_layout Standard
+The wave equations in vacuum for the electric field 
+\begin_inset Formula $\vec{E}$
+\end_inset
+
+ and the magnetic field 
+\series bold
+
+\begin_inset Formula $\vec{B}$
+\end_inset
+
+ 
+\series default
+follow from Maxwell's equations and are given by
+\begin_inset Formula 
+\begin{eqnarray}
+\nabla^{2}\vec{E} & = & \epsilon_{0}\mu_{0}\frac{\partial^{2}\vec{E}}{\partial t^{2}}\\
+\nabla^{2}\vec{B} & = & \epsilon_{0}\mu_{0}\frac{\partial^{2}\vec{B}}{\partial t^{2}}
+\end{eqnarray}
+
+\end_inset
+
+where 
+\begin_inset Formula $\epsilon_{0}$
+\end_inset
+
+ and 
+\begin_inset Formula $\mu_{0}$
+\end_inset
+
+ are the permittivity and permeability of free space, respectively.
+ Faraday's Law states that
+\begin_inset Formula 
+\begin{equation}
+\vec{\nabla}\times\vec{E}=-\frac{\partial\vec{B}}{\partial t}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Following the derivation in [3], we can consider the case of a monochromatic
+ plane wave of linear polarization moving in the z-direction, where the
+ electric and magnetic fields are given by
+\begin_inset Formula 
+\begin{eqnarray}
+\tilde{E} & = & \tilde{E}_{0}e^{i(kz-\omega t)}\\
+\tilde{B} & = & \tilde{B}_{0}e^{i(kz-\omega t)}
+\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Gauss's Law for electric and magnetic fields in free space requires that
+ 
+\begin_inset Formula 
+\begin{equation}
+\vec{\nabla}\cdot\vec{B}=\vec{\nabla}\cdot\vec{E}=0
+\end{equation}
+
+\end_inset
+
+which implies that both fields are transverse to the direction of propagation
+ of the wave, since
+\begin_inset Formula 
+\begin{equation}
+(\vec{E}_{0})_{z}=(\vec{B}_{0})_{z}=0
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Moreover, equation (3) forces the electric and magnetic fields to be perpendicul
+ar to each other, since (3) requires that
+\begin_inset Formula 
+\begin{equation}
+-k(\tilde{E}_{0})_{y}=\omega(\tilde{B}_{0})_{x},\,k(\tilde{E}_{0})_{x}=\omega(\tilde{B}_{0})_{y}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This can also be expressed as
+\begin_inset Formula 
+\begin{equation}
+\tilde{B}_{0}=\frac{k}{\omega}(\hat{z}\times\tilde{E}_{0})
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In linear, non-absorbing media with no free charge or free current, this
+ relationship also holds, since equation (6) is still true, and the only
+ change in the other equations is that the constants in Faraday's law change
+ from 
+\begin_inset Formula $\epsilon_{0}$
+\end_inset
+
+ and 
+\begin_inset Formula $\mu_{o}$
+\end_inset
+
+ to the corresponding permittivity and permeability of the specific medium
+ in question, 
+\begin_inset Formula $\epsilon$
+\end_inset
+
+ and 
+\begin_inset Formula $\mu$
+\end_inset
+
+.
+ Thus the velocity of the wave changes, but not their transverse quality
+ or the characteristic that the electric and magnetic fields are perpendicular
+ to each other.
+\end_layout
+
+\begin_layout Subsection
+Polarization by a plastic film
+\end_layout
+
+\begin_layout Standard
+One of the properties that describes electromagnetic waves is their polarization
+, which is related to the geometrical orientation of their electric fields.
+ The orientation of the electric field of an electromagnetic wave traveling
+ in the +z-direction can be described in terms of the relationships between
+ the amplitudes and phases of the electric field's x- and y-components.
+ We say that light is linearly polarized when one of the components of the
+ electric field is equal to zero, and thus the electric field oscillates
+ in only one axis.
+\end_layout
+
+\begin_layout Standard
+Linear polarization can be achieved by means of a thin plastic film made
+ of polymer chains covered with iodine.
+ Iodine is a light absorbing element, and the plastic film is manufactured
+ in such a way that the polymer chains align in a particular direction.
+ Randomly polarized light incident in such a film becomes linearly polarized,
+ as only the component of the electric field perpendicular to the direction
+ of the film's polymer chains is transmitted by the film.
+ The iodine covering the polymer chains preferentially absorbs the light
+ incident parallel to it, as its electrons are able to oscillate freely
+ along that axis.
+ The radiation emitted due to the oscillations of these electrons is 
+\begin_inset Formula $180^{\circ}$
+\end_inset
+
+ out of phase with respect to the incident radiation, which means that very
+ little light gets transmitted with its field oscillating in that direction.
+ The only direction in which the electrons cannot oscillate at all is perpendicu
+lar to the direction of the polymer chains, so the component of the electric
+ field along this axis is the only one that is transmitted by the film.
+\end_layout
+
+\begin_layout Subsection
+Malus's Law
+\end_layout
+
+\begin_layout Standard
+An optical system composed of two linear polarizers will transmit a certain
+ amount of light that depends on the relative orientations of the axes of
+ the two constituent polarizers.
+ The precise relationship between the transmitted intensity 
+\begin_inset Formula $I$
+\end_inset
+
+ and the angle between the axes of the polarizers 
+\begin_inset Formula $\theta$
+\end_inset
+
+ is known as Malus's Law, and is given by
+\begin_inset Formula 
+\begin{equation}
+I(\theta)=I_{0}\cos^{2}\theta
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $I_{0}$
+\end_inset
+
+ corresponds to the intensity of the light emerging from the first polarizer.
+ The obvious consequences of this relationship is that maximum transmission
+ occurs when 
+\begin_inset Formula $\theta=0^{\circ}$
+\end_inset
+
+, that is, when the two polarizer axes are aligned with each other, whereas
+ minimum transmission occurs when 
+\begin_inset Formula $\theta=90^{\circ}$
+\end_inset
+
+, which corresponds to the configuration in which the axes of transmission
+ of both polarizers are perpendicular to each other.
+ This law should hold exactly for the case of two ideal polarizers which
+ transmit all the light incident along their transmission axis and block
+ all other light.
+ In practice, however, some of the light that is not parallel to the transmissio
+n axis is allowed to go through, and some of the light parallel to the transmiss
+ion axis is blocked.
+ A measure of deviation from ideal is the extinction ratio 
+\begin_inset Formula $r_{e}$
+\end_inset
+
+, given by
+\begin_inset Formula 
+\begin{equation}
+r_{e}=\frac{I_{min}}{I_{max}}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $I_{min}$
+\end_inset
+
+ and 
+\begin_inset Formula $I_{max}$
+\end_inset
+
+ correspond to the minimum intensity and maximum intensities emerging from
+ the system, respectively.
+\end_layout
+
+\begin_layout Subsection
+Fresnel's equations and Brewster's angle
+\end_layout
+
+\begin_layout Standard
+The electric field of an electromagnetic wave incident on a surface can
+ be conveniently expressed in terms of its components parallel (
+\begin_inset Formula $E_{\parallel}$
+\end_inset
+
+) and perpendicular (
+\begin_inset Formula $E_{\perp}$
+\end_inset
+
+) to the plane of incidence.
+ The Fresnel equations relate the magnitude of the reflected fields to that
+ of the incident fields for each of the components, and are given in [4]
+ as
+\begin_inset Formula 
+\begin{eqnarray}
+r_{\parallel}=\frac{E_{\parallel_{r}}}{E_{\parallel_{i}}} & = & \frac{\tan(\theta_{i}-\theta_{t})}{\tan(\theta_{i}+\theta_{t})}\\
+r_{\perp}=\frac{E_{\perp_{r}}}{E_{\perp_{i}}} & = & -\frac{\sin(\theta_{i}-\theta_{t})}{\sin(\theta_{i}+\theta_{t})}
+\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+These ratios are also known as the reflection coefficients.
+ The incident wave becomes completely polarized when 
+\begin_inset Formula $r_{\parallel}$
+\end_inset
+
+ vanishes, which occurs when its denominator 
+\begin_inset Formula $\tan(\theta_{i}+\theta_{t})\rightarrow\infty$
+\end_inset
+
+, that is, when 
+\begin_inset Formula $\theta_{i}+\theta_{t}=90^{\circ}$
+\end_inset
+
+.
+ Snell's Law indicates that for an air/dielectric interface, 
+\begin_inset Formula 
+\begin{align}
+n\sin\theta_{t} & =\sin\theta_{i}=\sin(90^{\circ}-\theta_{t})=\cos\theta_{t}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Solving for 
+\begin_inset Formula $\theta_{t}$
+\end_inset
+
+ gives the transmission angle that results in completely polarized light,
+ also known as Brewster's angle 
+\begin_inset Formula $\theta_{b}$
+\end_inset
+
+, in honor of Sir David Brewster, who first discovered it in 1815.
+\begin_inset Formula 
+\begin{equation}
+\theta_{b}=\arctan(n)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We will calculate the refractive index of a glass prism in experiment 2
+ by means of this equation.
+ 
+\end_layout
+
+\begin_layout Standard
+Using trigonometric identities and Snell's Law, it is possible to rewrite
+ (12) and (13) strictly in terms of 
+\begin_inset Formula $\theta_{i}$
+\end_inset
+
+ and 
+\begin_inset Formula $n$
+\end_inset
+
+,
+\begin_inset Formula 
+\begin{eqnarray}
+r_{\parallel} & = & \frac{n^{2}\cos\theta_{i}-\sqrt{n^{2}-\sin^{2}\theta_{i}}}{n^{2}\cos\theta_{i}+\sqrt{n^{2}-\sin^{2}\theta_{i}}}\\
+r_{\perp} & = & \frac{\cos\theta_{i}-\sqrt{n^{2}-\sin^{2}\theta_{i}}}{\cos\theta_{i}+\sqrt{n^{2}-\sin^{2}\theta_{i}}}
+\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Experiment 3 of this project will verify these equations by comparing the
+ incident intensities of light alternatively polarized along the plane of
+ incidence and perpendicular to the plane of incidence to the reflected
+ intensities, as a function of 
+\begin_inset Formula $\theta_{i}$
+\end_inset
+
+.
+ The ratio between the reflected intensity and the incident intensity correspond
+s to the square of the ratio of the reflected electric field and the incident
+ electric field.
+ That is
+\begin_inset Formula $R_{\parallel}=r_{\parallel}^{2}$
+\end_inset
+
+, and 
+\begin_inset Formula $R_{\perp}=r_{\perp}^{2}$
+\end_inset
+
+, so our measurements should be described by the square of equations (16)
+ and (17).
+\end_layout
+
+\begin_layout Subsection
+Polarization and scattering
+\end_layout
+
+\begin_layout Standard
+Randomly polarized light incident on a group of molecules causes the molecules
+ to start oscillating parallel to the direction of the light's electric
+ field's oscillations.
+ Because the light is unpolarized, the direction of oscillation will change
+ with time in a practically random way, but it will always be perpendicular
+ to the direction of the light's propagation.
+ This means that molecules will oscillate perpendicularly to the direction
+ of propagation.
+ As explained in section 2.2, as the molecules oscillate, they reradiate
+ light in all directions except for that of their axis of oscillation, and
+ the reradiated light will be out of phase with respect to the incident
+ light, which will result in the light becoming polarized.
+ In practice, this means that the reradiated light emerging from a direction
+ normal to that of the propagation of the incident light beam will be completely
+ linearly polarized, and the reradiated light emerging in the same direction
+ of the incident beam will emerge randomly polarized.
+ A more detailed explanation of this phenomenon can be found in [5].
+ The light reradiated in directions that are neither normal nor perpendicular
+ to the direction of propagation will be partially polarized.
+ Experiment 4 qualitatively verifies these concepts.
+\end_layout
+
+\begin_layout Subsection
+Birefringence
+\end_layout
+
+\begin_layout Standard
+Birefringence corresponds to the phenomenon in which the components of a
+ beam's electric field undergo a relative phase shift as they pass through
+ a material, because not all the beam's light is able to travel at the same
+ speed within the material.
+ Depending on the geometrical orientation of the beam's constituent electric
+ fields, the velocity at which parts of the beam travel is different from
+ that of other parts, because a birefringent material has more than one
+ refractive index.
+ In experiment 5, we will examine the properties of a uniaxial birefringent
+ material, for which one of its axes has a different refractive index than
+ the other two.
+\end_layout
+
+\begin_layout Standard
+The first setup in that experiment will involve placing a quarter wave plate
+ in between two polarizers, with respect to the orientation of a laser beam's
+ propagation.
+ Linearly polarized light passing through a quarter wave plate becomes circularl
+y polarized because the quarter wave plate introduces a phase shift of 
+\begin_inset Formula $45^{\circ}$
+\end_inset
+
+ between the x- and y-components of the incident electric field.
+ Crossing the first polarizer with the second polarizer (which in this context
+ is referred to as an analyzer), and introducing the quarter wave plate
+ in between them with its fast axis at an angle of 
+\begin_inset Formula $\theta$
+\end_inset
+
+ with respect to the horizontal axis of the system, and rotating the system
+ in such a way that the transmission axis of the first polarizer points
+ in the y-direction, implies that the transmitted components of the electric
+ field are proportional to
+\begin_inset Formula 
+\begin{eqnarray}
+\left[\begin{array}{c}
+E_{t_{x}}\\
+E_{t_{y}}
+\end{array}\right] & \propto & e^{-\frac{i\pi}{4}}\left[\begin{array}{cc}
+1 & 0\\
+0 & 0
+\end{array}\right]\left[\begin{array}{cc}
+\cos^{2}\theta+i\sin^{2}\theta & (1-i)\sin\theta\cos\theta\\
+(1-i)\sin\theta\cos\theta & \sin^{2}\theta+i\cos^{2}\theta
+\end{array}\right]\left[\begin{array}{c}
+0\\
+1
+\end{array}\right]\\
+ & \propto & e^{-\frac{i\pi}{4}}\left[\begin{array}{cc}
+1 & 0\\
+0 & 0
+\end{array}\right]\left[\begin{array}{c}
+(1-i)\sin\theta\cos\theta\\
+\sin^{2}\theta+i\cos^{2}\theta
+\end{array}\right]\\
+ & \propto & e^{\frac{-i\pi}{4}}\left[\begin{array}{c}
+(1-i)\cos\theta\sin\theta\\
+0
+\end{array}\right]
+\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The maximum transmitted intensity will occur when the squared magnitude
+ of the vector in (19) is maximum, that is, at the maximum of the function
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+f(\theta)=2\cos^{2}\theta\sin^{2}\theta
+\end{equation}
+
+\end_inset
+
+which occurs when 
+\begin_inset Formula $\theta=-45^{\circ}$
+\end_inset
+
+ or 
+\begin_inset Formula $\theta=135^{\circ}$
+\end_inset
+
+.
+ Substituting either of these angles into the vector in (19), and multiplying
+ by 
+\begin_inset Formula $e^{-\frac{i\pi}{4}}$
+\end_inset
+
+, gives
+\begin_inset Formula 
+\begin{equation}
+\left[\begin{array}{c}
+E_{t_{x}}\\
+E_{t_{y}}
+\end{array}\right]\propto\frac{1}{\sqrt{2}}\left[\begin{array}{cc}
+1 & 0\\
+0 & 0
+\end{array}\right]\left[\begin{array}{c}
+i\\
+1
+\end{array}\right]
+\end{equation}
+
+\end_inset
+
+and thus the light emerging from the quarter wave plate is circularly polarized.
+ If we now rotate the analyzer such that its transmission axis forms and
+ angle 
+\begin_inset Formula $\phi$
+\end_inset
+
+ with the horizontal axis of the optical system, (22) becomes
+\begin_inset Formula 
+\begin{eqnarray}
+\left[\begin{array}{c}
+E_{t_{x}}\\
+E_{t_{y}}
+\end{array}\right] & \propto & \frac{1}{\sqrt{2}}\left[\begin{array}{cc}
+\cos^{2}\phi & \sin\phi\cos\phi\\
+\sin\phi\cos\phi & \sin^{2}\phi
+\end{array}\right]\left[\begin{array}{c}
+i\\
+1
+\end{array}\right]\\
+ & \propto & \frac{1}{\sqrt{2}}\left[\begin{array}{c}
+i\cos^{2}\phi+\sin\phi\cos\phi\\
+i\sin\phi\cos\phi+\sin^{2}\phi
+\end{array}\right]
+\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The squared magnitude of the vector in (24) is a constant, which implies
+ that rotating the analyzer should have no effect on the intensity of the
+ transmitted light.
+\end_layout
+
+\begin_layout Standard
+The second setup of the experiment is designed in order to find the phase
+ shift 
+\begin_inset Formula $\phi$
+\end_inset
+
+ due to an overhead transparency.
+ The new setup makes the beam pass through a vertical linear polarizer,
+ the overhead transparency with its fast axis set at an angle of 
+\begin_inset Formula $\theta$
+\end_inset
+
+ with respect to the transmission axis of the polarizer, a quarter wave
+ plate with its fast axis at an angle of 
+\begin_inset Formula $\psi$
+\end_inset
+
+ with respect to the fast axis of the transparency, and an analyzer with
+ its transmission axis at an angle of 
+\begin_inset Formula $\vartheta$
+\end_inset
+
+ with respect to the fast axis of the quarter wave plate.
+ The angles 
+\begin_inset Formula $\psi$
+\end_inset
+
+ and 
+\begin_inset Formula $\theta$
+\end_inset
+
+ have to be chosen such that the transmission of the compound optical system
+ is zero.
+ This gives the matrix equation
+\begin_inset Formula 
+\begin{eqnarray}
+\left(R(-\theta-\psi-\vartheta)\left[\begin{array}{cc}
+1 & 0\\
+0 & 0
+\end{array}\right]R(\theta+\psi+\vartheta)\right)\left(R(-\theta-\psi)\left[\begin{array}{cc}
+1 & 0\\
+0 & i
+\end{array}\right]R(\theta+\psi)\right)\nonumber \\
+\left(R(-\theta)\left[\begin{array}{cc}
+1 & 0\\
+0 & e^{i\phi}
+\end{array}\right]R(\theta)\right)\left[\begin{array}{c}
+0\\
+1
+\end{array}\right] & = & \left[\begin{array}{c}
+0\\
+0
+\end{array}\right]
+\end{eqnarray}
+
+\end_inset
+
+where 
+\begin_inset Formula $R(\alpha)$
+\end_inset
+
+ corresponds to the rotation matrix
+\begin_inset Formula 
+\begin{equation}
+R(\alpha)=\left[\begin{array}{cc}
+\cos\alpha & \sin\alpha\\
+-\sin\alpha & \cos\alpha
+\end{array}\right]
+\end{equation}
+
+\end_inset
+
+A very lengthy application of matrix and trigonometric algebra leads to
+ the relationship
+\begin_inset Formula 
+\begin{equation}
+\tan\phi=-\frac{\tan2\vartheta}{\sin2\psi}
+\end{equation}
+
+\end_inset
+
+from which it follows that 
+\begin_inset Formula $\phi$
+\end_inset
+
+ is independent of the transparency angle 
+\begin_inset Formula $\theta$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section
+Experimental Set-Up and Results
+\end_layout
+
+\begin_layout Subsection
+Preliminary observations
+\end_layout
+
+\begin_layout Standard
+Before performing the experiments, a series of preliminary exercises using
+ polarizers and calcite crystals were carried out.
+ First, we went outdoors and looked at a point in the sky close to orthogonal
+ with respect to the sun's rays and observed what happened to the transmitted
+ brightness of light through a polarizer as we rotated the polarizer in
+ front of us.
+ We observed that the brightness fluctuated from minimum to maximum as we
+ rotated the polarizer by 
+\begin_inset Formula $90^{\circ}$
+\end_inset
+
+.
+ This is evidence that the light coming from that point in the sky is partially
+ polarized, because of the phenomenon described in section 2.5.
+\end_layout
+
+\begin_layout Standard
+The second preliminary exercise involved looking at a printed page, first
+ through a calcite crystal, and second through a polarizer and a calcite
+ crystal.
+ Looking at the page through the crystal alone resulted in a double image
+ of the printed letters, which results from the fact that the crystal is
+ an example of a birefringent material.
+ Once the polaroid is inserted between the crystal and the eye, we observed
+ that rotating it resulted in the double images appearing and disappearing,
+ and the relative brightness of each of the images changing.
+ This is consistent with the nature of birefringence and the polarizing
+ effect of the polaroid, as the crystal gives the light from the page an
+ elliptical polarization, which is then converted to linear to varying degrees
+ by the polarizer, depending on the polarizer's orientation and the crystal's
+ thickness.
+\end_layout
+
+\begin_layout Standard
+Finally, we crossed a polarizer and an analyzer and inserted a sheet of
+ mica in between them.
+ The light transmitted with the mica present was brighter than that without
+ the mica, and was separated into different colors, illustrating the birefringen
+t properties of the sheet, and the fact that the incident light on the first
+ polarizer is natural light of different frequencies.
+ Rotating one of the polarizers resulted in the light becoming brighter
+ and whiter, and continued rotation resulted in the transmitted light having
+ the same characteristics as before.
+ This occurs because the angle between the transmission axis of the polarizer
+ and the optic axis of the mica sheet varies, and thus the polarizer blocks
+ different components of the light emerging from the mica.
+\end_layout
+
+\begin_layout Subsection
+Experiment 1
+\end_layout
+
+\begin_layout Subsubsection
+Set-Up
+\end_layout
+
+\begin_layout Standard
+We mount a laser and place polarizer in front of it.
+ We then measure the intensity 
+\begin_inset Formula $I_{0}$
+\end_inset
+
+ transmitted by this polarizer using a photosensor placed directly after
+ it.
+ We proceed to observe how 
+\begin_inset Formula $I_{0}$
+\end_inset
+
+varies as a function of the the polarizer angle 
+\begin_inset Formula $\theta_{p}$
+\end_inset
+
+ read off its rotation stage.
+ Next, we place a second polarizer, the analyzer, in between the first polarizer
+ and the photosensor, and rotate it, measuring the transmitted intensity
+ as a function of its angle of rotation 
+\begin_inset Formula $\theta_{a}$
+\end_inset
+
+, as given by its rotation stage.
+ We use these measurements to test Malus's Law and to find the extinction
+ ratio of the system, 
+\begin_inset Formula $\frac{I_{min}}{I_{max}}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection
+Results and analysis
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename plot1a.png
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset Formula $I$
+\end_inset
+
+ vs
+\begin_inset Formula $\Delta\theta$
+\end_inset
+
+, for the case where 
+\begin_inset Formula $\theta_{p}=0\pm1^{\circ}$
+\end_inset
+
+.
+ The data points are in blue and the line in red represents the best fits
+ for the parameters of the model given in (27).
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename plot1b.png
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset Formula $I$
+\end_inset
+
+ vs
+\begin_inset Formula $\Delta\theta$
+\end_inset
+
+, for the case where 
+\begin_inset Formula $\theta_{p}=30\pm1^{\circ}$
+\end_inset
+
+.
+ The data points are in blue and the line in red represents the best fits
+ for the parameters of the model given in (28).
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We measured the intensity as a function of 
+\begin_inset Formula $\theta_{a}$
+\end_inset
+
+, for two different values of the angle of the polarizer 
+\begin_inset Formula $\theta_{p}$
+\end_inset
+
+, 
+\begin_inset Formula $0^{\circ}\pm1^{\circ}$
+\end_inset
+
+ and 
+\begin_inset Formula $30^{\circ}\pm1^{\circ}$
+\end_inset
+
+.
+ The experiment was particularly complicated given that the intensity of
+ the transmitted beam fluctuated considerably over variable periods of time
+ between a minimum and maximum value once a polarizer was put in front of
+ it.
+ We attempted to measure the values at the maxima and minima of each fluctuation
+ for a given 
+\begin_inset Formula $\theta_{a}$
+\end_inset
+
+, but we decided not to use the measured value of 
+\begin_inset Formula $I_{0}$
+\end_inset
+
+ since the amplitude of the fluctuations was too large for the case of a
+ single polarizer, and because this amplitude varied as a function of 
+\begin_inset Formula $\theta_{p}$
+\end_inset
+
+.
+ Instead, we fit a model given by
+\begin_inset Formula 
+\begin{equation}
+I(I_{0},\,\theta_{p},\,\theta_{a},\,I_{min})=I_{0}\cos^{2}(\theta_{p}-\theta_{a}+\phi)+I_{min}
+\end{equation}
+
+\end_inset
+
+and plot both the minimum and maximum values of the intensity as a function
+ of 
+\begin_inset Formula $\Delta\theta=\theta_{p}-\theta_{a}$
+\end_inset
+
+.
+ The parameter 
+\begin_inset Formula $\phi$
+\end_inset
+
+ gives us the location of the eigenstates of the analyzer, and allows us
+ to obtain the relationship between the angle measured by the rotation stages
+ 
+\begin_inset Formula $\Delta\theta$
+\end_inset
+
+ and the real angle between the transmission axes of the polarizers, 
+\begin_inset Formula $\Delta\theta_{real}$
+\end_inset
+
+,
+\begin_inset Formula 
+\begin{equation}
+\Delta\theta=\Delta\theta_{real}-\phi
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Figures 1 and 2 show the results for the cases when 
+\begin_inset Formula $\theta_{p}=0\pm1^{\circ}$
+\end_inset
+
+ and 
+\begin_inset Formula $\theta_{p}=30\pm1^{\circ}$
+\end_inset
+
+.
+ The best value for 
+\begin_inset Formula $I_{o}$
+\end_inset
+
+ was found to be 
+\begin_inset Formula $4.91\pm0.13\,V$
+\end_inset
+
+, by averaging the best values for obtained for each of the two cases.
+ Similarly, the best fit value for 
+\begin_inset Formula $\phi=9.4\pm1.1^{\circ}$
+\end_inset
+
+.
+ It was not possible to recover an accurate value for the extinction ratio
+ due to the fact that the intensity at the minima was less than the intensity
+ of the ambient light, and as such the errors involved in the calculations
+ became too big.
+ For instance, we measured the intensity of the background lights in the
+ room to be 
+\begin_inset Formula $15\pm5\,mV$
+\end_inset
+
+, and the values recorded by the voltmeter close to the minima were ~20
+ mV, which included the contribution of the ambient lights.
+ In fact, the optimal fits for 
+\begin_inset Formula $I_{min}$
+\end_inset
+
+ were negative in both cases, and the magnitude of the average error for
+ the extinction ratio ended up being 7000% greater than the magnitude of
+ its nominal value.
+\end_layout
+
+\begin_layout Subsection
+Experiment 2
+\end_layout
+
+\begin_layout Subsubsection
+Set-Up
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename setup2.png
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Set-up for experiment 2, obtained from [6].
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The objective of this experiment was to find Brewster's angle.
+ Figure 3 shows a diagram of the set-up used.
+ From left to right, the symbols in the figure represent the laser, a polarizer
+ set with its transmission axis parallel to the table, a glass prism mounted
+ atop a pedestal on a rotation stage, and a beam stopper.
+ Brewster's angle was determined by measuring the intensity 
+\begin_inset Formula $I$
+\end_inset
+
+ of the reflected light as a function of the incident angle 
+\begin_inset Formula $\theta_{i}$
+\end_inset
+
+, and finding the minima in the resulting curve.
+\end_layout
+
+\begin_layout Subsubsection
+Results and analysis
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename plot2a.png
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset Formula $I_{min}$
+\end_inset
+
+ vs 
+\begin_inset Formula $\theta_{i}$
+\end_inset
+
+.
+ The data points are in blue and the line in red represents the best fits
+ for the parameters of the model given in (31).
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename plot2b.png
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset Formula $I_{max}$
+\end_inset
+
+ vs 
+\begin_inset Formula $\theta_{i}$
+\end_inset
+
+.
+ The data points are in blue and the line in red represents the best fits
+ for the parameters of the model given in (30).
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Again, to account for the fluctuations of the laser, we measured both the
+ minimum and maximum values of the intensity, 
+\begin_inset Formula $I_{min}$
+\end_inset
+
+ and 
+\begin_inset Formula $I_{max}$
+\end_inset
+
+at each angle of incidence.
+ The results of these measurements are shown in Figures 4 and 5.
+ We model the observed curve in terms of a quintic polynomial with equation
+\begin_inset Formula 
+\begin{equation}
+f(\theta_{i},\,a,\,b,\,c,\,d,\,e,\,f)=a\theta_{i}^{5}+b\theta_{i}^{4}+c\theta_{i}^{3}+d\theta_{i}^{2}+e\theta_{i}+f
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The minimum occurs at one of the four roots of the quartic equation given
+ by
+\begin_inset Formula 
+\begin{equation}
+5a\theta_{i}^{4}+4b\theta_{i}^{3}+3c\theta_{i}^{2}+2d\theta_{i}+e=0
+\end{equation}
+
+\end_inset
+
+which can be found by applying the elementary formulae for the roots of
+ a quartic equation.
+ We find that for both cases, the minimum occurs at 
+\begin_inset Formula $\theta_{B}=55.6\pm1.0^{\circ}$
+\end_inset
+
+, giving a refractive index of 
+\begin_inset Formula $n=1.46\pm0.05$
+\end_inset
+
+.
+ This is consistent with the values found, with the nominal value within
+ 4% of the value given by the manufacturer of 
+\begin_inset Formula $n=1.517$
+\end_inset
+
+ (as given in [6]), and almost within the error bars.
+ However, this measurement of the refraction index is not as accurate as
+ those performed in the previous project, where the discrepancies were never
+ greater than 2%, and were as low as 0.2%.
+ The reason for this likely resides in the alignment of the reflecting interface
+ of the prism with respect to the incident light.
+ This was done by having the light reflected from the prism in the initial
+ position to go back into the laser aperture.
+ However, even a very small angle of deviation from perfect alignment gives
+ rise to significant errors.
+ For instance, if this misalignment was on the order of 
+\begin_inset Formula $0.5^{\circ}$
+\end_inset
+
+ in the appropiate direction, the minimum occurs at 
+\begin_inset Formula $56.1\pm1^{\circ}$
+\end_inset
+
+ instead of 
+\begin_inset Formula $55.6\pm1^{\circ}$
+\end_inset
+
+, and the nominal value of the refractive index increases to 
+\begin_inset Formula $n=1.49$
+\end_inset
+
+, which is much closer to the desired value.
+ Reducing this error can be achieved by means of placing the prism farther
+ away from the laser, so as to make any deviation in alignment more noticeable
+ to the naked eye.
+\end_layout
+
+\begin_layout Subsection
+Experiment 3
+\end_layout
+
+\begin_layout Subsubsection
+Set-Up
+\end_layout
+
+\begin_layout Standard
+First, we mount a polarizer in front of the laser and measure the intensity
+ of light polarized parallel to the plane of incidence 
+\begin_inset Formula $I_{\parallel_{i}}$
+\end_inset
+
+ and the intensity of light polarized perpendicular to the plane of incidence
+ 
+\begin_inset Formula $I_{\perp_{i}}$
+\end_inset
+
+.
+ Then, the set-up becomes identical to that of experiment 2, except for
+ the fact that a blackened flat is used instead of the glass prism.
+ This flat was blackened in order to decrease the amount of light reflected.
+ We then proceed to measure the intensity of the reflected light as a function
+ of 
+\begin_inset Formula $\theta_{i}$
+\end_inset
+
+ for parallel incident polarization 
+\begin_inset Formula $\left(I_{\parallel_{r}}\right)$
+\end_inset
+
+ and perpendicular incident polarization 
+\begin_inset Formula $\left(I_{\perp_{i}}\right)$
+\end_inset
+
+.
+ Finally, we orient the polarizer with its transmission axis at an angle
+ of 
+\begin_inset Formula $45^{\circ}$
+\end_inset
+
+ with respect to the plane of incidence, and mount an analyzer on a rotation
+ stage in front of the reflected beam.
+ We look for the angle 
+\begin_inset Formula $\psi$
+\end_inset
+
+ of the analyzer with respect to the plane of incidence that results in
+ the extinction of the transmitted light, thus enabling us to measure the
+ orientation of the reflected polarization.
+ The components of the electric field then should satisfy 
+\begin_inset Formula $\tan\psi=\frac{E_{\parallel}}{E_{\perp}}$
+\end_inset
+
+.
+ We measure 
+\begin_inset Formula $\psi$
+\end_inset
+
+ for different 
+\begin_inset Formula $\theta_{i}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection
+Results and analysis
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename plot3a.png
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset Formula $R_{\parallel}$
+\end_inset
+
+ vs 
+\begin_inset Formula $\theta_{i}$
+\end_inset
+
+.
+ The data points are in blue and the line in red represents the best fits
+ for the parameters of the model given in (32).
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename plot3b.png
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset Formula $R_{\perp}$
+\end_inset
+
+ vs 
+\begin_inset Formula $\theta_{i}$
+\end_inset
+
+.
+ The data points are in blue and the line in red represents the best fits
+ for the parameters of the model given in (33).
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We first plot 
+\begin_inset Formula $\frac{I_{\parallel_{r}}}{I_{\parallel_{i}}}=R_{\parallel}$
+\end_inset
+
+ and 
+\begin_inset Formula $\frac{I_{\perp_{r}}}{I_{\perp_{i}}}=R_{\perp}$
+\end_inset
+
+as a function of 
+\begin_inset Formula $\theta_{i}$
+\end_inset
+
+ and fit using two different models, given by
+\begin_inset Formula 
+\begin{eqnarray}
+f\left(\theta_{i},\,\phi_{\parallel},\,n_{\parallel}\right) & = & \left(\frac{n_{\parallel}^{2}\cos\left(\theta_{i}+\phi_{\parallel}\right)-\sqrt{n_{\parallel}^{2}-\sin^{2}\left(\theta_{i}+\phi_{\parallel}\right)}}{n_{\parallel}^{2}\cos\left(\theta_{i}+\phi_{\perp}\right)+\sqrt{n_{\parallel}^{2}-\sin^{2}\left(\theta_{i}+\phi_{\perp}\right)}}\right)^{2}\\
+g\left(\theta_{i},\,\phi_{\perp},\,n_{\perp}\right) & = & \left(\frac{\cos\left(\theta_{i}+\phi_{\parallel}\right)-\sqrt{n_{\perp}^{2}-\sin^{2}\left(\theta_{i}+\phi_{\parallel}\right)}}{\cos\left(\theta_{i}+\phi_{\perp}\right)+\sqrt{n_{\perp}^{2}-\sin^{2}\left(\theta_{i}+\phi_{\perp}\right)}}\right)^{2}
+\end{eqnarray}
+
+\end_inset
+
+which follows from section 2.7, but where we have also introduced parallel
+ and perpendicular phase offsets to correct for possible deviations from
+ perfect alignment, in terms of the horizontal and vertical orientations
+ of the flat with respect to the incident plane, and the adjustment of the
+ polarizer using Brewster's angle.
+ The results are shown in Figures 6 and 7.
+ We find that 
+\begin_inset Formula $n_{\parallel}=1.57\pm0.01$
+\end_inset
+
+, 
+\begin_inset Formula $\phi_{\parallel}=1.6\pm0.5^{\circ}$
+\end_inset
+
+, 
+\begin_inset Formula $n_{\perp}=1.52\pm0.01$
+\end_inset
+
+, and 
+\begin_inset Formula $\phi_{\perp}=-4.1\pm0.7^{\circ}$
+\end_inset
+
+.
+ These results are consistent with Fresnel's equations and indicate that
+ the system alignment was performed reasonably well, given the small value
+ of 
+\begin_inset Formula $\phi_{\parallel}$
+\end_inset
+
+ and 
+\begin_inset Formula $\phi_{\perp}$
+\end_inset
+
+.
+ The ~3% discrepancy in the values for the refractive index can be explained
+ by measurement errors in the reflected intensity, due to the intensity
+ fluctuations from the laser.
+ This was not included in the value of the uncertainty related to each of
+ the measurements because it was very hard to quantify, but since we only
+ measured the values at the fluctuation maxima, performing similar measurements
+ at the minima would certainly increase the error bars such that both values
+ of the refractive index overlap.
+ A more detailed analysis of this effect could in principle be performed
+ by studying the fluctuations directly, but this was not done due to time
+ constraints.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename plot3c.png
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset Formula $\frac{I_{\perp_{i}}}{I_{\parallel_{i}}}\tan^{2}\psi$
+\end_inset
+
+ vs 
+\begin_inset Formula $\theta_{i}$
+\end_inset
+
+.
+ The data points are in blue.
+ The line in red represents the fit using a combination of the models from
+ (32) and (33), whereas the green line arises from the fit using (34).
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename plot3b.png
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset Formula $R_{\perp}$
+\end_inset
+
+ vs 
+\begin_inset Formula $\theta_{i}$
+\end_inset
+
+.
+ The data points are in blue and the line in red represents the best fits
+ for the parameters of the model given in (33).
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The relationship between the azimuthal angle and the amplitude of the electric
+ field components implies that
+\begin_inset Formula 
+\begin{equation}
+\tan^{2}\psi=\frac{I_{\parallel_{r}}}{I_{\perp_{r}}}=\left(\frac{-1+\cos2\theta_{i}+2\cos\theta_{i}\sqrt{n^{2}-\sin^{2}\theta_{i}}}{-1+\cos2\theta_{i}-2\cos\theta_{i}\sqrt{n^{2}-\sin^{2}\theta_{i}}}\right)^{2}\frac{I_{\parallel_{i}}}{I_{\perp_{i}}}
+\end{equation}
+
+\end_inset
+
+To determine the agreement between these two methods of verifying Fresnel's
+ equations, we fit a model according to (34), but again we add an offset
+ 
+\begin_inset Formula $\phi$
+\end_inset
+
+ such that 
+\begin_inset Formula $\theta_{i}\rightarrow\theta_{i}+\phi$
+\end_inset
+
+, to minimize any possible errors in the alignment, and find the best fit
+ for 
+\begin_inset Formula $n$
+\end_inset
+
+.
+ We find that the best fit value for 
+\begin_inset Formula $n$
+\end_inset
+
+ in this case is 
+\begin_inset Formula $n=1.40\pm0.1$
+\end_inset
+
+, which is significantly lower than the values found for 
+\begin_inset Formula $n$
+\end_inset
+
+ from the reflection coefficients.
+ An illustration of how the two models differ is given in Figure 8, where
+ we use both models to fit for the values of 
+\begin_inset Formula $\frac{I_{\parallel_{r}}}{I_{\perp_{r}}}$
+\end_inset
+
+ as calculated from the measurements of 
+\begin_inset Formula $\psi$
+\end_inset
+
+.
+ We see that the model in (34) gives a better fit than the combination of
+ models in (32) and (33).
+ The differences arise because the models in (32) and (33) attempt to measure
+ the reflection coefficients directly, and test the Fresnel equations by
+ setting 
+\begin_inset Formula $n$
+\end_inset
+
+ as a free parameter.
+ Comparing the two values of 
+\begin_inset Formula $n$
+\end_inset
+
+ obtained give us a good idea of how well the Fresnel equations hold.
+ Setting 
+\begin_inset Formula $n$
+\end_inset
+
+ as a free parameter, however, implies that the ratio 
+\begin_inset Formula $\frac{I_{\parallel_{r}}}{I_{\perp_{r}}}$
+\end_inset
+
+ calculated from such a model can potentially be more than unity.
+ The model in (34), on the other hand, uses a single value for 
+\begin_inset Formula $n$
+\end_inset
+
+, which means that the ratio's maximum value never exceeds one, and since
+ the tangent of any angle is never larger than one, this model provides
+ a better fit for the ratio as a function of 
+\begin_inset Formula $\theta_{i}$
+\end_inset
+
+ arising from the measurement of the azimuthal angle.
+\end_layout
+
+\begin_layout Standard
+The minimum value of the plot corresponds to Brewster's angle.
+ We have not plotted 
+\begin_inset Formula $\tan\psi$
+\end_inset
+
+ vs 
+\begin_inset Formula $\theta_{i}$
+\end_inset
+
+, but doing so would have shown that the ratio between the components of
+ the electric field intercepts the x-axis at Brewster's angle, and proceeds
+ to become negative, because crossing this angle introduces a phase shift
+ of 
+\begin_inset Formula $90^{\circ}$
+\end_inset
+
+ between the components.
+ The reason why this cannot be observed by measuring the intensities directly
+ is that these correspond to the square of the electric field components.
+\end_layout
+
+\begin_layout Subsection
+Experiment 4
+\end_layout
+
+\begin_layout Subsubsection
+Set-Up
+\end_layout
+
+\begin_layout Standard
+We place a vial filled with water and a small amount of skim milk in front
+ of the laser, and qualitatively observe the characteristics of the scattered
+ light with respect to the angle of observation.
+ We then place a polarizer in between the laser and the vial, and observe
+ the scattered light at an angle of 
+\begin_inset Formula $90^{\circ}$
+\end_inset
+
+ with respect to the direction of propagation of the beam as we rotate the
+ polarizer.
+\end_layout
+
+\begin_layout Subsubsection
+Results and analysis
+\end_layout
+
+\begin_layout Standard
+For the case in which the light incident on the vial is unpolarized, we
+ observe that the maximum intensity of the scattered light occurs when looking
+ at the vial from an angle that is directly opposite to the incident laser
+ beam.
+ The reason for this is that no polarization occurs in this direction, since
+ the molecules are not able to oscillate in that axis, which results in
+ no interference between the incident radiation and the light reradiated
+ by the molecules.
+ The minimum intensities occur at angles perpendicular to the direction
+ of propagation, at which points the scattered light is completely plane
+ polarized.
+ This effect becomes more evident once we introduce a polarizer in between
+ the laser and the vial.
+ Observing the vial at 
+\begin_inset Formula $90^{\circ}$
+\end_inset
+
+ angles with respect to the direction of propagation, it is possible to
+ rotate the polarizer into positions that result in no scattered light being
+ observed, something that is not possible to do when looking at the vial
+ from an angle parallel to the direction of propagation.
+ Essentially, then, the system is similar to the one studied in experiment
+ 1, with the extinction ratio depending on the angle of observation.
+\end_layout
+
+\begin_layout Subsection
+Experiment 5
+\end_layout
+
+\begin_layout Subsubsection
+Set-Up
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename setup5b.png
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Set-up for the last part of experiment 5, obtained from [6].
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We start by placing two polarizers at a distance of 30 cm away from the
+ laser.
+ We proceed to place a quarter wave plate in between the two polarizers.
+ We find the eigenstates of the quarter wave by crossing the two polarizers
+ and finding the orientations of the plate that result in no transmitted
+ intensity.
+ Next, we find the orientations of the quarter wave plate that result in
+ maximally transmitted intensity, which corresponds to the setup in which
+ the quarter wave plate is transmitting circularly polarized light.
+ Then, we rotate the analyzer and look for variations in the intensity of
+ the transmitted light.
+\end_layout
+
+\begin_layout Standard
+We now attempt to measure the phase shift introduced by an overhead transparency
+, using equation (27).
+ We cross the polarizers and place the overhead transparency in between
+ them.
+ We then find the eigenstates of the overhead transparency by the same method
+ we used to find the eigenstates of the quarter wave plate.
+ We proceed to rotate the transparency by 
+\begin_inset Formula $45^{\circ}$
+\end_inset
+
+ with respect to the position of one of its eigenstates, and place the quarter
+ wave plate in between the transparency and the analyzer.
+ We now rotate the quarter wave plate by an angle 
+\begin_inset Formula $\psi$
+\end_inset
+
+ with respect to the transparency and the analyzer by an angle 
+\begin_inset Formula $\vartheta$
+\end_inset
+
+ with respect to the quarter wave plate, such that no light is transmitted
+ by the analyzer.
+ We repeat this procedure for different orientations of the transparency.
+\end_layout
+
+\begin_layout Standard
+Finally, we build an optical isolator by adjusting the quarter wave plate
+ such that it gives off circularly polarized light, following the procedure
+ described above.
+ We now replace the analyzer with a mirror and qualitatively measure the
+ intensity of the reflected light that passes through the quarter wave plate
+ and the polarizer in the opposite direction, by placing a beam splitter
+ in between the laser and the polarizer and placing a beam stopper at 
+\begin_inset Formula $90^{0}$
+\end_inset
+
+ with respect to the laser and the beam stopper, as shown in Figure 10.
+\end_layout
+
+\begin_layout Subsubsection
+Results and analysis
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename plot5.png
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Intensity of transmitted light 
+\begin_inset Formula $I$
+\end_inset
+
+ vs analyzer angle 
+\begin_inset Formula $\theta_{a}$
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="5">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\theta_{t}\,(^{\circ})(\pm1^{\circ})$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\theta_{qw}\,(^{\circ})(\pm1^{\circ})$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\theta_{a}\,(^{\circ})(\pm1^{\circ})$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\phi\,(^{\circ})$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\Delta\phi\,(^{\circ})$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+107
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+200
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+100
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+81
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+4
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+120
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+210
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+90
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+64
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+20
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+130
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+215
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+85
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+64
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+30
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+140
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+223
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+85
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+73
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+10
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Measurements made in order to calculate the transparency retardation 
+\begin_inset Formula $\phi$
+\end_inset
+
+ and their individual outcomes.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Rotating the analyzer after following the procedure described above in order
+ to produce circularly polarized light using the polarizer and the quarter
+ wave plate did not produce the expected results.
+ Figure 11 shows the results of plotting the intensity of the transmitted
+ light 
+\begin_inset Formula $I$
+\end_inset
+
+ as a function of the analyzer angle 
+\begin_inset Formula $\theta_{a}$
+\end_inset
+
+.
+ Instead of a straight line, we get an oscillation that looks like a sinusoid
+ plus an offset, although the symmetry is progressively lost due to the
+ intensity fluctuations that we have encountered before.
+ This means that the procedure did not effectively produce circularly polarized
+ light, and instead resulted in elliptically polarized light.
+ The reasons for this are unclear.
+ The results are so far from the expectation that 
+\begin_inset Formula $I$
+\end_inset
+
+ should not be a function of 
+\begin_inset Formula $\theta_{a}$
+\end_inset
+
+, that it is hard to develop a convincing explanation for the phenomenon.
+ We repeated the procedure in the construction of the optical isolator later,
+ and that procedure worked as expected, so we likely committed a significant
+ execution error in this particular attempt.
+\end_layout
+
+\begin_layout Standard
+We measured the retardation introduced by the overhead transparency using
+ the following reasoning.
+ Equation (27) relates 
+\begin_inset Formula $\psi$
+\end_inset
+
+ and 
+\begin_inset Formula $\vartheta$
+\end_inset
+
+ to the retardation 
+\begin_inset Formula $\phi$
+\end_inset
+
+, but these angles are not possible to measure directly.
+ Instead, they are given by
+\begin_inset Formula 
+\begin{eqnarray}
+\psi & = & \theta_{qw}-\theta_{t}\nonumber \\
+\vartheta & = & \theta_{a}-\theta_{qw}
+\end{eqnarray}
+
+\end_inset
+
+where 
+\begin_inset Formula $\theta_{qw}$
+\end_inset
+
+ and 
+\begin_inset Formula $\theta_{t}$
+\end_inset
+
+ correspond to the angles between the fast axes of the quarter wave and
+ the transparency with respect to the horizontal axis of the optical system,
+ and 
+\begin_inset Formula $\theta_{a}$
+\end_inset
+
+ corresponds to the the angle between the transmission axis of the analyzer
+ and the horizontal axis of the system, which is defined as parallel to
+ the transmission axis of the polarizer.
+ We cannot measure these angles directly either, however, since the rotation
+ stages of the optical elements do not necessarily align with the axes of
+ the respective element.
+ Instead, we find these angles via their relationship with their lowest
+ eigenstate.
+ Let 
+\begin_inset Formula $\alpha_{qw}$
+\end_inset
+
+, 
+\begin_inset Formula $\alpha_{t}$
+\end_inset
+
+, and 
+\begin_inset Formula $\alpha_{a}$
+\end_inset
+
+ be the lowest eigenstates of the elements as measured by the rotation stage,
+ and let 
+\begin_inset Formula $\beta_{qw}$
+\end_inset
+
+, 
+\begin_inset Formula $\beta_{t}$
+\end_inset
+
+, and 
+\begin_inset Formula $\beta_{a}$
+\end_inset
+
+ be the angle of each element according to the rotation stage reading, and
+ we have that
+\begin_inset Formula 
+\begin{eqnarray}
+\theta_{qw} & = & \beta_{qw}+\alpha_{qw}\nonumber \\
+\theta_{t} & = & \beta_{t}+\alpha_{t}\nonumber \\
+\theta_{a} & = & \beta_{a}+\alpha_{a}-90^{\circ}
+\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+It should be obvious from this that the errors involved in the measurement
+ of the retardation are rather large, due to the propagation of error.
+ We performed four measurements, which are tabulated in Table 1.
+ Combining them gives a value for the phase shift
+\begin_inset Formula $\phi=70\pm10^{\circ}$
+\end_inset
+
+.
+ It must be stressed that this result is unreliable not only because of
+ the error propagation: we also found it impossible to actually achieve
+ complete extinction by performing the described procedure, which implies
+ that the RHS of (25) was never actually equal to zero, which in turn means
+ that (27) does not apply exactly, and a dependence on the angle of the
+ transparency with respect to the axes of the system is introduced.
+ A more detailed examination of this is outside the scope of this work,
+ and as such will not be pursued here.
+\end_layout
+
+\begin_layout Standard
+Our attempt to build an optical isolator was successful.
+ Following the procedure described above enabled us to build a system into
+ which light enters but doesn't come out, which we were able to confirm
+ because the beam spot was not visible at the beam stopper.
+ The reason why this works is the following.
+ Once we set up the polarizer and the quarter wave in such a way that the
+ plate transmits circularly polarized light, the light reflected by the
+ mirror is unable to pass through the polarizer because the mirror changes
+ the handedness of the circularly polarized beam, which is linearly polarized
+ in a plane perpendicular to the transmission axis of the polarizer once
+ it passes back through the quarter wave.
+ Thus, a single polarizer is able to act like a combination of two crossed
+ polarizers.
+\end_layout
+
+\begin_layout Section
+Conclusions
+\end_layout
+
+\begin_layout Standard
+We have performed a series of experiments that illustrate the transverse
+ wave nature of light via an examination of its polarizing properties.
+ Most, but not all, of our results have agreed with expectations.
+ Better results would probably be obtained with the modification of two
+ things in particular.
+ First, it would have been much easier to conduct the experiments using
+ a laser whose beam's intensity did not fluctuate as much as ours once it
+ was passed through one or more polarizers.
+ As mentioned above, these fluctuations potentially led to significant errors.
+ The other significant source of error in most of the experiments performed
+ was the precision of the scale in the rotation stages.
+ Using rotation stages of larger radii would be very useful especially in
+ procedures like the one used to determine the retardation of the overhead
+ transparency, where the relatively low precision of this scale resulted
+ in large final errors once the errors of each of the measurements were
+ combined.
+ Larger rotation scales would also have been useful for measuring Brewster's
+ angle.
+\end_layout
+
+\begin_layout Section
+Acknowledgements
+\end_layout
+
+\begin_layout Standard
+The author of this work would like to acknowledge the help received from
+ his lab partner, Juliette Fropier, throughout the data gathering process.
+ I was unable to attend one of the lab sessions, and she competently performed
+ part of the project by herself, and allowed me to used her data, so I am
+ particularly grateful for that.
+ I would also like to acknowledge the help provided by our TA, David Moreau,
+ during lab time.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-4"
+
+\end_inset
+
+Jones E, Oliphant E, Peterson P, et al.
+ 
+\emph on
+SciPy: Open Source Scientific Tools for Python, 
+\emph default
+2001-, http://www.scipy.org/.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-5"
+
+\end_inset
+
+Lebigot, E.O.
+ 
+\emph on
+Uncertainties: a Python package for calculations with uncertainties
+\emph default
+, http://pythonhosted.org/uncertainties/
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-3-1"
+
+\end_inset
+
+Griffiths, D.
+ J.
+ 
+\emph on
+Introduction to Electrodynamics, 4th edit.
+\emph default
+, Pearson Education Inc.
+ 2013.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "4"
+key "key-6"
+
+\end_inset
+
+Born, M.
+ & Wolf, E.
+ 
+\emph on
+Principles of Optics, 7th (expanded) edit., 
+\emph default
+Cambridge University Press, 1999.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "5"
+key "key-1"
+
+\end_inset
+
+Hecht, E.
+ 
+\emph on
+Optics
+\emph default
+, 
+\emph on
+5th edit.
+\emph default
+, Pearson Education Limited 2017.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "6"
+key "key-3"
+
+\end_inset
+
+Bodenschatz, E., et al.
+ 
+\emph on
+Modern Experimental Optics Laboratory Manual
+\emph default
+, Cornell University Physics Department 2016.
+\end_layout
+
+\end_body
+\end_document

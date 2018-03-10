@@ -1,0 +1,3117 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 3cm
+\topmargin 3cm
+\rightmargin 3cm
+\bottommargin 5cm
+\headheight 1cm
+\headsep 1cm
+\footskip 2cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Project 1: Reflection and Refraction
+\end_layout
+
+\begin_layout Date
+September 13th, 2017
+\end_layout
+
+\begin_layout Author
+Gianfranco Grillo
+\end_layout
+
+\begin_layout Abstract
+We present the results of a series of experiments designed to study the
+ reflection and refraction properties of a flat mirror, water, a prism,
+ and a slab, with the latter two sharing an identical composition.
+ There are six experiments in total.
+ The first attempts to verify the law of reflection, the second finds the
+ refractive index of tap water at room temperature, and the remaining four
+ find the refractive index of the prism and slab's glass using different
+ methods.
+ Our results agree with expectations to varying degrees, and find that in
+ particular the different methods for finding the refractive index of the
+ glass significantly vary in terms of their relative accuracy.
+\end_layout
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout Standard
+Understanding the propagation of electromagnetic waves at the interface
+ between two media is one of the most important areas of inquiry in optics.
+ During reflection and refraction, an electromagnetic wave changes speed
+ and direction as it comes into contact with the interface, in the first
+ case propagating back into the original medium, while in the second propagating
+ from the original medium into the new one.
+ In practice, both reflection and refraction occur whenever an electromagnetic
+ wave is incident on a surface, as part of the wave's energy is transmitted
+ from one medium to the other, and another part of it is reflected.
+ We will see that we can measure the refractive index of a material in several
+ different ways by exploring how the material reflects and transmits light
+ via relatively simple experiments.
+\end_layout
+
+\begin_layout Standard
+This paper is divided as folllows.
+ Section 2 gives an overview of the background theory and geometry required
+ to understand each of the experiments performed, with derivations of the
+ equations used and the physical basis behind them.
+ Section 3 describes the experimental setup for each of the experiments,
+ and section 4 presents the results obtained and the procedures used in
+ the reduction of the data.
+ Section 5 analyses the results.
+ Finally, we develop general conclusions in Section 6.
+\end_layout
+
+\begin_layout Section
+Theoretical background
+\end_layout
+
+\begin_layout Subsection
+Law of reflection
+\end_layout
+
+\begin_layout Standard
+The law of reflection is the statement that the angle of reflection 
+\begin_inset Formula $\theta_{r}$
+\end_inset
+
+ of the wave, due to its scattering as it impinges on a flat surface, is
+ equal to its angle of incidence 
+\begin_inset Formula $\theta_{i}$
+\end_inset
+
+.
+ 
+\begin_inset Formula 
+\begin{equation}
+\theta_{i}=\theta_{r}
+\end{equation}
+
+\end_inset
+
+A simple derivation of this law can be found in [1].
+ Both of these angles are measured with respect to the normal of the surface
+ that performs the reflection of the wave.
+ Note that this law applies only when the mirror is large compared to the
+ wavelength of the wave, enabling the electrons at the surface to oscillate
+ in phase with each other when they absorb and emit the energy carried by
+ the wave.
+ In the context of this project, this condition holds, so we expect the
+ law of reflection to apply.
+\end_layout
+
+\begin_layout Subsection
+Snell's Law and index of refraction of water
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename 1Bgeometry (2).png
+	scale 30
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Geometry for experiment 2
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Snell's Law relates the refractive indices of two media to the respective
+ incident and transmitted angles of a ray of light as it propagates from
+ one medium to the other.
+ Let the refractive index of the originating medium be 
+\begin_inset Formula $n_{i}$
+\end_inset
+
+ and the refractive index of the medium into which the wave propagates be
+ 
+\begin_inset Formula $n_{t}$
+\end_inset
+
+, and let the incident and transmitted angles at the interface be 
+\begin_inset Formula $\theta_{i}$
+\end_inset
+
+ and 
+\begin_inset Formula $\theta_{t}$
+\end_inset
+
+, respectively, and according to Snell's Law
+\begin_inset Formula 
+\begin{equation}
+n_{i}\sin\theta_{i}=n_{r}\sin\theta_{t}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We see that the law of reflection can be recovered from this statement,
+ since in the case of reflection, 
+\begin_inset Formula $n_{i}=n_{r}$
+\end_inset
+
+, and thus it follows that the incidence angle is equal to the 
+\begin_inset Quotes eld
+\end_inset
+
+transmitted
+\begin_inset Quotes erd
+\end_inset
+
+ angle, which in this case is the reflected angle.
+ A proper derivation of Snell's Law can be found in [1].
+ Note that the refractive index 
+\begin_inset Formula $n$
+\end_inset
+
+ of a material is related to the speed of light in vacuum 
+\begin_inset Formula $c$
+\end_inset
+
+ and the speed of light in the medium 
+\begin_inset Formula $v$
+\end_inset
+
+ by
+\begin_inset Formula 
+\begin{equation}
+n=\frac{c}{v}
+\end{equation}
+
+\end_inset
+
+which implies that light travels at different velocities in different media.
+ The refractive index of air 
+\begin_inset Formula $n_{air}\approx1$
+\end_inset
+
+, a fact that will be used extensively throughout this work.
+ In the second experiment of this report, we will use Snell's Law and the
+ geometry shown in Figure 1 in order to find the refractive index of water
+ 
+\begin_inset Formula $n_{w}$
+\end_inset
+
+.
+ Define 
+\begin_inset Formula $d_{mt}=d_{mw}+d_{wt}$
+\end_inset
+
+, and we have that 
+\begin_inset Formula 
+\begin{equation}
+\theta_{i}=\arctan\left(\frac{a}{d_{mt}}\right)
+\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{equation}
+\theta_{t}=\arctan\left(\frac{b-c}{d_{wt}}\right)
+\end{equation}
+
+\end_inset
+
+The rules for similar triangles allow us to write 
+\begin_inset Formula $c$
+\end_inset
+
+ as
+\begin_inset Formula 
+\begin{equation}
+c=\frac{ad_{mw}}{d_{mt}}
+\end{equation}
+
+\end_inset
+
+By Snell's law, 
+\begin_inset Formula 
+\begin{equation}
+n_{w}=\frac{n_{air}\sin\theta_{i}}{\sin\theta_{t}}=\frac{\sin\theta_{i}}{\sin\theta_{t}}
+\end{equation}
+
+\end_inset
+
+Combining equations (4)-(7) gives
+\begin_inset Formula 
+\begin{eqnarray}
+n_{w} & = & \frac{\sin\left[\arctan\left(\frac{a}{d_{mt}}\right)\right]}{\sin\left[\arctan\left(\frac{b}{d_{wt}}-\frac{ad_{mw}}{d_{wt}d_{mt}}\right)\right]}\nonumber \\
+ & = & \frac{a}{bd_{mt}-ad_{mw}}\sqrt{\frac{\left(bd_{mt}-ad_{mw}\right)^{2}+d_{mt}^{2}d_{wt}^{2}}{a^{2}+d_{mt}^{2}}}
+\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Minimum angle of deviation
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename 1Cgeometry (1).png
+	scale 30
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Geometry for experiment 3
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The index of refraction 
+\begin_inset Formula $n$
+\end_inset
+
+ of a transparent triangular prism can be calculated by determining the
+ angle of minimum deviation 
+\begin_inset Formula $\delta_{min}$
+\end_inset
+
+, which can be derived from the geometry of Figure 2.
+ From the figure, it can be seen that 
+\begin_inset Formula $\varepsilon$
+\end_inset
+
+ and the angles 
+\begin_inset Formula $\theta_{2}$
+\end_inset
+
+ and 
+\begin_inset Formula $\theta_{3}$
+\end_inset
+
+ are related by
+\begin_inset Formula 
+\begin{equation}
+(90^{\circ}-\theta_{2})+\varepsilon+(90^{\circ}-\theta_{3})=180\textdegree
+\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{equation}
+\varepsilon=\theta_{2}+\theta_{3}
+\end{equation}
+
+\end_inset
+
+Whereas the angle of deviation 
+\begin_inset Formula $\gamma$
+\end_inset
+
+ is given by
+\begin_inset Formula 
+\begin{equation}
+\delta=(\theta_{1}-\theta_{2})+(\theta_{4}-\theta_{3})=\theta_{1}+\theta_{4}-\varepsilon
+\end{equation}
+
+\end_inset
+
+By symmetry, 
+\begin_inset Formula $\delta_{min}$
+\end_inset
+
+ must occur when 
+\begin_inset Formula $\theta_{1}=\theta_{4}$
+\end_inset
+
+, which in turn implies that 
+\begin_inset Formula $\theta_{2}=\theta_{3}$
+\end_inset
+
+, which means that equations (10) and (11) become
+\begin_inset Formula 
+\begin{eqnarray}
+\varepsilon & = & 2\theta_{2}\\
+\delta_{min} & = & 2\theta_{1}-\varepsilon
+\end{eqnarray}
+
+\end_inset
+
+Using Snell's Law and taking into account that the medium to either side
+ of the prism is air, we have that
+\begin_inset Formula 
+\begin{eqnarray}
+\sin\theta_{1} & = & n\sin\theta_{2}
+\end{eqnarray}
+
+\end_inset
+
+Solving for 
+\begin_inset Formula $n$
+\end_inset
+
+, and using equations (12) and (13), we obtain a way for calculating the
+ refractive index of the prism
+\begin_inset Formula 
+\begin{equation}
+n=\frac{\sin\left(\frac{\delta_{min}+\varepsilon}{2}\right)}{\sin\left(\frac{\varepsilon}{2}\right)}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Index of refraction of a glass slab
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename 1Dgeometry.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Geometry for experiment 4
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The relationship between the index of refraction of a transparent glass
+ slab of length 
+\begin_inset Formula $d$
+\end_inset
+
+ oriented at an angle 
+\begin_inset Formula $\theta$
+\end_inset
+
+ with respect to the incident beam of light and the displacement 
+\begin_inset Formula $\Delta x$
+\end_inset
+
+, as shown on Figure 3, can be derived again via Snell's Law.
+ As described in [2], we have that 
+\begin_inset Formula $\Delta x$
+\end_inset
+
+ is given by
+\begin_inset Formula 
+\begin{equation}
+\Delta x=(d\tan\theta-d\tan\theta')\cos\theta=d\sin\theta\left[1-\frac{\cos\theta}{\sqrt{n^{2}-\sin^{2}\theta}}\right]
+\end{equation}
+
+\end_inset
+
+For the purposes of this experiment, is it useful to rewrite this equation
+ as
+\begin_inset Formula 
+\begin{equation}
+\frac{\Delta x}{d}=\sin\theta\left[1-\frac{\cos\theta}{\sqrt{n^{2}-\sin^{2}\theta}}\right]
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Total internal reflection
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename 1Egeometry.png
+	scale 25
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Geometry for experiment 5
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The phenomenon of total internal reflection occurs when a ray of light propagati
+ng from a medium with refractive index 
+\begin_inset Formula $n_{i}$
+\end_inset
+
+ into a medium with refractive index 
+\begin_inset Formula $n_{t}$
+\end_inset
+
+ such that 
+\begin_inset Formula $n_{i}>n_{t}$
+\end_inset
+
+ is completely reflected back towards the original medium, that is, the
+ transmitted intensity of the beam is equal to zero.
+ The minimum angle at which this happens is known as the critical angle
+ 
+\begin_inset Formula $\theta_{i}=\theta_{c}$
+\end_inset
+
+, for which 
+\begin_inset Formula $\theta_{t}=90^{\circ}$
+\end_inset
+
+.
+ By Snell's Law,
+\begin_inset Formula 
+\begin{equation}
+\sin\theta_{i}=\frac{n_{t}}{n_{i}}\sin\theta_{t}\rightarrow\sin\theta_{c}=\frac{n_{t}}{n_{i}}
+\end{equation}
+
+\end_inset
+
+In the present experiment, 
+\begin_inset Formula $n_{i}=n$
+\end_inset
+
+ will be the refractive index of a 
+\begin_inset Formula $90^{\circ}$
+\end_inset
+
+ transparent glass prism, and 
+\begin_inset Formula $n_{t}=n_{air}$
+\end_inset
+
+, so (18) becomes
+\begin_inset Formula 
+\begin{equation}
+\sin\theta_{c}=\frac{1}{n}
+\end{equation}
+
+\end_inset
+
+Now let a beam of light impinge on one of the faces of the prism with an
+ angle 
+\begin_inset Formula $\phi_{c}$
+\end_inset
+
+ as depicted in Figure 4.
+ The geometry of the setup gives the following equation relating the angles
+ 
+\begin_inset Formula $\varepsilon$
+\end_inset
+
+, 
+\begin_inset Formula $\phi_{c}'$
+\end_inset
+
+, and 
+\begin_inset Formula $\theta_{c}$
+\end_inset
+
+:
+\begin_inset Formula 
+\begin{equation}
+\varepsilon-\phi_{c}'-\theta_{c}=0
+\end{equation}
+
+\end_inset
+
+By Snell's law, we have that
+\begin_inset Formula 
+\begin{equation}
+\sin\phi_{c}'=\frac{\sin\phi_{c}}{n}
+\end{equation}
+
+\end_inset
+
+Combining equations (19)-(21) gives
+\begin_inset Formula 
+\begin{equation}
+\frac{1}{n}=\sin(\varepsilon-\phi_{c}')=\sin\left[\varepsilon-\arcsin\left(\frac{\sin\phi_{c}}{n}\right)\right]
+\end{equation}
+
+\end_inset
+
+Applying the trigonometric identities 
+\begin_inset Formula $\sin(a-b)=\sin(a)\cos(b)-\cos(a)\sin(b)$
+\end_inset
+
+ allows us to write
+\begin_inset Formula 
+\begin{eqnarray}
+\frac{1}{n} & = & \sin\varepsilon\cos\left[\arcsin\left(\frac{\sin\phi_{c}}{n}\right)\right]-\cos\varepsilon\sin\left[\arcsin\left(\frac{\sin\phi_{c}}{n}\right)\right]\nonumber \\
+ & = & \sin\varepsilon\cos\left[\arcsin\left(\frac{\sin\phi_{c}}{n}\right)\right]-\frac{\cos\varepsilon\sin\phi_{c}}{n}
+\end{eqnarray}
+
+\end_inset
+
+ And since 
+\begin_inset Formula $\cos\left[\arcsin\left(a\right)\right]=\sqrt{1-a^{2}}$
+\end_inset
+
+,
+\begin_inset Formula 
+\[
+\frac{1}{n}=\sin\varepsilon\sqrt{1-\frac{\sin^{2}\phi_{c}}{n^{2}}}-\frac{\cos\varepsilon\sin\phi_{c}}{n}
+\]
+
+\end_inset
+
+Some further elementary algebra yields the following expression for 
+\begin_inset Formula $n^{2}$
+\end_inset
+
+
+\begin_inset Formula 
+\begin{equation}
+n^{2}=\sin^{2}\phi_{c}+\left(\frac{1+\cos\varepsilon\sin\phi_{c}}{\sin\varepsilon}\right)^{2}
+\end{equation}
+
+\end_inset
+
+Expanding the square of the expression in parenthesis and adding yields
+\begin_inset Formula 
+\begin{eqnarray*}
+n^{2} & = & \frac{1+2\cos\varepsilon\sin\phi_{c}+\cos^{2}\varepsilon\sin^{2}\phi_{c}+\sin^{2}\varepsilon\sin^{2}\phi_{c}}{\sin^{2}\varepsilon}\\
+ & = & \frac{1+2\cos\varepsilon\sin\phi_{c}+\sin^{2}\phi_{c}\left(\cos^{2}\varepsilon+\sin^{2}\varepsilon\right)}{\sin^{2}\varepsilon}
+\end{eqnarray*}
+
+\end_inset
+
+Finally, using the identity 
+\begin_inset Formula $\cos^{2}a+\sin^{2}a=1$
+\end_inset
+
+ gives
+\begin_inset Formula 
+\begin{eqnarray}
+n^{2} & = & \frac{\cos^{2}\varepsilon+\sin^{2}\varepsilon+2\cos\varepsilon\sin\phi_{c}+\sin^{2}\phi_{c}}{\sin^{2}\varepsilon}\nonumber \\
+ & = & 1+\frac{\cos^{2}\varepsilon+2\cos\varepsilon\sin\phi_{c}+\sin^{2}\phi_{c}}{\sin^{2}\varepsilon}\nonumber \\
+n & = & \sqrt{1+\left(\frac{\cos\varepsilon+\sin\phi_{c}}{\sin\varepsilon}\right)^{2}}
+\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Reflectivity
+\end_layout
+
+\begin_layout Standard
+The reflectivity 
+\begin_inset Formula $R$
+\end_inset
+
+ of an interface is defined as the ratio of the intensities of the reflected
+ wave and the incident wave, 
+\begin_inset Formula $I_{r}$
+\end_inset
+
+ and 
+\begin_inset Formula $I_{0}$
+\end_inset
+
+
+\begin_inset Formula 
+\begin{equation}
+R=\frac{I_{0}}{I_{r}}
+\end{equation}
+
+\end_inset
+
+The relationship between a material's refraction index and it's reflection
+ coefficient, assuming the material is surrounded by air, can be derived
+ as follows.
+ An electromagnetic wave incident on the material is, in general, reflected
+ and refracted, with part of the wave's energy being transmitted into the
+ material, and part of it being reflected back towards the original medium
+ from which it came from.
+ For a wave polarized in such a way that the electric field 
+\begin_inset Formula $\vec{E}$
+\end_inset
+
+ is perpendicular to the plane of incidence, the tangential components of
+ the electric field at either side of the interface are continuous, or in
+ other words,
+\begin_inset Formula 
+\begin{equation}
+\vec{E}_{0i}+\vec{E}_{0r}=\vec{E}_{0t}
+\end{equation}
+
+\end_inset
+
+where the quantities on the left hand side are the magnitudes of the incident
+ and reflected electric fields, respectively, and the one on the right hand
+ side is the magnitude of the transmitted electric field.
+ The electric field is related to the magnetic field 
+\begin_inset Formula $\vec{B}$
+\end_inset
+
+ via
+\begin_inset Formula 
+\begin{equation}
+\hat{k}\times\vec{E}=v\vec{B}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $\hat{k}$
+\end_inset
+
+ is a unit vector pointing in the direction of propagation, and 
+\begin_inset Formula $v$
+\end_inset
+
+ is the velocity of the wave.
+ This implies that the magnetic field of the wave points parallel to the
+ interface.
+ Ampere's Law provides another equation by demanding that the tangential
+ component of 
+\begin_inset Formula $\frac{\vec{B}}{\mu}$
+\end_inset
+
+ be continuous across the two media.
+ The constant 
+\begin_inset Formula $\mu$
+\end_inset
+
+ is the magnetic permeability of the material.
+ This implies that
+\begin_inset Formula 
+\begin{equation}
+\frac{-B_{i}}{\mu_{i}}\cos\theta_{i}+\frac{B_{r}}{\mu_{i}}\cos\theta_{r}=\frac{-B_{t}}{\mu_{t}}\cos\theta_{t}
+\end{equation}
+
+\end_inset
+
+which, when combined with equation (27), yields
+\begin_inset Formula 
+\begin{equation}
+\frac{1}{\mu_{i}v_{i}}(E_{i}-E_{r})\cos\theta_{i}=\frac{1}{\mu_{t}v_{t}}E_{t}\cos\theta_{t}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using equation (3) and the fact that 
+\begin_inset Formula $\vec{E}=\vec{E}_{0}e^{i(\vec{k}\cdot\vec{r}-\omega t)}$
+\end_inset
+
+, we can write
+\begin_inset Formula 
+\begin{equation}
+\frac{n_{i}}{\mu_{i}}(E_{0i}-E_{0r})\cos\theta_{i}=\frac{n_{t}}{\mu_{t}}E_{0t}\cos\theta_{t}
+\end{equation}
+
+\end_inset
+
+combined with equation (30), we have
+\begin_inset Formula 
+\begin{equation}
+\left(\frac{E_{0r}}{E_{0i}}\right)_{\perp}=\frac{\frac{n_{i}}{\mu_{i}}\cos\theta_{i}-\frac{n_{t}}{\mu_{t}}\cos\theta_{t}}{\frac{n_{i}}{\mu_{i}}\cos\theta_{i}+\frac{n_{t}}{\mu_{t}}\cos\theta_{t}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+An analysis along the same lines allows us to calculate the same ratio for
+ the case of the electric field being parallel to the plane of incidence,
+ which is
+\begin_inset Formula 
+\begin{equation}
+\left(\frac{E_{0r}}{E_{0i}}\right)_{\parallel}=\frac{\frac{n_{t}}{\mu_{i}}\cos\theta_{i}-\frac{n_{i}}{\mu_{t}}\cos\theta_{t}}{\frac{n_{t}}{\mu_{i}}\cos\theta_{i}+\frac{n_{i}}{\mu_{t}}\cos\theta_{t}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For the case of transition between air and glass, 
+\begin_inset Formula $\mu_{i}\approx\mu_{t}\approx\mu_{0}$
+\end_inset
+
+, and the equations simplify to
+\begin_inset Formula 
+\begin{eqnarray}
+\left(\frac{E_{0r}}{E_{0i}}\right)_{\perp} & = & \frac{n_{i}\cos\theta_{i}-n_{t}\cos\theta_{t}}{n_{i}\cos\theta_{i}+n_{t}\cos\theta_{t}}\\
+\left(\frac{E_{0r}}{E_{0i}}\right)_{\parallel} & = & \frac{n_{t}\cos\theta_{i}-n_{i}\cos\theta_{t}}{n_{t}\cos\theta_{i}+n_{i}\cos\theta_{t}}
+\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The reflectivities 
+\begin_inset Formula $R_{\perp}$
+\end_inset
+
+ and 
+\begin_inset Formula $R_{\parallel}$
+\end_inset
+
+ correspond to the square of these equations, because the intensity of the
+ wave corresponds to the squared magnitude of the electric field.
+ For the case of normal incidence, 
+\begin_inset Formula $\theta_{i}=\theta_{t}=90^{\circ}$
+\end_inset
+
+, and using 
+\begin_inset Formula $n_{i}=n_{air}=1,$
+\end_inset
+
+ we have that
+\begin_inset Formula 
+\begin{equation}
+R_{\perp}=R_{\parallel}=\left(\frac{1-n}{1+n}\right)^{2}=\left(\frac{n-1}{n+1}\right)^{2}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Finally, we have that for unpolarized light, 
+\begin_inset Formula $R=\frac{1}{2}\left(R_{\perp}+R_{\parallel}\right)$
+\end_inset
+
+, and thus
+\begin_inset Formula 
+\begin{equation}
+R=\left(\frac{n-1}{n+1}\right)^{2}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename symbols.png
+	scale 80
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+List of symbols
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Experimental setup
+\end_layout
+
+\begin_layout Subsection
+Experiment 1
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename 1Asetup.png
+	scale 80
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Setup for experiment 1
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Figure 6 shows the setup used for experiment 1.
+ The meaning of all symbols used in the setup diagrams for the experiments
+ can be found in Figure 5.
+ We use a 0.5 ND filter to dim the beam of light by a factor of approximately
+ 3, and set up the flat mirror on a rotation stage as seen in the figure.
+ The rotation stage and the mirror are initially positioned in such a way
+ that the laser is reflected back upon itself.
+ The nominal value of the wavelength of the monochromatic red light emitted
+ from the laser is 632.8 nm, and the same laser is used throughout all five
+ experiments.
+ The setup's geometry implies that the reflected angle 
+\begin_inset Formula $\theta_{r}$
+\end_inset
+
+ is given by
+\begin_inset Formula 
+\begin{equation}
+\theta_{r}=90\textdegree-\theta_{i}-\arctan\left(\frac{X}{Y}\right)
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $\theta_{i}$
+\end_inset
+
+ is the incident angle as measured by the rotation stage, and 
+\begin_inset Formula $X$
+\end_inset
+
+ and 
+\begin_inset Formula $Y$
+\end_inset
+
+ are the x and y components of the distance from the mirror to the post
+ holder as depicted in the figure.
+ We measure the distances by counting the number of 
+\begin_inset Formula $\nicefrac{1}{4}"$
+\end_inset
+
+-20 holes on the breadboard atop which the experiment takes place.
+\end_layout
+
+\begin_layout Subsection
+Experiment 2
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename 1Bsetup.png
+	scale 80
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Setup for experiment 2
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The setup for the second experiment can be seen on Figure 7.
+ We set up the laser and the filter just as we did in experiment 1, and
+ locate a flat mirror on top of a rotation stage that is perpendicular to
+ the table, such that the mirror is able to reflect the laser beam from
+ a certain height towards the table.
+ The rotation stage and the mirror are initially set up in order for the
+ mirror to be able to reflect the beam such that it strikes the table at
+ an angle of 
+\begin_inset Formula $0^{\circ}$
+\end_inset
+
+ with respect to the normal to the table.
+ This spot is taken to be the origin of the coordinate system shown in Figure
+ 1.
+ We mark this on a piece of graph paper fixed to the top of the table.
+ The graph paper is evenly divided in 
+\begin_inset Formula $1\,mm^{2}$
+\end_inset
+
+ squares.
+ Next, we measure the distance 
+\begin_inset Formula $d_{mt}$
+\end_inset
+
+ between the place in the mirror that is hit by the laser beam and the surface
+ of the table.
+ We proceed to fill a circular glass container with tap water, and measure
+ the distance 
+\begin_inset Formula $d_{wt}$
+\end_inset
+
+ between the surface of the water and the base of the container.
+ The mirror is then deviated such that the beam strikes the table at an
+ angle, and we measure the distance 
+\begin_inset Formula $a$
+\end_inset
+
+ between the origin and the new striking spot.
+ Finally, we place the water tank on top of the table in between the laser
+ beam and its surface, and record the new location 
+\begin_inset Formula $b$
+\end_inset
+
+ of the laser spot as seen from above.
+ We repeat this for different values of 
+\begin_inset Formula $a$
+\end_inset
+
+, produced by rotating the mirror.
+\end_layout
+
+\begin_layout Subsection
+Experiment 3
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename 1Csetup.png
+	scale 70
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Setup for experiment 3
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Figure 8 shows the setup for experiment 3.
+ We place the laser in the same position as in previous experiments, and
+ position the glass prism in a pedestal on top of a rotation stage, at the
+ height of the laser beam.
+ The starting position of the prism is such that the beam is normally incident
+ with respect to its longer side.
+ A beam stopper is placed behind the prism on top of a translation stage,
+ as indicated in the figure.
+ We proceed to measure the angle of minimum deviation 
+\begin_inset Formula $\delta_{min}$
+\end_inset
+
+ by rotating the stage with the prism into a position in which any further
+ rotation to either side results in an increase in the deviation.
+ We calculate the angle by measuring the horizontal and vertical distances
+ between the prism and the location of the spot at minimum deviation, 
+\begin_inset Formula $X$
+\end_inset
+
+ and 
+\begin_inset Formula $Y$
+\end_inset
+
+.
+ Thus, in terms of the measured variables, equation (15) is written as
+\begin_inset Formula 
+\begin{eqnarray}
+n & = & \frac{\sin\left(\frac{\arctan\left(\frac{Y}{X}\right)+\varepsilon}{2}\right)}{\sin\left(\frac{\varepsilon}{2}\right)}
+\end{eqnarray}
+
+\end_inset
+
+We use a nominal value for 
+\begin_inset Formula $\varepsilon$
+\end_inset
+
+ of 
+\begin_inset Formula $45\textdegree$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Experiment 4
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename 1Dsetup.png
+	scale 80
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Setup for experiment 4
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Experiment 4's setup is depicted in Figure 9.
+ The idea behind the setup is to reproduce the geometry shown on Figure
+ 3 for the incident angle 
+\begin_inset Formula $\theta$
+\end_inset
+
+ and the displacement 
+\begin_inset Formula $\Delta x$
+\end_inset
+
+ in order to calculate the refraction index 
+\begin_inset Formula $n$
+\end_inset
+
+ of the glass prism using equation (17).
+ We place the glass slab on a pedestal attached to a rotation stage initially
+ set such that the incident beam is normal to one of the long faces of the
+ slab, which is verified by ensuring that the reflected beam hits the laser
+ aperture.
+ A razor bladed mounted on a beam stopper is located atop the translation
+ stage directly in front of a photosensor as shown in the figure.
+ The razor blade is positioned in such a way that it blocks half of the
+ beam's intensity.
+ Then, the slab is rotated until the intensity of the light reaching the
+ photosensor diminishes significantly with respect to the intensity recorded
+ in the previous step, at which point the translation stage is translated
+ until the photosensor's reading comes back to its original value.
+ The difference in positions is recorded by the micrometer attached to the
+ stage.
+ This is repeated several times in order to obtain multiple data points.
+ The distance 
+\begin_inset Formula $d$
+\end_inset
+
+ between the slab's faces is measured with a ruler.
+\end_layout
+
+\begin_layout Subsection
+Experiment 5
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename 1Esetup.png
+	scale 80
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Setup for experiment 5
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Experiment 5's setup, shown in Figure 10, is designed to replicate the geometry
+ from Figure 4, in order to be able to find 
+\begin_inset Formula $\phi_{c}$
+\end_inset
+
+ and apply equation (25).
+ The setup is simple: we place the prism at the same height of the laser
+ beam on top of a rotation stage with an initial orientation like the one
+ shown in the figure, and rotate the stage until the transmitted beam disappears.
+ 
+\begin_inset Formula $\phi_{c}$
+\end_inset
+
+ is then calculated in two ways: first, by calculating the angle 
+\begin_inset Formula $\alpha=\arctan\left(\frac{Y}{X}\right)$
+\end_inset
+
+, and then by directly reading it off the rotation stage, with the post
+ holder in the figure being located at the position at which the transmitted
+ beam disappears.
+ The relationship between 
+\begin_inset Formula $\alpha$
+\end_inset
+
+ and 
+\begin_inset Formula $\phi_{c}$
+\end_inset
+
+ is given by 
+\begin_inset Formula $\phi_{c}=\alpha+\varepsilon-90\textdegree=\arctan\left(\frac{Y}{X}\right)+\varepsilon-90\textdegree$
+\end_inset
+
+, and equation (25) becomes
+\begin_inset Formula 
+\begin{equation}
+n=\sqrt{1+\left[\frac{\cos\varepsilon+\sin\left(\arctan\left(\frac{Y}{X}\right)+\varepsilon-90\textdegree\right)}{\sin\varepsilon}\right]^{2}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Experiment 6
+\end_layout
+
+\begin_layout Subsubsection
+Part A
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename 1Fasetup.png
+	scale 80
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Setup for experiment 6A
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Part A of this experiment is an attempt to measure the reflectivity of a
+ flat mirror because it is to be used later in order to be able to calculate
+ the reflectivity of the glass prism.
+ Since it is not possible to measure the reflectivity at normal incidence
+ directly without blocking the laser beam, we attempt to calculate it by
+ first measuring the intensity 
+\begin_inset Formula $I_{0}$
+\end_inset
+
+ of the unreflected beam, and then mounting the mirror in a rotation stage
+ and measuring the reflected intensity 
+\begin_inset Formula $I_{r}$
+\end_inset
+
+ at small angles 
+\begin_inset Formula $\theta$
+\end_inset
+
+, in order to be able to extrapolate to the case of normal incidence.
+ This is shown in Figure 11.
+\end_layout
+
+\begin_layout Subsubsection
+Part B
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename 1Fbsetup.png
+	scale 80
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Setup for experiment 6B
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Here, we place a beam splitter in between the laser and the mirror, as shown
+ in Figure 12, and measure the intensity 
+\begin_inset Formula $I_{bs}$
+\end_inset
+
+ of the beam that emerges from the right side of the beam splitter.
+ Thus, we are able to calculate the transmission coefficient of the beam
+ splitter 
+\begin_inset Formula $T_{bs}=\frac{I_{0}}{I_{bs}}$
+\end_inset
+
+.
+ This part of the experiment, as will be seen, was not actually necessary.
+\end_layout
+
+\begin_layout Subsubsection
+Part C
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename 1Fcsetup.png
+	scale 70
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Setup for experiment 6C
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In the third part of the experiment, we use two different setups in order
+ to be able to calculate the reflectivity of the prism, 
+\begin_inset Formula $R_{p}$
+\end_inset
+
+.
+ Starting with the arrangement from Part B, we now place the photosensor
+ 90 degrees from where it was, and place the mirror in the photosensor's
+ original position.
+ We then measure the intensity 
+\begin_inset Formula $I_{1}$
+\end_inset
+
+ of the light that reaches the photosensor in this setup.
+ Next, we perform the same procedure but with the prism instead of the mirror,
+ and measure an intensity 
+\begin_inset Formula $I_{2}$
+\end_inset
+
+.
+ A naive analysis of the optical system would suggest that the equations
+ for 
+\begin_inset Formula $I_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $I_{2}$
+\end_inset
+
+ would be
+\begin_inset Formula 
+\begin{eqnarray}
+I_{1} & = & I_{0}T_{bs}R_{m}R_{bs}\\
+I_{2} & = & I_{0}T_{bs}R_{p}R_{bs}
+\end{eqnarray}
+
+\end_inset
+
+where 
+\begin_inset Formula $R_{m}$
+\end_inset
+
+ corresponds to the reflectivity of the flat mirror, and 
+\begin_inset Formula $R_{bs}$
+\end_inset
+
+ corresponds to the reflectivity of the mirror when the beam is incident
+ from the right.
+\end_layout
+
+\begin_layout Standard
+A more careful examination, however, leads to the conclusion that equation
+ (42) is incorrect.
+ Due to the geometry of the prism, when the beam strikes one of its shorter
+ sides at normal incidence, the transmitted wave undergoes a double reflection
+ with the two other sides that adds to the intensity of the light reflected
+ by the first air/glass interface.
+ Let the incident beam have an intensity 
+\begin_inset Formula $I_{i}$
+\end_inset
+
+, and we have that the reflected intensity 
+\begin_inset Formula $I_{r}$
+\end_inset
+
+ is actually given by
+\begin_inset Formula 
+\begin{equation}
+I_{r}=2R_{p}I_{i}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In this case, 
+\begin_inset Formula $I_{i}=I_{0}T_{bs}$
+\end_inset
+
+, which implies that the correct expression for 
+\begin_inset Formula $I_{2}$
+\end_inset
+
+ is
+\begin_inset Formula 
+\begin{equation}
+I_{2}=2I_{0}T_{bs}R_{p}R_{bs}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Combining equations (41) and (44) and solving for 
+\begin_inset Formula $R_{p}$
+\end_inset
+
+ gives
+\begin_inset Formula 
+\begin{equation}
+R_{p}=\frac{I_{2}R_{m}}{2I_{1}}
+\end{equation}
+
+\end_inset
+
+which illustrates why part B of this experiment was unnecessary.
+ Now we can apply equation (37) and solve for 
+\begin_inset Formula $n$
+\end_inset
+
+ in terms of 
+\begin_inset Formula $R_{p}$
+\end_inset
+
+, which gives
+\begin_inset Formula 
+\begin{equation}
+n=\frac{-1-R_{p}\pm2\sqrt{R_{p}}}{R_{p}-1}
+\end{equation}
+
+\end_inset
+
+The sign ambiguity is inevitable, but in practice we end up using the negative
+ sign because otherwise we get a value of 
+\begin_inset Formula $n$
+\end_inset
+
+ that is less than unity.
+\end_layout
+
+\begin_layout Subsubsection
+Part D
+\end_layout
+
+\begin_layout Standard
+The final part of the experiment involved repeating the procedure described
+ in part A but substituting the flat mirror with the prism in order to find
+ 
+\begin_inset Formula $R_{p}$
+\end_inset
+
+ by the same extrapolation process.
+ Again, care must be taken to account for the geometric effect described
+ in the previous section.
+\end_layout
+
+\begin_layout Section
+Results
+\end_layout
+
+\begin_layout Subsection
+Procedures for data reduction and error analysis
+\end_layout
+
+\begin_layout Standard
+We use two different approaches to reducing the data measured.
+ In the case of the experiments in which we can gather multiple data points,
+ we apply the orthogonal distance regression (ODR) module of the Python
+ library SciPy [3].
+ This is a good way of accounting for the fact that our measurements have
+ errors in both the dependent and the independent variables.
+ The idea behind this algorithm is to minimize the merit function
+\begin_inset Formula 
+\begin{equation}
+\chi^{2}=\sum_{i=0}^{N-1}\left[\frac{y_{i}-\sum_{k=0}^{M-1}f(x_{i},\vec{p})}{\sigma_{xi}^{2}+\sigma_{yi}^{2}}\right]^{2}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $y_{i}$
+\end_inset
+
+ is the measured value of the dependent variable, 
+\begin_inset Formula $x_{i}$
+\end_inset
+
+ is the independent variable,
+\begin_inset Formula $\sigma_{xi}$
+\end_inset
+
+ and 
+\begin_inset Formula $\sigma_{yi}$
+\end_inset
+
+ a measure of their their standard deviations (taken to be their measurement
+ error), and 
+\begin_inset Formula $f(x_{i},\vec{p})$
+\end_inset
+
+ an arbitrary model function of the independent variables and a vector of
+ parameters 
+\begin_inset Formula $\vec{p}$
+\end_inset
+
+.
+ ODR is based on the Levenberg-Marquardt method described in [4], and this
+ particular implementation is able to provide a best fit and a standard
+ deviation for the values of the parameters in the model, which we will
+ identify with the values of the quantities that we are trying to calculate
+ from the experiment, as will be seen below.
+ A more detailed examination of ODR is beyond the scope of this work and
+ can be found in [5].
+\end_layout
+
+\begin_layout Standard
+For the cases in which we have only one (experiment 3) or two (experiment
+ 5) data points, we calculate the value of the quantity that we are trying
+ to find simply by writing it in terms of the dependent and independent
+ variables and applying error propagation.
+ In the particular case of experiment 5, we calculate the two values for
+ the refractive index independently.
+\end_layout
+
+\begin_layout Standard
+In both cases we use the Python uncertainties package [6] in order to perform
+ error propagation.
+ This package allows us to calculate errors for complicated expressions
+ that depend on the measured experimental quantities, whose errors we estimate
+ from the practical difficulty of the corresponding measurement and the
+ precision of the instrument used in order to perform it.
+\end_layout
+
+\begin_layout Subsection
+Experiment 1
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename 1Aplot.png
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset Formula $\alpha$
+\end_inset
+
+ vs incident angle 
+\begin_inset Formula $\theta_{i}$
+\end_inset
+
+.
+ The data points are in blue and the line in red represents the best fit
+ for parameter 
+\begin_inset Formula $n$
+\end_inset
+
+ of the model given in (48).
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+From equation (45), we find that plotting 
+\begin_inset Formula $\alpha=\arctan\left(\frac{x}{y}\right)$
+\end_inset
+
+ as a function of 
+\begin_inset Formula $\theta_{i}$
+\end_inset
+
+ should be a straight line with a slope 
+\begin_inset Formula $m=-2$
+\end_inset
+
+ line and a y-intercept 
+\begin_inset Formula $b=90^{\circ}$
+\end_inset
+
+, if the law of reflection holds, since with 
+\begin_inset Formula $\theta_{i}=\theta_{r}$
+\end_inset
+
+, we have that
+\begin_inset Formula 
+\begin{equation}
+\arctan\left(\frac{X}{Y}\right)=-2\theta_{i}+90\textdegree
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The deviation from such a line gives us a way of estimating how far from
+ flat the mirror used is, and the subsequent deviation from the law.
+ Figure 14 shows this plot.
+ The best fit estimates for 
+\begin_inset Formula $m$
+\end_inset
+
+ and 
+\begin_inset Formula $b$
+\end_inset
+
+ returned by the ODR algorithm are 
+\begin_inset Formula $m=-1.92\pm0.08$
+\end_inset
+
+ and 
+\begin_inset Formula $b=88\pm2^{\circ}$
+\end_inset
+
+.
+ The errors for the measurements were estimated as 0.5 holes for the 
+\begin_inset Formula $X$
+\end_inset
+
+ and 
+\begin_inset Formula $Y$
+\end_inset
+
+ measurements, due mainly to the fact that the mirror was not directly on
+ top of a hole, and 
+\begin_inset Formula $\pm1^{\circ}$
+\end_inset
+
+ for 
+\begin_inset Formula $\theta_{i}$
+\end_inset
+
+, a reasonable estimate given the scale of the rotation stage.
+\end_layout
+
+\begin_layout Subsection
+Experiment 2
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename 1Bplot.png
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset Formula $\tau$
+\end_inset
+
+ vs 
+\begin_inset Formula $\nu$
+\end_inset
+
+.
+ The data points are in blue and the line in red represents the best fit
+ for parameter 
+\begin_inset Formula $n$
+\end_inset
+
+ of the model given in (49).
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="2" columns="9">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $a\,(cm)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.00
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2.00
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+3.00
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+4.00
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+5.00
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+6.00
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+7.00
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+8.00
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $b\,(cm)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.95
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.90
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2.80
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+3.75
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+4.65
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+5.55
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+6.50
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+7.40
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Measured values for 
+\begin_inset Formula $a$
+\end_inset
+
+ and 
+\begin_inset Formula $b$
+\end_inset
+
+ (
+\begin_inset Formula $\pm0.05\,cm)$
+\end_inset
+
+.
+ The measured vertical distance parameters were 
+\begin_inset Formula $d_{mt}=14.5\pm0.1\,cm$
+\end_inset
+
+ and 
+\begin_inset Formula $d_{wt}=4.0\pm0.1\,cm$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+To perform the analysis, we rearrange equation (8) as
+\begin_inset Formula 
+\begin{equation}
+a\sqrt{\frac{\left(bd_{mt}-ad_{mw}\right)^{2}+d_{mt}^{2}d_{wt}^{2}}{a^{2}+d_{mt}^{2}}}=(bd_{mt}-ad_{mw})n_{w}
+\end{equation}
+
+\end_inset
+
+and define the quantities 
+\begin_inset Formula $\tau=a\sqrt{\frac{\left(bd_{mt}-ad_{mw}\right)^{2}+d_{mt}^{2}d_{wt}^{2}}{a^{2}+d_{mt}^{2}}}$
+\end_inset
+
+ and 
+\begin_inset Formula $\nu=bd_{mt}-ad_{mw}$
+\end_inset
+
+, turning (49) in a simple relationship, 
+\begin_inset Formula $\tau=n_{w}\nu$
+\end_inset
+
+.
+ Plotting 
+\begin_inset Formula $\tau$
+\end_inset
+
+ vs 
+\begin_inset Formula $\nu$
+\end_inset
+
+ should then give a straight line that passes throught the origin with slope
+ 
+\begin_inset Formula $n_{w}$
+\end_inset
+
+.
+ The result of such a plot is given in Figure 15.
+ Since 
+\begin_inset Formula $\tau$
+\end_inset
+
+ and 
+\begin_inset Formula $\nu$
+\end_inset
+
+ are combinations of the measured variables and parameters 
+\begin_inset Formula $a$
+\end_inset
+
+, 
+\begin_inset Formula $b$
+\end_inset
+
+, 
+\begin_inset Formula $d_{mt}$
+\end_inset
+
+ and 
+\begin_inset Formula $d_{mw}$
+\end_inset
+
+, we also present the raw measurements for 
+\begin_inset Formula $a$
+\end_inset
+
+ and 
+\series bold
+
+\begin_inset Formula $b$
+\end_inset
+
+ 
+\series default
+in Table 1.
+ The errors in the measurements for 
+\begin_inset Formula $a$
+\end_inset
+
+ and 
+\begin_inset Formula $b$
+\end_inset
+
+ were estimated as to be consistent with the scale of the graph paper used
+ to measure the distances, which was subdivided in 1 mm squares; as such
+ 
+\begin_inset Formula $\Delta a=\Delta b=\pm0.5\,mm$
+\end_inset
+
+.
+ An error of 
+\begin_inset Formula $\pm1\:mm$
+\end_inset
+
+ was chosen for 
+\begin_inset Formula $d_{mt}$
+\end_inset
+
+ and 
+\begin_inset Formula $d_{mw}$
+\end_inset
+
+, which were measured using a ruler with subdivisions of 1 mm, but which
+ were in practice harder to measure accurately than 
+\begin_inset Formula $a$
+\end_inset
+
+ and 
+\begin_inset Formula $b$
+\end_inset
+
+.
+ The ODR algorithm gives a value for the refraction index of water 
+\begin_inset Formula $n_{w}=1.298\pm0.008$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Experiment 3
+\end_layout
+
+\begin_layout Standard
+This experiment is simpler than the previous two because the refraction
+ index of the prism 
+\begin_inset Formula $n$
+\end_inset
+
+ depends only on the constants 
+\begin_inset Formula $\varepsilon$
+\end_inset
+
+ and 
+\begin_inset Formula $\delta_{min}$
+\end_inset
+
+, which means that given 
+\begin_inset Formula $\varepsilon$
+\end_inset
+
+, we can only measure 
+\begin_inset Formula $\delta_{min}$
+\end_inset
+
+ once in order to determine 
+\begin_inset Formula $n$
+\end_inset
+
+.
+ We take 
+\begin_inset Formula $\varepsilon=45\pm1\textdegree$
+\end_inset
+
+ and our measurements for 
+\begin_inset Formula $X$
+\end_inset
+
+ and 
+\begin_inset Formula $Y$
+\end_inset
+
+ are 
+\begin_inset Formula $X=29.5\pm0.1\,cm$
+\end_inset
+
+ and 
+\begin_inset Formula $Y=14.1\pm0.1\,cm$
+\end_inset
+
+, so applying equation (47), we get a value of 
+\begin_inset Formula $n=1.51\pm0.01$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Experiment 4
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename 1Dplot.png
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset Formula $\nicefrac{\Delta x}{d}$
+\end_inset
+
+ vs 
+\begin_inset Formula $\theta$
+\end_inset
+
+.
+ The data points are in blue and the line in red represents the best fit
+ for parameter 
+\begin_inset Formula $n$
+\end_inset
+
+ of the model given in (17).
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+From equation (17), we can calculate the value of 
+\begin_inset Formula $n$
+\end_inset
+
+ by plotting 
+\begin_inset Formula $\frac{\Delta x}{d}$
+\end_inset
+
+ as a function of 
+\begin_inset Formula $\theta$
+\end_inset
+
+, and then find the 
+\begin_inset Formula $n$
+\end_inset
+
+ that minimizes the residuals of the merit function (47) with 
+\begin_inset Formula $f(x_{i},\vec{p})=f(\theta_{i},n)=\sin\theta_{i}\left[1-\frac{\cos\theta_{i}}{\sqrt{n^{2}-\sin^{2}\theta_{i}}}\right]$
+\end_inset
+
+.
+ Figure 16 shows a plot of 
+\begin_inset Formula $\frac{\Delta x}{d}$
+\end_inset
+
+ as a function of 
+\begin_inset Formula $\theta$
+\end_inset
+
+ together with a best fit line calculated using the best fit value of 
+\begin_inset Formula $n$
+\end_inset
+
+ given by the ODR algorithm, 
+\begin_inset Formula $n=1.514\pm0.009$
+\end_inset
+
+.
+ We estimated the errors in 
+\begin_inset Formula $\Delta x$
+\end_inset
+
+ to be 
+\begin_inset Formula $\pm0.05\,mm$
+\end_inset
+
+, mainly due to the difficulty in getting the voltage in the photosensor
+ to be exactly equal to its value at 
+\begin_inset Formula $\theta=0^{\circ}$
+\end_inset
+
+.
+ The measured value for the slab's width was 
+\begin_inset Formula $d=11\pm0.5$
+\end_inset
+
+ mm, and the error for the measurement of 
+\begin_inset Formula $\theta$
+\end_inset
+
+ was taken as 
+\begin_inset Formula $1^{\circ}$
+\end_inset
+
+, as was done in the previous experiments.
+\end_layout
+
+\begin_layout Subsection
+Experiment 5
+\end_layout
+
+\begin_layout Standard
+We calculate 
+\begin_inset Formula $n$
+\end_inset
+
+ in two ways, again using only single measurements: by measuring 
+\begin_inset Formula $\alpha=\arctan\left(\frac{Y}{X}\right)$
+\end_inset
+
+ (equation (40)), and by measuring 
+\begin_inset Formula $\phi_{c}$
+\end_inset
+
+ (equation (25)).
+ We take the errors in 
+\begin_inset Formula $X$
+\end_inset
+
+ and 
+\begin_inset Formula $Y$
+\end_inset
+
+ to be 
+\begin_inset Formula $\pm0.5$
+\end_inset
+
+ holes, and the errors in 
+\begin_inset Formula $\phi_{c}$
+\end_inset
+
+ and 
+\begin_inset Formula $\varepsilon$
+\end_inset
+
+ to be 
+\begin_inset Formula $\pm1^{\circ}$
+\end_inset
+
+.
+ We find that for the first case, 
+\begin_inset Formula $\alpha=51\pm2^{\circ}$
+\end_inset
+
+, and thus 
+\begin_inset Formula $n=n_{\alpha}=1.53\pm0.04$
+\end_inset
+
+, while measuring the critical angle 
+\begin_inset Formula $\phi_{c}$
+\end_inset
+
+ directly yields 
+\begin_inset Formula $\phi_{c}=6\pm1\textdegree,$
+\end_inset
+
+ meaning that 
+\begin_inset Formula $n=n_{\phi_{c}}=1.52\pm0.03$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Experiment 6
+\end_layout
+
+\begin_layout Standard
+The intensity of the light striking the photosensor is directly proportional
+ to the photosensor's output voltage, with a constant of proportionality
+ that does not change throughout the experiment.
+ For Part A, we find that the unreflected intensity of the laser beam, in
+ terms of the voltage read by the photosensor, is 
+\begin_inset Formula $I_{0}=5.55\pm0.05\,V$
+\end_inset
+
+.
+ We also find that the room lights contribute an offset of 
+\begin_inset Formula $I_{lights}=20\pm5\,mV$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename 1Fplota.png
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset Formula $I_{r}$
+\end_inset
+
+ vs 
+\begin_inset Formula $\theta$
+\end_inset
+
+ for the flat mirror.
+ The data points are in blue and the line in red represents the best linear
+ fit.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Figure 17 shows the results of Part C, and the extrapolation to normal incidence
+ gives a value for the reflected intensity 
+\begin_inset Formula $I_{r}(0)$
+\end_inset
+
+ of 
+\begin_inset Formula $5.27\pm0.02\,V$
+\end_inset
+
+, and thus the value of the mirror's reflectivity is 
+\begin_inset Formula $R_{m}=0.953\pm0.004$
+\end_inset
+
+.
+ The intensity of light at the photosensor for case in which the mirror
+ is placed opposite the beam splitter 
+\begin_inset Formula $I_{1}$
+\end_inset
+
+ was measured to be 
+\begin_inset Formula $336\pm5\,mV$
+\end_inset
+
+, and repeating the same setup using the prism produces an intensity 
+\begin_inset Formula $I_{2}=46\pm5\,mV$
+\end_inset
+
+, so applying equation (45) gives a reflectivity for the prism equal to
+ 
+\begin_inset Formula $R_{p}=0.04\pm0.01$
+\end_inset
+
+, which in turn means that the refraction index is 
+\begin_inset Formula $n=1.49\pm0.08$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename 1Fplotb.png
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset Formula $I_{r}$
+\end_inset
+
+ vs 
+\begin_inset Formula $\theta$
+\end_inset
+
+ for the prism.
+ The data points are in blue and the line in red represents the best fit
+ for a model of a Gaussian plus an offset.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Figure 18 shows the results of Part D.
+ Here, we perform the extrapolation to normal incidence in a different way
+ than in the previous part, and instead model the curve as a Gaussian added
+ to an offset.
+ The value of the intensity at 
+\begin_inset Formula $\theta=0^{\circ}$
+\end_inset
+
+, according to this extrapolation, is 
+\begin_inset Formula $I_{r}(0)=435\pm25\,mV$
+\end_inset
+
+, which gives a value of 
+\begin_inset Formula $R_{p}=0.04\pm0.01$
+\end_inset
+
+, and a value for the refractive index 
+\begin_inset Formula $n=1.49\pm0.02$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section
+Analysis
+\end_layout
+
+\begin_layout Subsection
+Experiment 1
+\end_layout
+
+\begin_layout Standard
+The results of experiment 1 are consistent with the law of reflection, which
+ requires that 
+\begin_inset Formula $\theta_{i}=\theta_{r}$
+\end_inset
+
+, although the agreement is not perfect, as we expected a slope of 
+\begin_inset Formula $m=-2$
+\end_inset
+
+ and a y-intercept of 
+\begin_inset Formula $b=90^{\circ}$
+\end_inset
+
+ and the results were that 
+\begin_inset Formula $m=-1.92\pm0.08$
+\end_inset
+
+ and 
+\begin_inset Formula $b=88\pm2^{\circ}$
+\end_inset
+
+.
+ Even though these expectations are within the error bars, they are at their
+ edge, which suggests that there might be some kind of systematic error
+ involved.
+ Most plausibly, the rotation stage was not zeroed to sufficient precision,
+ and this can introduce a big error, in particular at small angles.
+ It is also possible that the mirror's position with respect to the table
+ was not recorded perfectly, since the mirror is not directly on top of
+ the hole into which its holder is screwed to.
+ More consideration to these sources of error should be applied in the future.
+\end_layout
+
+\begin_layout Subsection
+Experiment 2
+\end_layout
+
+\begin_layout Standard
+Experiment 2's result agrees reasonable well with the expected value for
+ the refractive index of water, 
+\begin_inset Formula $n_{w}=1.33$
+\end_inset
+
+.
+ Sources of error in this experiment include the fact that the water used
+ was not distilled water, and that it was not exactly at 
+\begin_inset Formula $20\textdegree\,C$
+\end_inset
+
+, which are the conditions for which we expect to get 
+\begin_inset Formula $n_{w}=1.33$
+\end_inset
+
+.
+ Another, and potentially more important, source of error is that the container
+ in which the water was held is made of a glass with a non-negligible thickness,
+ and this should certainly contribute to the measured deviation of the laser
+ beam.
+ Finally, the laser beam's ~mm diameter might have introduced errors in
+ the measured position of the spot with respect to the graph paper, as one
+ has to calculate where the center of the spot is by eye.
+ This becomes more complicated as the distance 
+\begin_inset Formula $a$
+\end_inset
+
+ increases since the spot becomes elongated.
+\end_layout
+
+\begin_layout Subsection
+Experiment 3
+\end_layout
+
+\begin_layout Standard
+The nominal value of the refractive index of the glass prism used in this
+ experiment and the slab used in the next one is 
+\begin_inset Formula $n=1.517$
+\end_inset
+
+, so our result for this experiment of 
+\begin_inset Formula $n=1.51\pm0.01$
+\end_inset
+
+ is totally consistent with expectations, especially given the fact that
+ a single measurement was performed.
+ The minimum deviation was calculated by eye as the point in which increasing
+ or decreasing the angle of the rotation stage led to the refracted laser
+ beam to move away from the prism, and this procedure certainly introduced
+ a degree of error.
+ The 
+\begin_inset Formula $X$
+\end_inset
+
+ and 
+\begin_inset Formula $Y$
+\end_inset
+
+ values were measured with a ruler, and the non-zero height of the laser
+ beam also introduced errors as the location of the spot with respect to
+ the table had to be calculated crudely by eye.
+\end_layout
+
+\begin_layout Subsection
+Experiment 4
+\end_layout
+
+\begin_layout Standard
+The results from this experiment are remarkably in line with expectations,
+ as the refractive index is measured to be 
+\begin_inset Formula $n=1.514\pm0.009$
+\end_inset
+
+, which yields a percent discrepancy of ~0.1%.
+ This is related to the relatively large number of data points used, as
+ well as the extraordinary precision of the micrometer.
+ The principal errors involved are the uncertainties related to reading
+ off the angles from the rotation stage, and getting the voltage measured
+ by the photosensor to come back to its original value, because the voltmeter
+ reading tended to fluctuate and only measured the voltage to a precision
+ of 0.01 V.
+\end_layout
+
+\begin_layout Subsection
+Experiment 5
+\end_layout
+
+\begin_layout Standard
+The two values for 
+\begin_inset Formula $n$
+\end_inset
+
+ found in this experiment were slightly different, with 
+\begin_inset Formula $n_{\alpha}=1.53\pm0.04$
+\end_inset
+
+, and 
+\begin_inset Formula $n_{\phi_{c}}=1.52\pm0.03$
+\end_inset
+
+.
+ Both agree well with the expected value for 
+\begin_inset Formula $n$
+\end_inset
+
+, although the error bars are larger than in the case of the previous two
+ experiments.
+ This has to do with the relatively large errors involved in the measurements
+ of 
+\begin_inset Formula $X$
+\end_inset
+
+, 
+\begin_inset Formula $Y$
+\end_inset
+
+, and 
+\begin_inset Formula $\phi_{c}$
+\end_inset
+
+.
+ In the first case, it would have been preferable to place the beam stopper
+ at a larger distance away from the prism than was done, and in the second
+ case, the fact that the angle is small and the rotation stage's reading
+ is not very precise implies that there is a large error involved in the
+ measurement.
+ The fact that 
+\begin_inset Formula $\varepsilon$
+\end_inset
+
+ is not known to arbitrary precision also contributes to the resulting error.
+\end_layout
+
+\begin_layout Subsection
+Experiment 6
+\end_layout
+
+\begin_layout Standard
+We get values for 
+\begin_inset Formula $n$
+\end_inset
+
+ of 
+\begin_inset Formula $1.49\pm0.08$
+\end_inset
+
+ and 
+\begin_inset Formula $1.49\pm0.02$
+\end_inset
+
+.
+ Both results are consistent with expectations, although the expected value
+ is slightly over the edge of the error bars in the second case.
+ The origin of the large errors in the first case becomes evident upon inspectio
+n of Figure 17, which suggests that a more precise voltmeter should have
+ been used, as the variation of the intensity of the reflected beam is very
+ small for the case of the flat mirror.
+ Another possibility would have been dimming the laser beam further, but
+ that would have added a scale factor into the equations because the filter
+ would have had to be removed afterwards given the very small reflectivity
+ of the prism.
+ It is hard to explain why the intensity curve produced by the prism in
+ Figure 18 is so well approximated by a Gaussian.
+ The geometric effect described in section 3.6.3 explains why the intensity
+ does not decrease linearly like in the case of the flat mirror, but it
+ is unclear to us as to why a Gaussian model gives such a good result.
+ It is also noteworthy that both nominal values found for 
+\begin_inset Formula $n$
+\end_inset
+
+ are the same, and slightly less than the expected value.
+ A more careful repetition of the experiment, with a better control over
+ the sources of error, as well as performing a larger number of measurements,
+ would be useful in order to resolve these issues.
+\end_layout
+
+\begin_layout Section
+Conclusion
+\end_layout
+
+\begin_layout Standard
+We have performed a series of experiments designed to apply some basic laws
+ of optics that have allowed us to measure the refractive index of two different
+ materials and to test the law of reflection.
+ We find the results to be consistent with expectations, and that some experimen
+tal methods yield better results than others.
+ In particular, the setup in experiment 4 enabled us to calculate the refractive
+ index of a glass prism to a precision of ~0.1%, which is about 10 times
+ better than the accuracy obtained in the other setups.
+ This reinforces the idea that different ways of measuring the same quantity
+ are not equivalent in terms of their precision, even in the case of experiments
+ performed in closely controlled laboratory conditions.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-2"
+
+\end_inset
+
+Hecht, E.
+ 
+\emph on
+Optics
+\emph default
+, 
+\emph on
+5th edit.
+\emph default
+, Pearson Education Limited 2017.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-3"
+
+\end_inset
+
+Bodenschatz, E., et al.
+ 
+\emph on
+Modern Experimental Optics Laboratory Manual
+\emph default
+, Cornell University Physics Department 2016.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-4"
+
+\end_inset
+
+Jones E, Oliphant E, Peterson P, et al.
+ 
+\emph on
+SciPy: Open Source Scientific Tools for Python, 
+\emph default
+2001-, http://www.scipy.org/.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-5"
+
+\end_inset
+
+W.
+ H.
+ Press, S.
+ A.
+ Teukolsky, W.
+ T.
+ Vetterling and B.
+ P.
+ Flannery 
+\emph on
+Numerical Recipes, The Art of Scientific Computing, 3rd edit.
+\emph default
+, Camb.
+ Univ.
+ Press 2007.
+
+\emph on
+ 
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "5"
+key "key-1"
+
+\end_inset
+
+P.
+ T.
+ Boggs and J.
+ E.
+ Rogers, “Orthogonal Distance Regression,” in “Statistical analysis of measureme
+nt error models and applications: proceedings of the AMS-IMS-SIAM joint
+ summer research conference held June 10-16, 1989,” Contemporary Mathematics,
+ vol.
+ 112, pg.
+ 186, 1990.
+ 
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "6"
+key "key-2"
+
+\end_inset
+
+Lebigot, E.O.
+ 
+\emph on
+Uncertainties: a Python package for calculations with uncertainties
+\emph default
+, http://pythonhosted.org/uncertainties/
+\end_layout
+
+\end_body
+\end_document

@@ -1,0 +1,3401 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+\usepackage{amsmath}
+
+\DeclareMathOperator{\erf}{erf}
+\end_preamble
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 3cm
+\topmargin 3cm
+\rightmargin 3cm
+\bottommargin 5cm
+\headheight 1cm
+\headsep 1cm
+\footskip 2cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Project 3: Geometrical Optics
+\end_layout
+
+\begin_layout Date
+October 16th, 2017
+\end_layout
+
+\begin_layout Author
+Gianfranco Grillo
+\end_layout
+
+\begin_layout Abstract
+We present the results of a series of optical experiments involving thin
+ lenses and Gaussian beams.
+ We verify the thin lens equation, estimate the focal length of a plano-convex
+ lens and a plano-concave lens in different ways, find the minimum beam
+ radius and the divergence of a laser beam, expand the beam using a Galilean
+ expander and a Keplerian expander, and attempt to build a shadowgraphy
+ system for visualizing small changes in the refractive index of a medium.
+ We find good agreement between the focal lengths as given by the lenses'
+ manufacturer and those calculated using the thin lens equation.
+ The focal length of the convex lens with a nominal value of 10 cm was measured
+ to be 
+\begin_inset Formula $10.16\pm0.06$
+\end_inset
+
+ cm, and the focal length of the concave lens with a nominal value of -2.5
+ cm was measured to be 
+\begin_inset Formula $-2.8\pm1.0$
+\end_inset
+
+ cm.
+ We find a minimum radius for the laser beam of 
+\begin_inset Formula $0.34\pm0.08$
+\end_inset
+
+ mm and a divergence of 
+\begin_inset Formula $1.22\pm0.04$
+\end_inset
+
+ mrad, which is consistent with the typical values for HeNe lasers.
+ Our attempts to build the beam expanders were only partially successful,
+ and we were unable to construct the shadowgraphy system.
+\end_layout
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout Standard
+Even though classical electromagnetism describes light as a wave phenomenon,
+ the fact that visible light's wavelength ranges from 400 to 700 nm implies
+ that the effects arising from its wavelike nature are often very small,
+ and that a good first approximation to light's behavior can be made by
+ modelling it as if it consisted of rays.
+ Optics performed under this framework, which is mathematically equivalent
+ to the description of a wave with zero wavelength (or infinite frequency),
+ is known as geometrical optics.
+ Treating light as a wave of zero wavelength significantly simplifies the
+ analysis of its propagation, because it allows us to completely ignore
+ diffractive effects.
+ We can describe simple optical systems involving convex and concave lenses,
+ as well as mirrors, from a geometrical optics perspective, by thinking
+ about the light emerging from an object as a multitude of rays that pass
+ through the lenses and bounce off the mirrors in different ways depending
+ on the shape of the lenses and mirrors.
+ This approximation is especially useful when analyzing the propagation
+ of a laser beam through an optical system, because the nature of the laser
+ beam ensures that in certain contexts it can be treated as a single ray
+ of light propagating through space and time.
+ We work under this framework during the first half of our project.
+\end_layout
+
+\begin_layout Standard
+On the other hand, it is also true that the beam emitted by a laser is not
+ exactly equivalent to a ray of light, because it has a non zero width that
+ changes as it propagates, although it does so at a rate that is much less
+ than that of, for example, the beam emerging from a flashlight.
+ We take a closer look at these properties of a laser beam in the second
+ half of our project.
+\end_layout
+
+\begin_layout Standard
+We perform the data analysis using Python and the associated libraries NumPy
+ and SciPy ([1]), as well as the Uncertainty package ([2]).
+\end_layout
+
+\begin_layout Section
+Theoretical background
+\end_layout
+
+\begin_layout Subsection
+Thin lenses
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename raydiagram3.png
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Principal ray diagram for a plano-convex thin lens.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+A thin lens corresponds to a lens for which the distance between its front
+ and back interfaces can be neglected without introducing significant errors
+ in the description of ray propagation.
+ As shown in Figure 1 for the case of a plano-convex lens, a simple system
+ made up of an object in front of a thin lens can be described by the parameters
+ 
+\begin_inset Formula $s_{o}$
+\end_inset
+
+, 
+\begin_inset Formula $s_{i}$
+\end_inset
+
+, and 
+\begin_inset Formula $f$
+\end_inset
+
+, which correspond to the object distance, the image distance, and the lens's
+ focal length, respectively.
+ These three quantities are related by the thin lens equation
+\begin_inset Formula 
+\begin{equation}
+\frac{1}{s_{o}}+\frac{1}{s_{i}}=\frac{1}{f}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The transverse magnification 
+\begin_inset Formula $M_{T}$
+\end_inset
+
+, defined as the ratio of the image height 
+\begin_inset Formula $y_{i}$
+\end_inset
+
+ to that of the object height 
+\begin_inset Formula $y_{i}$
+\end_inset
+
+ is given by
+\begin_inset Formula 
+\begin{equation}
+M_{T}=\frac{y_{i}}{y_{o}}=-\frac{s_{i}}{s_{o}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+A negative magnification implies that the image is inverted, whereas a positive
+ magnification corresponds to an erect image.
+ All real images formed by an optical system composed by a single thin lens
+ will be inverted, because the quantities 
+\begin_inset Formula $s_{i}$
+\end_inset
+
+ and 
+\begin_inset Formula $s_{o}$
+\end_inset
+
+ are always positive for real objects and images.
+ As shown in the figure, we can calculate the magnification and the image
+ distance of an object if we know the object's distance from the lens and
+ the lens's focal length by drawing a ray parallel to the axis that emerges
+ from the top of the object, passes through the lens and then crosses the
+ focal point to the right of the lens, and another ray that emerges from
+ the same point and then passes through the center of the lens without being
+ deviated.
+ The point at which these two rays intersect corresponds to the position
+ of the top of the image.
+ This sort of ray tracing technique can be very useful when applied to more
+ complicated systems involving more than one lens.
+ Convex lenses have a positive focal length, whereas concave lenses have
+ a negative focal length.
+ This implies that concave lenses are divergent, and convex lenses are convergen
+t.
+\end_layout
+
+\begin_layout Standard
+Systems consisting of more than one lens can be used as beam expanders,
+ because they have a magnification greater than 1.
+ Two types of beam expanders are the Galilean beam expander and the Keplerian
+ beam expander.
+ The Galilean beam expander consists of a diverging lens of focal length
+ 
+\begin_inset Formula $f_{1}$
+\end_inset
+
+ and a converging lens of focal length 
+\begin_inset Formula $f_{2}$
+\end_inset
+
+ separated by a distance 
+\begin_inset Formula $d=f_{1}+f_{2}$
+\end_inset
+
+, as shown in Figure 2.
+ The magnification of such a system is given by
+\begin_inset Formula 
+\begin{equation}
+M_{G}=\frac{-f_{2}}{f_{1}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The Keplerian beam expander, on the other hand, consists of two convex lenses,
+ separated by a distance of 
+\begin_inset Formula $d=f_{1}+f_{2}$
+\end_inset
+
+.
+ This is shown in Figure 3.
+ Note that this distance will be in general greater than that of the Galilean
+ expander because now both focal lengths are positive.
+ The magnification of this system is given by
+\begin_inset Formula 
+\begin{equation}
+M_{K}=\frac{f_{2}}{f_{1}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We will attempt to build both types of expanders in the last part of this
+ project.
+\end_layout
+
+\begin_layout Subsection
+Ray transfer matrices and the paraxial approximation
+\end_layout
+
+\begin_layout Standard
+A very useful way to describe the propagation of a ray is via the use of
+ ray transfer matrices.
+ In the context of laser optics, this approach can also be made simpler
+ by working under the so-called paraxial approximation.
+ If the object and image distances are large with respect to the transverse
+ size of the lenses used in the optical system, the angle at which a ray
+ can emerge from an object has to be small in order for the ray to pass
+ through the lens as it propagates.
+ This allows us to use the small-angle approximation, where 
+\begin_inset Formula $\sin\theta\approx\tan\theta\approx\theta$
+\end_inset
+
+, and implies that we can assume that the rays are very close to parallel
+ to the optical axis: they are paraxial.
+ Under this framework, we can relate the height 
+\begin_inset Formula $y$
+\end_inset
+
+ and the angle 
+\begin_inset Formula $\theta$
+\end_inset
+
+ of a ray with respect to the optical axis via the equation
+\begin_inset Formula 
+\begin{equation}
+\left[\begin{array}{c}
+y\\
+\theta
+\end{array}\right]=\left[\begin{array}{cc}
+A & B\\
+C & D
+\end{array}\right]\left[\begin{array}{c}
+y_{0}\\
+\theta_{0}
+\end{array}\right]
+\end{equation}
+
+\end_inset
+
+where the matrix is known as the ray transfer or ABCD matrix, and 
+\begin_inset Formula $y_{0}$
+\end_inset
+
+, 
+\begin_inset Formula $\theta_{0}$
+\end_inset
+
+ correspond to the initial height and angle of the ray.
+ The components of the matrix depend on the specific structures through
+ which the ray travels.
+ For the purposes of this project, it is enough to introduce the ABCD matrices
+ for a ray travelling a distance 
+\begin_inset Formula $d$
+\end_inset
+
+ through free space, and a ray crossing a thin lens of focal length 
+\begin_inset Formula $f$
+\end_inset
+
+.
+ These are given by
+\begin_inset Formula 
+\begin{eqnarray}
+M_{FS} & = & \left[\begin{array}{cc}
+1 & d\\
+0 & 1
+\end{array}\right]\\
+M_{TL} & = & \left[\begin{array}{cc}
+1 & 0\\
+\nicefrac{-1}{f} & 1
+\end{array}\right]
+\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The transfer matrix of a ray travelling through a combination of structures
+ can be found by multiplying the matrices of each of these structures.
+\end_layout
+
+\begin_layout Subsection
+Gaussian waves
+\end_layout
+
+\begin_layout Subsubsection
+General definitions
+\end_layout
+
+\begin_layout Standard
+The amplitude of the electric field of the light emitted by a laser can
+ be successfully described by a Gaussian distribution.
+ Following the descriptions given in [3] and [4], we can write the absolute
+ value of the normalized electric field amplitude of a laser beam propagating
+ in the z-direction as
+\begin_inset Formula 
+\begin{equation}
+\left|\frac{E(x,\,y,\,z)}{E_{0}}\right|=\frac{w_{0}}{w(z)}\exp\left(-\frac{r^{2}}{w^{2}}\right)
+\end{equation}
+
+\end_inset
+
+where
+\begin_inset Formula $w$
+\end_inset
+
+ corresponds to the beam waist, defined as the point in which the field
+ is down by 
+\begin_inset Formula $e^{-1}$
+\end_inset
+
+ with respect to the field's strength at 
+\begin_inset Formula $r=0$
+\end_inset
+
+, and 
+\begin_inset Formula $w_{0}=w(z_{0})$
+\end_inset
+
+, which corresponds to the minimum value of the beam waist.
+ The intensity of the beam as a function of the distance from the beam center
+ is proportional to the square of the electric field, and is thus given
+ by
+\begin_inset Formula 
+\begin{equation}
+I=I_{0}\exp\left(\frac{-2r^{2}}{w^{2}}\right)
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $I_{0}=\frac{w_{0}^{2}}{w(z)^{2}}$
+\end_inset
+
+.
+ The evolution of the beam waist as a function of 
+\begin_inset Formula $z$
+\end_inset
+
+ is related to the minimum radius 
+\begin_inset Formula $w_{0}$
+\end_inset
+
+ by
+\begin_inset Formula 
+\begin{equation}
+w(z)=w_{0}\sqrt{1+\left(\frac{z-z_{0}}{z_{R}}\right)^{2}}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $z_{R}$
+\end_inset
+
+ corresponds to the Rayleigh range,
+\begin_inset Formula 
+\begin{equation}
+z_{R}=\frac{\pi w_{0}^{2}}{\lambda}
+\end{equation}
+
+\end_inset
+
+with 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ being the wavelength of the light.
+ Equation (10) can be rewritten in terms of the beam diameter 
+\begin_inset Formula $D=2w$
+\end_inset
+
+ and related to the far field divergence angle
+\begin_inset Formula $\Theta$
+\end_inset
+
+ by the equation
+\begin_inset Formula 
+\begin{equation}
+D(z)=\sqrt{D_{0}^{2}+\left[\Theta(z-z_{0})\right]^{2}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Far away from the beam waist, when 
+\begin_inset Formula $z-z_{0}\gg z_{R}$
+\end_inset
+
+, 
+\begin_inset Formula $\Theta$
+\end_inset
+
+ approaches 
+\begin_inset Formula $\frac{2w(z)}{z-z_{0}}$
+\end_inset
+
+, and it follows that
+\begin_inset Formula 
+\begin{equation}
+\Theta=\frac{2\lambda}{\pi w_{0}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Equation (13) will provide a useful check on our measurements.
+ This equation is also a manifestation of Liouville's theorem in optics.
+ This theorem asserts that the phase space volume of system is conserved,
+ which in this context means that the product of the divergence and the
+ beam waist is always equal to a constant.
+\end_layout
+
+\begin_layout Subsubsection
+Calculating the beam size
+\end_layout
+
+\begin_layout Standard
+Since the beam size of a laser is very small, it is not possible to measure
+ small variations in its size by measuring its diameter using a ruler.
+ Instead, we do this by observing how the beam intensity changes as we block
+ part of the beam.
+ If the size of the spot is small compared to the collecting area of the
+ photosensor, the total intensity can be approximated as
+\begin_inset Formula 
+\begin{equation}
+I_{tot}=\int_{-\infty}^{\infty}I_{0}e^{\nicefrac{-2r^{2}}{w^{2}}}dr
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Blocking half of the beam (in this context, using a razor blade) results
+ in an intensity of 
+\begin_inset Formula $I_{\nicefrac{1}{2}}=\frac{I_{tot}}{2}$
+\end_inset
+
+.
+ If we now translate the razor blade a horizontal distance 
+\begin_inset Formula $\Delta x$
+\end_inset
+
+ such that the recorded intensity becomes a quarter of the original intensity,
+ 
+\begin_inset Formula $I_{\nicefrac{1}{4}}=\frac{I_{tot}}{4}=\frac{I_{\nicefrac{1}{2}}}{2}$
+\end_inset
+
+, we can find the value of 
+\begin_inset Formula $w$
+\end_inset
+
+ by solving the following equation:
+\begin_inset Formula 
+\begin{eqnarray}
+\frac{I_{\nicefrac{1}{2}}}{I_{\nicefrac{1}{4}}} & = & \frac{\int_{0}^{\infty}I_{0}e^{\nicefrac{-2r^{2}}{w^{2}}}dr}{\int_{\Delta x}^{\infty}I_{0}e^{\nicefrac{-2r^{2}}{w^{2}}}dr}\\
+ & = & \frac{\int_{0}^{\infty}e^{\nicefrac{-2r^{2}}{w^{2}}}dr}{\int_{0}^{\infty}e^{\nicefrac{-2r^{2}}{w^{2}}}dr-\int_{0}^{\Delta x}e^{\nicefrac{-2r^{2}}{w^{2}}}dr}
+\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Since the LHS of this equation is equal to 2, we can write this as
+\begin_inset Formula 
+\begin{equation}
+\frac{1}{2}=1-\frac{\int_{0}^{\Delta x}e^{\nicefrac{-2r^{2}}{w^{2}}}dr}{\int_{0}^{\infty}e^{\nicefrac{-2r^{2}}{w^{2}}}dr}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using the solution of the Gaussian integral and solving for 
+\begin_inset Formula $w$
+\end_inset
+
+ gives
+\begin_inset Formula 
+\begin{equation}
+w=\frac{\Delta x\sqrt{2}}{\erf\left(\nicefrac{1}{2}\right)}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We can use (18) to calculate the spot size when we are not too far away
+ from 
+\begin_inset Formula $w_{0}$
+\end_inset
+
+, but measuring the beam's divergence 
+\begin_inset Formula $\Theta$
+\end_inset
+
+ is better done far away from 
+\begin_inset Formula $w_{0}$
+\end_inset
+
+, where the spot size becomes comparable to the size of the photosensor's
+ collecting area.
+ In that case, (18) ceases to be accurate.
+ A better approximation can be performed by taking into account the photosensor'
+s shape and size.
+ For a square photosensor with side length 
+\begin_inset Formula $2a$
+\end_inset
+
+, the measured intensity when half of the beam is blocked is (assuming the
+ sensor is positioned right behind the razor blade)
+\begin_inset Formula 
+\begin{equation}
+I_{\nicefrac{1}{2}}=I_{0}\int_{0}^{a}e^{\nicefrac{-2x^{2}}{w^{2}}}dx\int_{0}^{2a}e^{\nicefrac{-2y^{2}}{w^{2}}}dy
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Translating the razor a horizontal distance 
+\begin_inset Formula $\Delta x$
+\end_inset
+
+ such that the new intensity is half of 
+\begin_inset Formula $I_{\nicefrac{1}{2}}$
+\end_inset
+
+, we see that this new intensity is given by
+\begin_inset Formula 
+\begin{equation}
+I_{\nicefrac{1}{4}}=I_{0}\int_{\Delta x}^{a}e^{\nicefrac{-2x^{2}}{w^{2}}}dx\int_{0}^{2a}e^{-\nicefrac{-2y^{2}}{w^{2}}}dy
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Dividing this two expressions gives
+\begin_inset Formula 
+\begin{equation}
+\frac{I_{\nicefrac{1}{2}}}{I_{\nicefrac{1}{4}}}=\frac{\int_{0}^{a}e^{\nicefrac{-2x^{2}}{w^{2}}}dx}{\int_{\Delta x}^{a}e^{\nicefrac{-2x^{2}}{w^{2}}}dx}=2
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We use the solution to the Gaussian integral again to get
+\begin_inset Formula 
+\begin{equation}
+\erf\left(\frac{a\sqrt{2}}{w}\right)-2\erf\left(\frac{\Delta x\sqrt{2}}{w}\right)=0
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This equation needs to be solved numerically for 
+\begin_inset Formula $w$
+\end_inset
+
+, since it is not possible to solve it analytically.
+ There is very little difference between the values for 
+\begin_inset Formula $w$
+\end_inset
+
+ obtained for a given 
+\begin_inset Formula $\Delta x$
+\end_inset
+
+ using equation (18) and those obtained using (22) when 
+\begin_inset Formula $\Delta x$
+\end_inset
+
+ is small compared to 
+\begin_inset Formula $a$
+\end_inset
+
+, but the differences become noticeable once 
+\begin_inset Formula $\Delta x$
+\end_inset
+
+ gets bigger, which occurs when we measure the beam diameter far away from
+ 
+\begin_inset Formula $w_{0}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Shadowgraphy and Schlieren photography
+\end_layout
+
+\begin_layout Standard
+In some engineering applications, especially in fluid dynamics and aerospace
+ engineering, it is very useful to observe the way fluids flow and how they
+ are affected by the presence of an object and changes in their temperature.
+ This can be done by setting up a system that allows one to indirectly observe
+ changes in the refractive index of the fluid.
+ The most basic of these systems is the shadowgraph, and a more advanced
+ one is the Schlieren system.
+ Both systems rely on the fact that that the refractive index of a fluid
+ is related to its density in such a way that a fluid with non-uniform density
+ also has a non-uniform refractive index.
+ The shadowgraph is able to capture these density differences by shining
+ light through the medium and looking at the shadow cast by it due to refraction.
+ In such a system, the observed light intensity is proportional to the Laplacian
+ of the fluid's density.
+ On the other hand, the more sophisticated Schlieren system is similar to
+ the shadowgraph but also utilizes a focusing element and a knife edge in
+ order to take advantage of the fact that the non-uniformity of the fluid
+ results in imperfect focusing, and the resulting light intensity is then
+ proportional to the first derivative of the fluid's density.
+ A more quantitative analysis of the shadowgraph and the Schlieren system
+ can be found in [5].
+ We will attempt to build a shadowgraph and a Schlieren system in the last
+ part of this project.
+\end_layout
+
+\begin_layout Section
+Experimental Set-Up and Results
+\end_layout
+
+\begin_layout Subsection
+Experiment 1A
+\end_layout
+
+\begin_layout Subsubsection
+Set-Up
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename setup1.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Setup for experiment 1A.
+ Obtained from [6].
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In this experiment, we find a lens's focal length by measuring image and
+ object distances, and exploiting the thin lens equation (1).
+ The system setup is shown in Figure 2.
+ We place a flashlight a small distance away from an object with a transparent
+ shape on it, in this case a set of two perpendicular arrows of length 1
+ cm.
+ Then, we position the lens in front of the object at a distance 
+\begin_inset Formula $s_{o}$
+\end_inset
+
+, and a beam stopper on the other side of the lens.
+ The plano-convex lens is oriented such that its planar surface faces the
+ incoming laser beam in order to reduce aberration.
+ We move the beam stopper into a position that maximizes the sharpness of
+ the arrow image, and take this position to correspond to 
+\begin_inset Formula $s_{i}$
+\end_inset
+
+, the image distance.
+ Finally, we measure the length of one of the arrows in the image and notice
+ its orientation.
+\end_layout
+
+\begin_layout Subsubsection
+Results and analysis
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "45col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename 3Aib.png
+	scale 30
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset Formula $s_{i}$
+\end_inset
+
+ as a function of 
+\begin_inset Formula $s_{o}$
+\end_inset
+
+and 
+\begin_inset Formula $f$
+\end_inset
+
+, with a best fit using the model given in (23).
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "45col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename 3Aia.png
+	scale 30
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset Formula $s_{i}$
+\end_inset
+
+ as a function of 
+\begin_inset Formula $s_{o}$
+\end_inset
+
+ and 
+\begin_inset Formula $f$
+\end_inset
+
+, with a best fit using the model given in (24).
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We rearrange equation (1) and write it in the form
+\begin_inset Formula 
+\begin{equation}
+s_{i}=\frac{s_{o}f}{s_{o}-f}
+\end{equation}
+
+\end_inset
+
+and proceed to fit for 
+\begin_inset Formula $f$
+\end_inset
+
+.
+ We also follow another approach in order to account for systematic errors
+ related to the position of the lens principal planes, as well as their
+ precise location within the lens holder, by performing a fit using two
+ auxiliary parameters 
+\begin_inset Formula $\hat{s}_{o}$
+\end_inset
+
+ and 
+\begin_inset Formula $\hat{s}_{i}$
+\end_inset
+
+ such that
+\begin_inset Formula 
+\begin{equation}
+s_{i}=\frac{(s_{o}+\hat{s}_{o})f}{s_{o}+\hat{s}_{o}-f}-\hat{s}_{i}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The results of both approaches are shown graphically in Figures 3 and 4.
+ Modelling the data using (23) gives a value for the focal length 
+\begin_inset Formula $f_{1}=9.87\pm0.21\,cm$
+\end_inset
+
+, whereas using equation (24) gives 
+\begin_inset Formula $f_{2}=8.692\pm0.005\,cm$
+\end_inset
+
+, with 
+\begin_inset Formula $\hat{s}_{o}=-1.247\pm0.008\,cm$
+\end_inset
+
+ and 
+\begin_inset Formula $\hat{s}_{i}=-2.796\pm0.008\,cm$
+\end_inset
+
+.
+ The standard errors for each of the measurements were taken to be 0.1 cm
+ for 
+\begin_inset Formula $s_{o}$
+\end_inset
+
+ and 0.4 cm for 
+\begin_inset Formula $s_{i}$
+\end_inset
+
+, with the larger value for 
+\begin_inset Formula $s_{i}$
+\end_inset
+
+ chosen to account for the fact that the beam stopper was not screwed in
+ place and that the sharpness of the image was judged qualitatively.
+ 
+\end_layout
+
+\begin_layout Standard
+The value for the focal length given by the simpler model, 
+\begin_inset Formula $f_{1}$
+\end_inset
+
+, is much closer to the value given by the manufacturer of 
+\begin_inset Formula $10$
+\end_inset
+
+ cm.
+ This, together with the relatively large values of 
+\begin_inset Formula $\hat{s}_{o}$
+\end_inset
+
+ and 
+\begin_inset Formula $\hat{s}_{i}$
+\end_inset
+
+, as well as the small number of data points taken, suggest that the simpler
+ model provides a better estimate of the real focal length of the lens.
+ We do not expect the systematic errors to be as large as the best fit values
+ for 
+\begin_inset Formula $\hat{s}_{o}$
+\end_inset
+
+ and 
+\begin_inset Formula $\hat{s}_{i}$
+\end_inset
+
+ suggest, because the distance of the principal plane from the lens middle
+ cross section should be very small given that the lens's thickness is very
+ small.
+ We also do not expect the position of the lens holder to affect our results
+ by more than a few millimeters, as anything more than that would be obvious
+ to the naked eye.
+ Thus, it seems that adding those two extra parameters has resulted in an
+ overcorrection that has not improved the accuracy of the results.
+ A better, more detailed model comparison could potentially be done under
+ a Bayesian framework, but this is outside the scope of this work.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="3">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\nicefrac{-s_{i}}{s_{o}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $M$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\%_{dif}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $3.28\pm0.06$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $3.00\pm0.05$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+8.9
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.95\pm0.02$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1.00\pm0.05$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+5.1
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.35\pm0.01$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.30\pm0.05$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+15.3
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.217\pm0.007$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.15\pm0.05$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+36.5
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Magnification according to (2), measured magnification, and percentage differenc
+e between their nominal values.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Table 1 shows a comparison between the theoretical magnification as given
+ by (2) and the actual observed magnification, obtained by dividing the
+ length of one of the object's arrows by the length of the corresponding
+ image arrow.
+ Note that all of the observed images were inverted, which is expected since
+ the object was always placed at a distance larger than the focal length.
+ We can see that three out of the four recorded values agree within their
+ error bars, and the last value is a little off.
+ This is to be expected because for small magnifications, the image size
+ was extremely difficult to measure, since this was done with the naked
+ eye using an ordinary ruler with a scale that had minimum divisions of
+ 1 mm.
+ Thus, measurements of very small images using this method are not reliable.
+\end_layout
+
+\begin_layout Subsection
+Experiment 1B
+\end_layout
+
+\begin_layout Subsubsection
+Set-Up
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename setup2.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Setup for experiment 1B.
+ Obtained from [6].
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This experiment measures object and image distances by a method different
+ than that used in experiment 1A.
+ Instead of using a flashlight, we now use a laser.
+ We place a filter in front of the laser, reducing its intensity by a factor
+ of 
+\begin_inset Formula $\thicksim3$
+\end_inset
+
+.
+ We then place a mirror on top of a rotation stage in order to deviate the
+ laser beam's path by an angle close to 
+\begin_inset Formula $90^{\circ}$
+\end_inset
+
+, and place the lens in this direction, with the planar side facing the
+ incident beam in order to minimize aberration effects.
+ We then place a beam stopper behind the lens, and vary its distance until
+ it reaches a position such that the laser spot does not move on the surface
+ of the beam stopper when the mirror is rotated.
+ The distance between the beam stopper and the lens at which this occurs
+ is the image distance 
+\begin_inset Formula $s_{i}$
+\end_inset
+
+, and the distance between the mirror and the lens is the object distance
+ 
+\begin_inset Formula $s_{o}$
+\end_inset
+
+.
+ A graphical representation of this setup is shown in Figure 5.
+ The reason why we are able to identify the image position using this procedure
+ is because in this context we can regard the laser beam as a single ray
+ emerging from a single point in the surface of an object, and geometrical
+ optics requires that all such rays arrive at the same position in the image
+ plane, as shown in Figure 1.
+ Rotating the mirror is akin to changing the direction of the ray emerging
+ from an object without changing the position from which the ray emerges.
+\end_layout
+
+\begin_layout Subsubsection
+Results and analysis
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename 3Aii.png
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset Formula $s_{i}$
+\end_inset
+
+ as a function of 
+\begin_inset Formula $s_{o}$
+\end_inset
+
+ and 
+\begin_inset Formula $f$
+\end_inset
+
+ using measurements from experiment 2 and the model given in (23).
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Figure 6 shows the results of fitting 
+\begin_inset Formula $f$
+\end_inset
+
+ to the measurements and the model given in (23).
+ We obtain a value for the focal length of 
+\begin_inset Formula $f=10.18\pm0.06$
+\end_inset
+
+ cm.
+ We assume a standard error of 0.5 cm for the 
+\begin_inset Formula $s_{i}$
+\end_inset
+
+ measurements, and a standard error of 0.2 cm for the 
+\begin_inset Formula $s_{o}$
+\end_inset
+
+ measurements.
+ This difference in the assumed standard errors is made in order to partly
+ account for the fact that we are qualitatively judging the beam stopper
+ position that minimizes the movement of the spot as a function of the rotation
+ of the mirror, and this judgment increases the uncertainty in 
+\begin_inset Formula $s_{i}$
+\end_inset
+
+ but not in 
+\begin_inset Formula $s_{o}$
+\end_inset
+
+.
+ The result has deceptively small error bars that are not large enough for
+ the measured focal length to be consistent with the 10 cm value given by
+ the manufacturer.
+ This very small error, however, suggests that the measurements were well
+ made, and that the discrepancy does not arise from the judgments made during
+ the procedure; instead, it is suggestive of some form of systematic error.
+ This is further reinforced by the fact that very small changes in the measured
+ values yield results that are a lot closer to the expected values.
+ For instance, subtracting 0.3 cm to each measured value of 
+\begin_inset Formula $s_{o}$
+\end_inset
+
+ and 
+\begin_inset Formula $s_{i}$
+\end_inset
+
+ gives 
+\begin_inset Formula $f=10.01\pm0.07$
+\end_inset
+
+ cm.
+ Some degree of systematic error is to be expected since, as mentioned earlier,
+ there are some uncontrolled variables like the position of the lens's principal
+ plane and the lens holder, and in this particular experiment we also have
+ that the point in which the laser strikes the mirror is not directly above
+ any of the table's holes.
+ Finally, alligning the mirror such that its axis of rotation intercepted
+ the point of reflection of the laser was also done qualitatively, which
+ is expected to introduce some degree of systematic error because it implies
+ that rotating the mirror not only changes the angle of the ray that strikes
+ the lens, but also the position from which it emerges with respect to the
+ mirror, which makes the analysis more complicated.
+\end_layout
+
+\begin_layout Subsection
+Experiment 1C
+\end_layout
+
+\begin_layout Subsubsection
+Set-Up
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "45col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename setup3.png
+	scale 45
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Setup for experiment 1C (i).
+ Obtained from [6].
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "45col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename setup3b.png
+	scale 45
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Setup for experiment 1C (ii).
+ Obtained from [6].
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We now measure the focal length of the lens in another way by using a glass
+ slab to translate the laser beam.
+ We position the glass slab in front of the laser atop a rotation stage,
+ and place the lens directly in front of it, with the planar side facing
+ the incident beam.
+ We now use a beam stopper to locate the focal length by placing it in a
+ position in which the laser spot does not move when the glass prism is
+ rotated.
+ Rotating the glass prism deviates the beam from its original path because
+ of refraction, but the emerging beam is still parallel to its original
+ direction.
+ In terms of the rays shown in Figure 1, this is essentially equivalent
+ to drawing ray number 2 at different 
+\begin_inset Formula $y_{o}$
+\end_inset
+
+.
+ The only point in the image side of the lens that intersects all incoming
+ parallel rays from the object is the lens's focal point, so this procedure
+ enables us to find the focal length of the lens.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename raydiagram4.png
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Ray diagram for experiment 1C (ii).
+ Translating the mirror is equivalent to changing 
+\begin_inset Formula $y_{0}$
+\end_inset
+
+, whereas rotating the mirror corresponds to a change in 
+\begin_inset Formula $\theta_{0}$
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We now switch back to a configuration similar to the one used in experiment
+ 1B, with the difference that now the lens is placed on top of a translation
+ stage and a rotation stage at the same time, as shown in Figure 8.
+ This enables us to vary both the angle of the ray, as we did in experiment
+ 1B, and the height at which the ray emerges, as we did in 1C (i).
+ The goal is to find the appropriate 
+\begin_inset Formula $s_{o}$
+\end_inset
+
+ and 
+\begin_inset Formula $s_{i}$
+\end_inset
+
+ such that translating the mirror does not result in any motion of the spot,
+ but rotating the mirror does.
+ Note that in this context, 
+\begin_inset Formula $s_{i}$
+\end_inset
+
+ corresponds to the distance between the beam stopper and the lens.
+ A ray diagram for the setup is shown in Figure 9.
+ In terms of the quantities represented on this diagram, translating the
+ mirror corresponds to a change in 
+\begin_inset Formula $y_{0}$
+\end_inset
+
+, and rotating the mirror corresponds to a variation in 
+\begin_inset Formula $\theta_{0}$
+\end_inset
+
+.
+ We can use the ray transfer matrix method within the paraxial approximation
+ described in section 2.2 in order to find the necessary conditions that
+ result in 
+\begin_inset Formula $y_{2}$
+\end_inset
+
+ being independent from 
+\begin_inset Formula $y_{0}$
+\end_inset
+
+, but not independent from 
+\begin_inset Formula $\theta_{0}$
+\end_inset
+
+.
+ We can relate 
+\begin_inset Formula $y_{0}$
+\end_inset
+
+ and 
+\begin_inset Formula $\theta_{0}$
+\end_inset
+
+ to 
+\begin_inset Formula $y_{2}$
+\end_inset
+
+ and 
+\begin_inset Formula $\theta_{2}$
+\end_inset
+
+ via the matrix equation
+\begin_inset Formula 
+\begin{eqnarray}
+\left[\begin{array}{c}
+y_{2}\\
+\theta_{2}
+\end{array}\right] & = & \left[\begin{array}{cc}
+1 & s_{i}\\
+0 & 1
+\end{array}\right]\left[\begin{array}{cc}
+1 & 0\\
+\nicefrac{-1}{f} & 1
+\end{array}\right]\left[\begin{array}{cc}
+1 & s_{o}\\
+0 & 1
+\end{array}\right]\left[\begin{array}{c}
+y_{0}\\
+\theta_{0}
+\end{array}\right]\\
+ & = & \left[\begin{array}{c}
+y_{0}+\theta_{0}(s_{o}+s_{i})-\frac{s_{i}(y_{0}+s_{o}\theta_{0})}{f}\\
+\theta_{0}-\frac{y_{0}+s_{o}\theta_{0}}{f}
+\end{array}\right]
+\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In order to find the 
+\begin_inset Formula $s_{o}$
+\end_inset
+
+ and 
+\begin_inset Formula $s_{i}$
+\end_inset
+
+ that result in 
+\begin_inset Formula $y_{2}$
+\end_inset
+
+ being independent of 
+\begin_inset Formula $y_{0}$
+\end_inset
+
+, we take the derivative of 
+\begin_inset Formula $y_{2}$
+\end_inset
+
+ with respect to 
+\begin_inset Formula $y_{0}$
+\end_inset
+
+ and set it equal to zero:
+\begin_inset Formula 
+\begin{equation}
+\frac{dy_{2}}{dy_{0}}=1-\frac{s_{i}}{f}=0
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Solving for 
+\begin_inset Formula $s_{i}$
+\end_inset
+
+ gives
+\begin_inset Formula 
+\begin{equation}
+s_{i}=f
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Taking the derivative of 
+\begin_inset Formula $y_{2}$
+\end_inset
+
+ with respect to 
+\begin_inset Formula $\theta_{0}$
+\end_inset
+
+ and using this result, we have
+\begin_inset Formula 
+\begin{equation}
+\frac{dy_{2}}{d\theta_{0}}=s_{o}+s_{i}-\frac{s_{i}s_{o}}{f}=f
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+These two results imply that the experimental goal can be achieved simply
+ by placing the beam stopper at a distance 
+\begin_inset Formula $f$
+\end_inset
+
+ from the lens, independently of the value of 
+\begin_inset Formula $s_{o}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection
+Results and analysis
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="6" columns="2">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $s_{o}\,(\pm0.2\,cm)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $f\,(\pm0.5\,cm)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+10.3
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+10.5
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+25.5
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+10.5
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+41.0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+10.5
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+66.5
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+9.5
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+81.5
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+9.7
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Focal length 
+\begin_inset Formula $f$
+\end_inset
+
+ at different object distances 
+\begin_inset Formula $s_{o}$
+\end_inset
+
+, obtained by applying the procedure described in 3.3.1.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Table 2 shows the results of our measurements for multiple 
+\begin_inset Formula $s_{o}$
+\end_inset
+
+.
+ Combining them, we obtain a value for the focal length of 
+\begin_inset Formula $f=10.1\pm0.4$
+\end_inset
+
+ cm, which is in agreement with expectations.
+ The large uncertainty assumed for the measurements of 
+\begin_inset Formula $f$
+\end_inset
+
+ comes again from the nature of the procedure, where we have qualitatively
+ judged the position of the beam stopper that minimizes the spot movement
+ when the glass slab is rotated.
+ The measured values appear to suggest that 
+\begin_inset Formula $f$
+\end_inset
+
+ is larger for smaller values of 
+\begin_inset Formula $s_{o}$
+\end_inset
+
+, but it is very hard to draw any conclusions from this small set of observation
+s, given the large error bars and the fact that there does not seem to be
+ any aspect of the experiment that could explain such a relationship.
+ The most likely explanation is that this discrepancy is due to the qualitative
+ nature of the procedure used to measure 
+\begin_inset Formula $f$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+After performing the measurements, we rotated the lens by 
+\begin_inset Formula $180^{\circ}$
+\end_inset
+
+ in order to see whether the orientation of the plano convex lens changed
+ our observations.
+ We were unable to detect any changes.
+ The orientation of the lens affects the amount of aberration, as mentioned
+ before, but the nature of the laser beam makes it hard to detect blurring
+ associated to aberration effects, especially if the aberration is small.
+\end_layout
+
+\begin_layout Standard
+Measuring 
+\begin_inset Formula $f$
+\end_inset
+
+ using the setup in 1C (ii) gives a focal length of 
+\begin_inset Formula $11.5\pm2.0$
+\end_inset
+
+ cm, which is within expectations.
+ We noticed that it was very hard to judge the point in which the 
+\begin_inset Formula $y_{2}$
+\end_inset
+
+ became independent of 
+\begin_inset Formula $y_{0}$
+\end_inset
+
+, as placing the beam stopper anywhere within 2 cm of 11.5 cm resulted in
+ very little spot movement when the mirror was translated.
+ This explains the large value for the uncertainty.
+\end_layout
+
+\begin_layout Subsection
+Experiment 1D
+\end_layout
+
+\begin_layout Subsubsection
+Set-Up
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "45col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename setup4.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Setup for experiment 1D.
+ Based on original obtained from [6].
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "45col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename autocollimator.png
+	scale 30
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Illustration of the autocollimation effect.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We now measure the focal length of the lens using an autocollimation procedure.
+ We place a pinhole in a filter holder directly to the right of the laser,
+ and position a beam splitter to the right of the pinhole.
+ We then place a flat mirror an appropriate distance away to the right of
+ the beam splitter that enables us to place the lens in between the mirror
+ and the beam splitter.
+ We also position the beam stopper at 
+\begin_inset Formula $90^{\circ}$
+\end_inset
+
+ with respect to the beam splitter, in order to be able to observe the character
+istics of the reflected beam.
+ We can measure the focal length by finding the distance from the beam splitter
+ at which we need to place the lens such that moving the mirror back and
+ forth along the direction of propagation does not affect the sharpness
+ of the spot that can be observed at the beam stopper.
+ This distance corresponds to the lens's focal length, because light emerging
+ from a point source that is placed at the focal distance from a convex
+ lens emerges collimated, that is, with rays parallel to each other, so
+ the characteristics of the reflected beam are independent of the mirror's
+ distance from the lens, 
+\begin_inset Formula $d_{m}$
+\end_inset
+
+.
+ This is illustrated in Figure 11.
+\end_layout
+
+\begin_layout Subsubsection
+Results and analysis
+\end_layout
+
+\begin_layout Standard
+Using this method, we obtained a result for the focal length of 
+\begin_inset Formula $f=10\pm2.5$
+\end_inset
+
+ cm.
+ The uncertainty for this measurement is significantly larger than the one
+ for some of the previous measurements, and the reason is simply that it
+ is extremely hard to judge whether the sharpness of the reflected beam
+ changes or not.
+ We found that we could place the lens up to 2.5 cm away from the 10 cm mark
+ without observing any obvious change in the characteristics of the reflected
+ beam.
+ The procedure is complicated because it is very hard to move the mirror
+ back and forth without misalligning the system, and the brightness of the
+ beam spot is very small given that the original beam needs to pass first
+ through the pinhole and then twice through the beam splitter before hitting
+ the beam stopper.
+\end_layout
+
+\begin_layout Standard
+Combining the results for 
+\begin_inset Formula $f$
+\end_inset
+
+ found using all the different methods gives a weighted value for the focal
+ length of 
+\begin_inset Formula $f=10.16\pm0.06$
+\end_inset
+
+ cm, which differs from the expected value by at least 1.0%.
+ This is a reasonable error, given the already mentioned limitations of
+ each of the procedures performed.
+\end_layout
+
+\begin_layout Subsection
+Experiment 2
+\end_layout
+
+\begin_layout Subsubsection
+Set-Up
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename setup5.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Setup for experiment 2.
+ Obtained from [6].
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In this experiment, we measure the focal length 
+\begin_inset Formula $f_{1}$
+\end_inset
+
+ of a plano-concave lens with nominal value of -2.5 cm.
+ The setup is shown in Figure 12.
+ We place an 0.5 ND filter inmediately in front of the laser, and a mirror
+ some reasonable distance away from it.
+ We now place the plano-concave lens with its concave side facing the mirror
+ at a distance 
+\begin_inset Formula $s_{o1}$
+\end_inset
+
+, in a position that makes a 
+\begin_inset Formula $\thicksim90^{\circ}$
+\end_inset
+
+ angle with the original direction of propagation of the beam.
+ Next, we mount a plano-convex lens of focal length 
+\begin_inset Formula $f_{2}=10$
+\end_inset
+
+ cm in front of the concave lens at a distance 
+\begin_inset Formula $d>10$
+\end_inset
+
+ cm.
+ Finally, we place the beam stopper behind the convex lens, and find the
+ image distance of the convex lens 
+\begin_inset Formula $s_{i2}$
+\end_inset
+
+using the same procedure as in experiment 1B: by looking for the position
+ of the beam stopper that results in no motion of the beam spot when the
+ mirror is rotated.
+ Based on these measurements, we can calculate 
+\begin_inset Formula $f_{1}$
+\end_inset
+
+ as follows.
+ Using the thin lens approximation, we have the following two equations
+\begin_inset Formula 
+\begin{eqnarray}
+\frac{1}{f_{1}} & = & \frac{1}{s_{i1}}+\frac{1}{s_{o1}}\\
+\frac{1}{f_{2}} & = & \frac{1}{s_{i2}}+\frac{1}{s_{o2}}
+\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In addition, we have that 
+\begin_inset Formula $s_{i1}$
+\end_inset
+
+ is related to 
+\begin_inset Formula $d$
+\end_inset
+
+ and 
+\begin_inset Formula $s_{o2}$
+\end_inset
+
+ by
+\begin_inset Formula 
+\begin{equation}
+s_{i1}=d-s_{o2}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Combining (32) with (30) and solving for 
+\begin_inset Formula $f_{1}$
+\end_inset
+
+ gives
+\begin_inset Formula 
+\begin{equation}
+f_{1}=\frac{s_{o1}(d-s_{o2})}{s_{o1}+d-s_{o2}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Finally, solving for 
+\begin_inset Formula $s_{o2}$
+\end_inset
+
+ in (31) and substituting
+\begin_inset Formula 
+\begin{equation}
+f_{1}=\frac{s_{o1}d(s_{i2}-f_{2})-f_{2}s_{o1}s_{i2}}{(s_{i2}-f_{2})(s_{o1}+d)-f_{2}s_{i2}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Results and analysis
+\end_layout
+
+\begin_layout Standard
+We used a distance between the convex and concave lens 
+\begin_inset Formula $d=20.0\pm0.2$
+\end_inset
+
+ cm, and a distance between the mirror and the concave lens 
+\begin_inset Formula $s_{o1}=22.8\pm0.2$
+\end_inset
+
+ cm.
+ The measured image distance was 
+\begin_inset Formula $s_{i2}=18.0\pm0.5$
+\end_inset
+
+ cm, which gives a focal length 
+\begin_inset Formula $f_{1}=-2.8\pm1.0$
+\end_inset
+
+ cm.
+ 
+\begin_inset Formula $f_{1}$
+\end_inset
+
+ was taken as 
+\begin_inset Formula $10\pm0.1$
+\end_inset
+
+ cm.
+ The large value in the uncertainty of 
+\begin_inset Formula $s_{i2}$
+\end_inset
+
+ derives, as in previous experiments, from the qualitative aspect of the
+ procedure used to determine it.
+ Even though the individual uncertainties of the measured values are not
+ large relative to their nominal value, propagation of the error results
+ in a large uncertainty for the value of 
+\begin_inset Formula $f_{1}$
+\end_inset
+
+, due to the large number of operations that need to be performed between
+ the quantities in order to arrive to the result.
+ This also implies that relatively small changes in the measured value for
+ 
+\begin_inset Formula $s_{i2}$
+\end_inset
+
+ introduce large variations in the computed value of 
+\begin_inset Formula $f_{1}$
+\end_inset
+
+.
+ For instance, using 
+\begin_inset Formula $s_{i2}=18.5\pm0.5$
+\end_inset
+
+ cm gives 
+\begin_inset Formula $f_{1}=-1.9\pm0.8$
+\end_inset
+
+ cm, and using 
+\begin_inset Formula $s_{i2}=19\pm0.5$
+\end_inset
+
+ cm yields 
+\begin_inset Formula $f_{1}=-1.2\pm0.7$
+\end_inset
+
+ cm.
+ This suggests that this method of measuring the focal length is not very
+ reliable, unless one is able to determine the distances with a large degree
+ of precision.
+\end_layout
+
+\begin_layout Subsection
+Experiment 3A
+\end_layout
+
+\begin_layout Subsubsection
+Set-Up
+\end_layout
+
+\begin_layout Standard
+The objective of this experiment is to measure the beam divergence 
+\begin_inset Formula $\Theta$
+\end_inset
+
+ of the laser by using equation (12).
+ The way we do this is by first finding the parameters 
+\begin_inset Formula $D_{0}$
+\end_inset
+
+ and 
+\begin_inset Formula $z_{0}$
+\end_inset
+
+, and then measuring 
+\begin_inset Formula $D$
+\end_inset
+
+ as a function of 
+\begin_inset Formula $z$
+\end_inset
+
+, in order to fit for 
+\begin_inset Formula $\Theta$
+\end_inset
+
+.
+ 
+\begin_inset Formula $D_{0}$
+\end_inset
+
+ and 
+\begin_inset Formula $z_{0}$
+\end_inset
+
+ are located inside the laser cavity, so we build a 4-f lens arrangement
+ in order to be able to measure it outside of it.
+ We position a 10 cm plano-convex lens at a distance of 10 cm directly in
+ front of the laser, with its planar side facing the incoming beam.
+ Then we place another 10 cm plano-convex lens at a distance of 20 cm away
+ from the first lens, now with the convex side facing the incoming beam.
+ We adjust the setup slightly so that the beam size, calculated using the
+ procedure described in section 2.3.2 with 
+\begin_inset Formula $a=1.8\,mm$
+\end_inset
+
+, is the same right before the first lens and right after the second lens.
+ We set the origin of our coordinate system at the site of the second lens,
+ and measure the beam size relatively close to 
+\begin_inset Formula $z=0$
+\end_inset
+
+, looking for the minimum value of 
+\begin_inset Formula $D$
+\end_inset
+
+, which corresponds to 
+\begin_inset Formula $D_{0}$
+\end_inset
+
+.
+ The position at which 
+\begin_inset Formula $D_{0}$
+\end_inset
+
+ is found then corresponds to 
+\begin_inset Formula $z_{0}$
+\end_inset
+
+.
+ After finding these two parameters, we extend the laser beam as much as
+ possible using mirrors and measure 
+\begin_inset Formula $D$
+\end_inset
+
+ as a function of 
+\begin_inset Formula $z$
+\end_inset
+
+, and fit for 
+\begin_inset Formula $\Theta$
+\end_inset
+
+ by using the previously measured values of 
+\begin_inset Formula $D_{0}$
+\end_inset
+
+ and 
+\begin_inset Formula $z_{0}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection
+Results and analysis
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "45col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename w0.png
+	scale 30
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Spot radius 
+\begin_inset Formula $w$
+\end_inset
+
+ as a function of 
+\begin_inset Formula $z$
+\end_inset
+
+ near 
+\begin_inset Formula $w_{0}$
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "45col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename divergence.png
+	scale 30
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset Formula $\sqrt{D^{2}-D_{0}^{2}}$
+\end_inset
+
+ vs 
+\begin_inset Formula $z-z_{0}$
+\end_inset
+
+ far away from 
+\begin_inset Formula $D_{0}$
+\end_inset
+
+.
+ The slope of the best fit line corresponds to 
+\begin_inset Formula $\Theta$
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The results of the procedure described above are shown in Figures 13 and
+ 14.
+ The best fit parabola in Figure 13 has a minimum 
+\begin_inset Formula $w_{0}=0.34\pm0.08$
+\end_inset
+
+ mm, which gives a minimum beam diameter of 
+\begin_inset Formula $D_{0}=0.68\pm0.16$
+\end_inset
+
+ mm.
+ This minimum is located at 
+\begin_inset Formula $z_{0}=432\pm40$
+\end_inset
+
+ mm.
+ Equation (12) indicates that plotting 
+\begin_inset Formula $\sqrt{D^{2}-D_{0}^{2}}$
+\end_inset
+
+ as a function of 
+\begin_inset Formula $z-z_{0}$
+\end_inset
+
+ should result in a straight line with slope 
+\begin_inset Formula $\Theta$
+\end_inset
+
+.
+ Based on this plot, we obtain a value of 
+\begin_inset Formula $\Theta=1.22\pm0.04$
+\end_inset
+
+ mrad.
+ According to equation (13), we should also be able to get 
+\begin_inset Formula $\Theta$
+\end_inset
+
+ based only on the value of 
+\begin_inset Formula $w_{0}$
+\end_inset
+
+ and the wavelength of the light, which in this case is equal to 
+\begin_inset Formula $\lambda=632.8$
+\end_inset
+
+ nm.
+ Calculating the divergence using this equation gives 
+\begin_inset Formula $\Theta=1.18\pm0.28$
+\end_inset
+
+ mrad, which is consistent with the measured value.
+ We were unable to find manufacturer information for the particular laser
+ model used, so we cannot compare this value of the divergence with the
+ nominal one, but it is certainly within the range of typical HeNe lasers
+ similar to the one that was used, according to the data found on the manufactur
+er's site [7].
+\end_layout
+
+\begin_layout Subsection
+Experiment 3B
+\end_layout
+
+\begin_layout Subsubsection
+Set-Up
+\end_layout
+
+\begin_layout Standard
+The goal of this experiment is to build a Galilean beam expander.
+ We place a plano-concave lens of focal length -2.5 cm with its planar side
+ facing the laser, at a distance of 2.5 cm of a plano-convex lens with focal
+ length of 5.0 cm.
+ We adjust this distance slightly such that the beam size right before the
+ plano-concave lens is half of the beam size right after the plano-convex
+ lens, which we expect to hold since the magnification of the system is
+ 
+\begin_inset Formula $M_{G}=2$
+\end_inset
+
+, as per equation (3).
+ We then determine 
+\begin_inset Formula $D_{0},$
+\end_inset
+
+ 
+\begin_inset Formula $z_{0}$
+\end_inset
+
+, and 
+\begin_inset Formula $\Theta$
+\end_inset
+
+ via the same procedure used in experiment 3A.
+\end_layout
+
+\begin_layout Subsubsection
+Results and analysis
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename galileo.png
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Spot radius 
+\begin_inset Formula $w$
+\end_inset
+
+ as a function of 
+\begin_inset Formula $z$
+\end_inset
+
+ near 
+\begin_inset Formula $w_{0}$
+\end_inset
+
+ for the Galilean expander.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "45col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename badgalileo1.png
+	scale 30
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Second set of measurements of spot radius 
+\begin_inset Formula $w$
+\end_inset
+
+ as a function of 
+\begin_inset Formula $z$
+\end_inset
+
+ near 
+\begin_inset Formula $w_{0}$
+\end_inset
+
+ for the Galilean expander.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "45col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename badgalileo2.png
+	scale 30
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset Formula $\sqrt{D^{2}-D_{0}^{2}}$
+\end_inset
+
+ vs 
+\begin_inset Formula $z-z_{0}$
+\end_inset
+
+ far away from 
+\begin_inset Formula $D_{0}$
+\end_inset
+
+ for the Galilean expander.
+ The slope of the best fit line corresponds to 
+\begin_inset Formula $\Theta$
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The results for this experiment were far from ideal.
+ We were at one point able to correctly setup the expander and measure 
+\begin_inset Formula $w_{0}$
+\end_inset
+
+ and 
+\begin_inset Formula $z_{0}$
+\end_inset
+
+, getting a result of 
+\begin_inset Formula $w_{0}=0.80\pm0.30\,mm$
+\end_inset
+
+ and 
+\begin_inset Formula $z_{0}=620\pm50\,mm$
+\end_inset
+
+, which is not a very accurate result but is consistent with expectations.
+ A plot of the measurements taken is shown in Figure 15.
+ An attempt was made to reproduce the same setup a week later, but the measureme
+nts made gave nonsensical results: 
+\begin_inset Formula $w_{0}$
+\end_inset
+
+ was measured to be 
+\begin_inset Formula $0.24\pm1.1\,mm$
+\end_inset
+
+, and 
+\begin_inset Formula $\Theta=5.4\pm0.3\,mrad$
+\end_inset
+
+, which is roughly 4.5 times the expected value for the divergence if one
+ takes the measured 
+\begin_inset Formula $w_{0}$
+\end_inset
+
+ at face value .
+ These measurements are shown in Figures 16 and 17.
+ No attempt to analyze these results in detail will be made given the obviously
+ faulty nature of the procedure performed.
+ The attempt at building a Keplerian expander by replacing the -2.5 cm lens
+ with a positive lens of 2.5 cm focal length was also unsuccessful, and we
+ will not present the results because they are even more obviously nonsensical
+ than the ones obtained for the Galilean expander.
+\end_layout
+
+\begin_layout Subsection
+Experiment 4
+\end_layout
+
+\begin_layout Subsubsection
+Set-Up
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename setup7.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Setup for experiment 4.
+ Obtained from [8].
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The procedure for setting up the shadowgraph and the Schlieren system is
+ as follows.
+ We set up a Keplerian beam expander inmediately after the laser, using
+ a pinhole in between the two lenses in order to act as a spatial filter.
+ We place a mirror at the far end of the table in order to increase the
+ distance traveled by the laser beam, and place the AiroDuster in the beam
+ path close to the expander.
+ We then place the beam stopper at about 1.5 m away from the AiroDuster in
+ such a way that it intercepts the beam path.
+ We now squeeze some air out of the AiroDuster, and observe what happens
+ to the image at the target assembly.
+ This setup corresponds to a shadowgraph.
+ In order to transform this into a Schlieren system, we place an additional
+ converging lens in between the mirror and the beam stopper, and place a
+ razor blade at a distance away from the lens equal to the lens's focal
+ length.
+ We then adjust the position of the blade such that the intensity of the
+ light on the screen is half the original intensity of the light on the
+ screen.
+\end_layout
+
+\begin_layout Subsubsection
+Results and analysis
+\end_layout
+
+\begin_layout Standard
+The attempt to build the shadowgraph and the Schlieren system failed.
+ As mentioned before, we were unable to set up the Keplerian beam expander
+ correctly, and it was not possible to construct the shadowgraph without
+ a correctly set up beam expander.
+ In a properly constructed system, we expect that the transition from a
+ shadowgraph to a Schlieren system to increase the sensitivity of the signal
+ because the Schlieren signal is proportional to the first derivative of
+ the air density, and the shadowgraph signal is proportional to the second
+ derivative of the air density, as explained in section 2.4.
+\end_layout
+
+\begin_layout Section
+Conclusions
+\end_layout
+
+\begin_layout Standard
+We have performed a series of experiments in the context of geometrical
+ and Gaussian optics, and exploiting the simplicity of the thin lens approximati
+on.
+ Most experiments were performed correctly and agreed with expectations,
+ but the last two experiments were not performed correctly.
+ A good way to get better results would be to develop procedures that would
+ enable us to measure certain quantities quantitatively instead of qualitatively
+; for example, the sharpness of the image in experiment 1A, the movement
+ of the spot in experiments 1B, 1C, and 2, and the sharpness of the reflected
+ beam in experiment 1D.
+ The failure to properly setup the beam expanders has a lot to do with the
+ difficulty in getting the distance between the lenses right, and our equipment
+ was not ideal for the task of slightly adjusting the distance without misallign
+ing the system.
+ It would have been useful to have access to more sophisticated sliders
+ that made this procedure easier.
+\end_layout
+
+\begin_layout Section
+Acknowledgements
+\end_layout
+
+\begin_layout Standard
+The author of this work would like to acknowledge the help received from
+ his lab partner, Juliette Fropier, throughout the data gathering process.
+ I would also like to acknowledge the help provided by our professor, Mukund
+ Vengalattore, and our TA, David Moreau, during lab time.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-1"
+
+\end_inset
+
+van der Walt, S., et al.
+ 
+\emph on
+The NumPy Array: A Structure for Efficient Numerical Computation
+\emph default
+, Computing in Science & Engineering, 13, 22-30, 2011.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-2"
+
+\end_inset
+
+Lebigot, E.O.
+ 
+\emph on
+Uncertainties: a Python package for calculations with uncertainties
+\emph default
+, http://pythonhosted.org/uncertainties/
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-3"
+
+\end_inset
+
+Hecht, E.
+ 
+\emph on
+Optics
+\emph default
+, 
+\emph on
+5th edit.
+\emph default
+, Pearson Education Limited, 2017.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "4"
+key "key-4"
+
+\end_inset
+
+Verdeyen, J.
+ 
+\emph on
+Laser Electronics, 3rd edit.
+ 
+\emph default
+Prentice-Hall, Inc., 1995.
+
+\emph on
+ 
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "5"
+key "key-5"
+
+\end_inset
+
+Settles, G.
+ S.
+ 
+\emph on
+Schlieren and Shadowgraph Techniques: Visualizing Phenomena in Transparent
+ Media, 1st edit.
+\emph default
+, Springer-Verlag Berlin Heidelberg, 2001.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "6"
+key "key-6"
+
+\end_inset
+
+Bodenschatz, E., et al.
+ 
+\emph on
+Modern Experimental Optics Laboratory Manual
+\emph default
+, Cornell University Physics Department 2016.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "7"
+key "key-7"
+
+\end_inset
+
+IDEX Health & Science.
+ 
+\emph on
+Random Polarization Products.
+ 
+\emph default
+2016.
+ https://www.idex-hs.com/optics/laser-light-sources/helium-neon-lasers/random-pola
+rization.html.
+\end_layout
+
+\end_body
+\end_document

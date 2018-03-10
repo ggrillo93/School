@@ -1,0 +1,1621 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+\usepackage{amsmath}
+\usepackage{capt-of}
+\DeclareMathOperator{\sinc}{sinc}
+\end_preamble
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 3cm
+\topmargin 3cm
+\rightmargin 3cm
+\bottommargin 5cm
+\headheight 1cm
+\headsep 1cm
+\footskip 2cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Project 6: Catastrophe Optics
+\end_layout
+
+\begin_layout Date
+December 1st, 2017
+\end_layout
+
+\begin_layout Author
+Gianfranco Grillo
+\end_layout
+
+\begin_layout Abstract
+We propose a simple experiment designed to explore the far field diffraction
+ pattern of a water droplet, and show the results of simulations based on
+ a simple model for the water droplet shape, which are in line with results
+ from previous experiments.
+ Liquid droplets can act as imperfect lenses, and give rise to interesting
+ near and far field diffraction patterns that contain caustics, which correspond
+ to envelopes of light rays projected onto a surface.
+ At the caustics, the geometrical optics approximation breaks down, and
+ a proper description of the intensity patterns needs to be obtained via
+ a more sophisticated mathematical treatment based on catastrophe theory.
+ Different types of caustics can be obtained depending on the number of
+ control parameters that are part of a generating function.
+ These control parameters can be identified with experimental variables
+ that can be altered during the course of an experiment.
+ 
+\end_layout
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout Standard
+A very useful way to describe the propagation of light is to model it as
+ rays whose direction is determined by the nature of the medium on which
+ the light is propagating.
+ Propagation through certain types of physical structures often result in
+ the rays converging towards a specific area in space.
+ In the idealized picture, rays of light parallel to the optical axis that
+ are incident on a beam with focal length 
+\begin_inset Formula $f$
+\end_inset
+
+ will focus at a single point in the optical axis at a distance 
+\begin_inset Formula $f$
+\end_inset
+
+ away from the lens.
+ In reality, however, this picture is inaccurate.
+ Conservation of energy implies that the intensity of the light at the focal
+ point would be infinite, since the area of the point is zero, which is
+ not physically possible.
+ This unphysical situation is never substantiated because lenses always
+ suffer from some degree of aberration.
+ This means that instead of coming into focus at a point, light comes into
+ focus at a caustic surface in space that has non-zero area.
+ Furthermore, the geometrical optics point of view ignores diffraction effects,
+ which also affect the intensity of the light at the focus.
+ The study of aberrations and their effects is an important area of optics,
+ especially because of the practical implications they have for the proper
+ construction of optical systems.
+ However, the picture of an aberrated lens is not very useful for describing
+ the irradiance patterns that arise from the lensing of light by manifestly
+ imperfect structures such as liquid droplets.
+ Instead, a different approach, based on the catastrophe theory of mathematician
+s Rene Thom (Thom 1972) and Vladimir Arnol'd (Arnol'd 1975), and applied
+ to optics by Sir Michael Berry and others (Berry 1976, Berry & Upstill
+ 1980, Nye 1978), has been very successful in describing the general characteris
+tics of the extremely complex intensity patterns that can be observed when
+ light is incident on transparent materials with irregular shapes.
+ Catastrophe optics has also proven useful in analyzing the intensity patterns
+ of astrophysical sources (Clegg et al.
+ 1998, Cordes et al.
+ 2017).
+\end_layout
+
+\begin_layout Standard
+The goal of the experiment proposed in this project is to be able to observe
+ the different types of caustics that can be produced in the far field irradianc
+e pattern of light incident on a small water droplet, and compare the structure
+ of these caustics to that predicted by catastrophe optics.
+\end_layout
+
+\begin_layout Section
+Theoretical background
+\end_layout
+
+\begin_layout Subsection
+Lensing geometry in the geometrical optics approximation
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename geometry (1).png
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Lensing geometry.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In the geometrical optics approximation, the propagation of light is described
+ in terms of rays, and the possible manifestations of the wave nature of
+ light such as diffraction are ignored by considering the limit of zero
+ wavelength, 
+\begin_inset Formula $\lambda\rightarrow0$
+\end_inset
+
+.
+ This approximation is extremely useful in practice because of the simple
+ propagation picture that it entails, and because the visible wavelength
+ of electromagnetic waves is very small.
+ In this framework, it is possible to visualize what happens when light
+ traveling through one medium is incident upon a transparent structure,
+ or lens, by thinking about it in terms of how the constituent rays deviate
+ from their original trajectory.
+ Let a beam of collimated light be normally incident on the lens.
+ Then if we consider a single ray that strikes the structure at a point
+ 
+\begin_inset Formula $\vec{x}=\left[\begin{array}{c}
+x\\
+y
+\end{array}\right]$
+\end_inset
+
+ in the lens's plane, it will emerge at the other side having been refracted
+ by a certain angle 
+\begin_inset Formula $\vec{\theta_{r}}=\left[\begin{array}{c}
+\theta_{x}\\
+\theta_{y}
+\end{array}\right]$
+\end_inset
+
+, which will depend on the wavelength of the light, the lens material, the
+ lens shape, and the nature of the surrounding medium.
+ If we now place a screen at distance 
+\begin_inset Formula $d$
+\end_inset
+
+ from the lens plane, the refracted ray will arrive at the screen at a second
+ set of coordinates on the screen plane, 
+\begin_inset Formula $\vec{x}'=\left[\begin{array}{c}
+x'\\
+y'
+\end{array}\right]$
+\end_inset
+
+.
+ Since we are interested in the far field, we can assume 
+\begin_inset Formula $d$
+\end_inset
+
+ to be large with respect to the path difference, so the angle to be small,
+ which implies that the relationship between the two sets of coordinates
+ in the lens and the screen plane will be given by
+\begin_inset Formula 
+\begin{equation}
+\vec{x}'=\vec{x}-d\vec{\theta}_{r}
+\end{equation}
+
+\end_inset
+
+which is known as the lens equation.
+\end_layout
+
+\begin_layout Standard
+Following Clegg et.
+ al.
+ (1998), a general expression for the refractive angle can be obtained in
+ the geometrical optics limit with the additional assumptions that the lens's
+ surface slope is small, and the lens's medium is uniform.
+ The result of the ray propagating through the lens is that the lens advances
+ or retards the ray's phase, depending on whether the value of the refractive
+ index is greater or smaller than unity, because the phase velocity will
+ be greater or smaller than the speed of light.
+ More precisely, we can write the phase difference 
+\begin_inset Formula $\delta\phi_{lens}$
+\end_inset
+
+ as
+\begin_inset Formula 
+\begin{equation}
+\delta\phi=\omega\tau=kc\tau
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $\tau$
+\end_inset
+
+ is the propagation time difference between an unlensed ray and a lensed
+ ray and 
+\begin_inset Formula $k=\frac{2\pi}{\lambda}$
+\end_inset
+
+ is the wavenumber.
+ For a rectangular lens of length 
+\begin_inset Formula $l$
+\end_inset
+
+ parallel to the direction of propagation, this is
+\begin_inset Formula 
+\begin{equation}
+\tau=\frac{l}{c}\left(1-n\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If we let the lens shape in the propagation direction be an arbitrary function
+ of x and y, 
+\begin_inset Formula $f(\vec{x})$
+\end_inset
+
+, we can then write (2) as
+\begin_inset Formula 
+\begin{equation}
+\delta\phi_{lens}=kf(\vec{x})(1-n)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+According to geometrical optics, rays propagate in the direction normal
+ to the surfaces of constant phase (Born & Wolf 1999, chapter III).
+ What this implies is that the shape of the wavefront emerging from the
+ lens will depend on 
+\begin_inset Formula $f(\vec{x})$
+\end_inset
+
+, and
+\begin_inset Formula $\vec{\theta}_{r}$
+\end_inset
+
+ can be written as
+\begin_inset Formula 
+\begin{align}
+\vec{\theta}_{r} & =\frac{1}{k}\nabla\delta\phi_{lens}\nonumber \\
+ & =(1-n)\nabla f(\vec{x})
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where we have assumed that 
+\begin_inset Formula $d\gg f(\vec{x})$
+\end_inset
+
+.
+ The lens equation (1) then becomes
+\begin_inset Formula 
+\begin{equation}
+\vec{x}'=\vec{x}+d(n-1)\nabla f(\vec{x})
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We now define a lens scale 
+\begin_inset Formula $a$
+\end_inset
+
+ that characterizes the size of the lens, and define the dimensionless quantitie
+s 
+\begin_inset Formula $\vec{u}'=\frac{\vec{x}'}{a}$
+\end_inset
+
+, 
+\begin_inset Formula $\vec{u}=\frac{\vec{x}}{a}$
+\end_inset
+
+, and rewrite 
+\begin_inset Formula $f(\vec{x})$
+\end_inset
+
+ as 
+\begin_inset Formula $hf(\vec{u})$
+\end_inset
+
+, where 
+\begin_inset Formula $h$
+\end_inset
+
+ is the maximum height of the lens above the lens plane, and 
+\begin_inset Formula $f(\vec{u})$
+\end_inset
+
+ is a dimensionless function with unit maximum.
+ This gives
+\begin_inset Formula 
+\begin{equation}
+\vec{u}'=\vec{u}+\frac{dh(n-1)}{a^{2}}\nabla_{\vec{u}}f(\vec{u})
+\end{equation}
+
+\end_inset
+
+Finally, we define dimensionless quantities 
+\begin_inset Formula $H=\frac{h}{a}$
+\end_inset
+
+ and 
+\begin_inset Formula $D=\frac{d}{a}$
+\end_inset
+
+, and write
+\begin_inset Formula 
+\begin{equation}
+\vec{u}'=\vec{u}+DH(n-1)\nabla_{\vec{u}}f(\vec{u})
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+An important property of this equation, which is simply a mapping from the
+ lens plane to the screen plane, is that depending on the nature of the
+ lens shape function 
+\begin_inset Formula $f(\vec{u})$
+\end_inset
+
+, and the values of 
+\begin_inset Formula $n$
+\end_inset
+
+, 
+\begin_inset Formula $a$
+\end_inset
+
+, 
+\begin_inset Formula $d$
+\end_inset
+
+, and 
+\begin_inset Formula $h$
+\end_inset
+
+, more than one solution may exist for a given coordinate in the screen
+ plane.
+ This means that an observer at certain coordinates in the screen plane
+ can potentially observe more than one image of the light that is incident
+ on the lens.
+ The points at which these images merge play a central role in catastrophe
+ optics.
+\end_layout
+
+\begin_layout Subsection
+Geometrical optics intensity
+\end_layout
+
+\begin_layout Standard
+The lens will have a focusing or defocusing effect on the rays that are
+ incident on it.
+ The magnification, or gain, of the lens is a measure of the focusing and
+ defocusing of the rays at a certain point on the screen.
+ With this in mind, we can define a Hessian matrix 
+\begin_inset Formula $\left[H\right]$
+\end_inset
+
+ given by (Thorne & Blandford 2017, chapter 7),
+\begin_inset Formula 
+\begin{align}
+\left[H\right] & =\left[\begin{array}{cc}
+\frac{\partial u_{x}}{\partial u_{x}'} & \frac{\partial u_{y}}{\partial u_{x}'}\\
+\frac{\partial u_{x}}{\partial u_{y}'} & \frac{\partial u_{y}}{\partial u_{y}'}
+\end{array}\right]\\
+ & =\left[\begin{array}{cc}
+1+DH(n+1)\partial_{u_{x}}^{2}f(\vec{u}) & DH(n+1)\partial_{u_{x}}{}_{u_{y}}f(\vec{u})\\
+DH(n+1)\partial_{u_{x}}{}_{u_{y}}f(\vec{u}) & 1+DH(n+1)\partial_{u_{y}}^{2}f(\vec{u})
+\end{array}\right]
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For a given solution of the lens equation 
+\begin_inset Formula $\vec{u}_{k}$
+\end_inset
+
+, the gain 
+\begin_inset Formula $G$
+\end_inset
+
+ is then given by the reciprocal of the absolute value of the determinant
+ of the Hessian matrix, ie.
+\begin_inset Formula 
+\begin{equation}
+G=\left|\left(1+DH(n+1)\partial_{u_{x}}^{2}f(\vec{u})\right)\left(1+DH(n+1)\partial_{u_{y}}^{2}f(\vec{u})\right)-\left(DH(n+1)\partial_{u_{x}u_{y}}f(\vec{u})\right)^{2}\right|_{\vec{u}=\vec{u}_{k}}^{-1}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+It is immediately apparent from the form of this equation that the gain
+ diverges at certain values of 
+\begin_inset Formula $\vec{u}_{k}$
+\end_inset
+
+ for a given set of parameters 
+\begin_inset Formula $d,$
+\end_inset
+
+ 
+\begin_inset Formula $h$
+\end_inset
+
+, 
+\begin_inset Formula $a$
+\end_inset
+
+, and 
+\begin_inset Formula $n$
+\end_inset
+
+.
+ These correspond to locations in which the determinant of 
+\begin_inset Formula $H$
+\end_inset
+
+ vanishes, and determine caustic locations.
+ Geometrical optics fails at these locations, as it predicts an infinite
+ intensity.
+ We call these locations catastrophes.
+ As mentioned before, the number of solutions to the lens equation changes
+ at either side of a caustic, as multiple images merge at the caustic location.
+ The number of images that merge determine the behavior of the intensity
+ pattern at and near the caustic.
+\end_layout
+
+\begin_layout Subsection
+The classification of catastrophes
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "45col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename table.png
+	width 95text%
+	height 6cm
+	clip
+	rotateOrigin centerTop
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+captionof{table}{Names and standard polynomials for the first five elementary
+ catastrophes.}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "45col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename catastrophesed.jpg
+	width 95text%
+	height 6cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Surfaces of the elementary catastrophes.
+ Note that the notation is different to the one used in this work.
+ They are related by 
+\begin_inset Formula $\tilde{x}=u_{x}$
+\end_inset
+
+, 
+\begin_inset Formula $\tilde{y}=u_{y}$
+\end_inset
+
+, and 
+\begin_inset Formula $\tilde{z}=D$
+\end_inset
+
+.
+ Adapted from Thorne & Blandford (2017).
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Since geometrical optics fails at catastrophe locations, it is necessary
+ to apply wave optics in order to describe the intensity pattern near the
+ caustics.
+ In the far field regime, the scalar field 
+\begin_inset Formula $\epsilon$
+\end_inset
+
+ is given by the Kirchoff's diffraction integral,
+\begin_inset Formula 
+\begin{equation}
+\epsilon(\vec{u}')=\frac{1}{2\pi u_{F}^{2}}\iint du_{x}\,du_{y}\exp\left[\imath\delta\phi\right]
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $u_{F}$
+\end_inset
+
+ corresponds to the normalized Fresnel scale, given by
+\begin_inset Formula 
+\begin{equation}
+u_{F}=\frac{1}{a}\sqrt{\frac{d}{k}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The phase difference 
+\begin_inset Formula $\delta\phi$
+\end_inset
+
+ between a refracted ray and an unrefracted one can be written in terms
+ of the geometrical phase difference 
+\begin_inset Formula $\delta\phi_{geo}$
+\end_inset
+
+ and the phase change introduced by the lens 
+\begin_inset Formula $\delta\phi_{lens}$
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align}
+\delta\phi & =\delta\phi_{geo}+\delta\phi_{lens}\nonumber \\
+ & =\frac{ka^{2}}{2d}\left|\vec{u}'-\vec{u}\right|^{2}+kh(1-n)f(\vec{u})\nonumber \\
+ & =\frac{\left|\vec{u}'-\vec{u}\right|^{2}}{2u_{F}^{2}}+kh(1-n)f(\vec{u})
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The geometrical optics gain can be obtained by solving (12) using the method
+ of stationary phase (Born & Wolf 1999, appendix III), and then taking the
+ squared magnitude of the result for each of the stationary phase solutions,
+ which correspond to the gain for each of the images that are observable
+ at the screen.
+ As noted before, however, this method fails close to caustics, which correspond
+ to the locations in which a number of images merge.
+ Near the caustics, and depending on the number of images at each side,
+ we can write 
+\begin_inset Formula $\delta\phi$
+\end_inset
+
+ in terms of a standard polynomial that describes the behavior of the phase
+ at or near the caustic.
+ In 3D, there exist five possible types of catastrophes, each described
+ by a different standard polynomial.
+ These are the fold, cusp, swallowtail, elliptic umbilic, and hyperbolic
+ umbilic.
+ A graphical representation is given in Figure 2, and the standard polynomials
+ for each of the catastrophes are given in Table 1.
+ What is important to note is that the standard polynomials of higher order
+ catastrophes have a larger number of parameters than the ones in lower
+ order catastrophes.
+ This means that depending on the number of parameters that can be altered
+ in an experimental setup, it is possible to observe some catastrophes but
+ not others.
+ In the present context, the screen coordinates constitute two control parameter
+s that potentially enable us to observe fold and cusp catastrophes depending
+ on the shape that the water droplet adopts, but in order to observe higher
+ order catastrophes it is necessary to also alter the distance 
+\begin_inset Formula $d$
+\end_inset
+
+ between the screen and the lens.
+ It is in principle possible to observe higher order catastrophes if one
+ introduces another control parameter in the experiment, such as by holding
+ the lens at an angle with respect to the xy-plane, but we will not explore
+ this possibility in the present project.
+\end_layout
+
+\begin_layout Subsection
+Liquid droplet structure
+\end_layout
+
+\begin_layout Standard
+Following the approach in Berry (1976) and Nye (1978), a liquid droplet
+ with characteristic radius 
+\begin_inset Formula $a<1.5$
+\end_inset
+
+ mm that is placed on a flat horizontal surface will not have its shape
+ noticeably altered by gravity, and we can regard its internal pressure
+ 
+\begin_inset Formula $p$
+\end_inset
+
+ as constant.
+ The elevation above the lens plane 
+\begin_inset Formula $f(\vec{x})$
+\end_inset
+
+ will then be constrained by the equation
+\begin_inset Formula 
+\begin{equation}
+\nabla^{2}f=-\frac{p}{\gamma}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $\gamma$
+\end_inset
+
+ is the surface tension of the liquid.
+ We can rewrite this in dimensionless coordinates using the already introduced
+ variables 
+\begin_inset Formula $h$
+\end_inset
+
+ and 
+\begin_inset Formula $a$
+\end_inset
+
+, as
+\begin_inset Formula 
+\begin{equation}
+\nabla_{\vec{u}}f(\vec{u})=-\frac{pa^{2}}{\gamma h}
+\end{equation}
+
+\end_inset
+
+This has the general solution
+\begin_inset Formula 
+\begin{equation}
+f(\vec{u})=\Re\left[g(u_{x}+\imath u_{y})\right]-\frac{pa^{2}}{4\gamma h}\left(u_{x}^{2}+u_{y}^{2}\right)
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $g(\zeta)$
+\end_inset
+
+ is any analytic function.
+ The simplest solution, given that we want the maximum of (17) to be unity,
+ is to set 
+\begin_inset Formula $g(\zeta)=1$
+\end_inset
+
+, which results in the droplet having the shape of the cap of a spheroid.
+ As noted in Berry (1976), however, the far field of such a droplet does
+ not show any catastrophes, and in any case is not a realistic model, because
+ the liquid droplet will never be perfectly smooth.
+ We will explore another choice of 
+\begin_inset Formula $g(\zeta)$
+\end_inset
+
+ in section 4 when we show the results of numerical simulations of the far
+ field irradiance pattern.
+ A more complete analysis would necesarily invove a discussion of wetting
+ and sessile drops, and it is in principle possible to derive relationships
+ between 
+\begin_inset Formula $\gamma$
+\end_inset
+
+, 
+\begin_inset Formula $h$
+\end_inset
+
+, 
+\begin_inset Formula $a$
+\end_inset
+
+, and 
+\begin_inset Formula $p$
+\end_inset
+
+ for a given volume of water, but this is outside the scope of this work.
+ See Zhang et.
+ al.
+ (2005) for an example of catastrophe optics applied to the study of the
+ wetting of liquid drops on a solid surface.
+ 
+\end_layout
+
+\begin_layout Section
+Experimental Set-Up
+\end_layout
+
+\begin_layout Subsection
+Equipment
+\end_layout
+
+\begin_layout Itemize
+Distilled water.
+\end_layout
+
+\begin_layout Itemize
+HeNe laser (
+\begin_inset Formula $\lambda=632.8$
+\end_inset
+
+ nm), with power comparable to that of a Melles Griot 05-LHR-321.
+ The refractive index of water is well known (
+\begin_inset Formula $n=1.33)$
+\end_inset
+
+ for the wavelength of a HeNe laser, and the relatively low power is essential
+ in order to prevent the water from heating up and evaporating rapidly.
+\end_layout
+
+\begin_layout Itemize
+Circular plate made of thin glass.
+ Should be relatively dirty, otherwise the contact angle between the water
+ and the glass will be too small and the water will spread out and adopt
+ a flat profile.
+\end_layout
+
+\begin_layout Itemize
+Pipette.
+\end_layout
+
+\begin_layout Itemize
+100 
+\begin_inset Formula $\mu$
+\end_inset
+
+m pinhole.
+\end_layout
+
+\begin_layout Itemize
+Two 2.5 mm convex lenses.
+ The first will be used to focus the beam into a pinhole, whereas the second
+ one is used to collimate the beam.
+ We don't want the size of the spot at the droplet to be large since the
+ size of the droplet will be very small, and we want the beam to diverge
+ relatively quickly so as to be able to obtain a large enough image at the
+ screen without having to make 
+\begin_inset Formula $d$
+\end_inset
+
+ too large.
+ This explains why we use a lens with small focal length in order to collimate
+ the light.
+\end_layout
+
+\begin_layout Itemize
+Post holders.
+\end_layout
+
+\begin_layout Itemize
+Beam stopper.
+\end_layout
+
+\begin_layout Itemize
+Vertical breadboard table.
+\end_layout
+
+\begin_layout Itemize
+Translation stage.
+\end_layout
+
+\begin_layout Itemize
+Claw.
+\end_layout
+
+\begin_layout Subsection
+Setup and procedure
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename setup.png
+	scale 70
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Rotated setup for the experiment.
+ Not to scale.
+ Device figures adapted from Bodenschatz et.
+ al.
+ (2016).
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename verticalsetup.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Vertical view of the refraction of the rays as they pass through the lens.
+ Not to scale.
+ Adapted from Nye (1978).
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Since the effect of gravity on the droplet is important, the setup of this
+ experiment is vertical, which means that the breadboard table to be used
+ must be set up vertically.
+ A horizontal representation of the setup is shown in Figure 3.
+ We start by mounting the laser, and placing a 2.5 mm lens some small distance
+ away from it.
+ We align the lens such that the reflected beam comes back to its origin
+ at the laser.
+ We now place the pinhole 2.5 mm away from the first lens, and place another
+ convex lens 2.5 mm away from the pinhole, aligned such that the beam goes
+ back onto itself.
+ Next, we mount the claw 2.5 mm away from the second lens and use it to hold
+ the empty plate.
+ We now use the pipette to place a drop of water in the glass.
+ The claw is aligned such that the glass is as perpendicular as possible
+ with respect to the incident light.
+ Finally, we mount the beam stopper in a translation stage a distance 
+\begin_inset Formula $d\gg a$
+\end_inset
+
+ away from the plate, and translate it towards and away from the plate in
+ order to observe the different types of catastrophes that form at the screen.
+\end_layout
+
+\begin_layout Subsection
+Difficulties and sources of error
+\end_layout
+
+\begin_layout Standard
+The most significant source of error in this experiment is the alignment
+ of the plate with respect to the direction of the incoming light.
+ The plate must be parallel to the floor.
+ If this is not the case, gravity will deform the drop and equation (19)
+ will not describe its shape.
+ Furthermore, the light will no longer be incident normally with respect
+ to the drop, which adds another term to the lens equation.
+ Finally, any deviation from the parallel position will result in the light
+ to be refracted by the glass that makes up the bottom surface of the plate,
+ and the lensing will no longer be due to the droplet only.
+ This alignment will be made harder by the fact that the water volume needs
+ to be very small: for a drop with 
+\begin_inset Formula $h=0.5$
+\end_inset
+
+ mm and characteristic radius 
+\begin_inset Formula $a=1.5$
+\end_inset
+
+ mm, the volume of the drop is 
+\begin_inset Formula $\thicksim1.2\,\mu$
+\end_inset
+
+L, which is about 
+\begin_inset Formula $\nicefrac{1}{50}$
+\end_inset
+
+ of the volume of a standard drop.
+ Thus, it might prove hard to make the laser beam pass through the droplet.
+\end_layout
+
+\begin_layout Standard
+Another important source of error is the drop's evaporation.
+ Since the amount of water involved is minuscule, it will not take long
+ for the water to evaporate, especially considering that laser light is
+ incident on it.
+ This means that the water level at the plate must be monitored and a new
+ drop should be added every few minutes.
+\end_layout
+
+\begin_layout Section
+Expected results
+\end_layout
+
+\begin_layout Subsection
+Simulations
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Plots/Final/Collage4.png
+	scale 45
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Simulations using the model given in (18).
+ For the top panel 
+\begin_inset Formula $m=8$
+\end_inset
+
+, whereas for the bottom panel 
+\begin_inset Formula $m=15$
+\end_inset
+
+.
+ The magnitude of the perturbation in both cases is 
+\begin_inset Formula $c=0.3$
+\end_inset
+
+, 
+\begin_inset Formula $d=60$
+\end_inset
+
+ mm, and 
+\begin_inset Formula $h=0.5$
+\end_inset
+
+ mm.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For simulation purposes, we simplify equation (17) by setting 
+\begin_inset Formula $\frac{pa^{2}}{4\gamma h}=1$
+\end_inset
+
+.
+ With 
+\begin_inset Formula $a=1.5$
+\end_inset
+
+ mm, 
+\begin_inset Formula $h=0.5$
+\end_inset
+
+ mm, and 
+\begin_inset Formula $\gamma=0.0728$
+\end_inset
+
+ Nm
+\begin_inset script superscript
+
+\begin_layout Plain Layout
+-1
+\end_layout
+
+\end_inset
+
+, this gives a value for 
+\begin_inset Formula $p\approx64.7$
+\end_inset
+
+ Pa, which is a reasonable value for the internal pressure of a water droplet.
+ Following Berry (1976), we choose 
+\begin_inset Formula $g(\zeta)=1-c\zeta^{m}$
+\end_inset
+
+, where 
+\begin_inset Formula $c$
+\end_inset
+
+ is a parameter that determines the deviation of the water droplet from
+ a paraboloid shape.
+ With these two choices, (17) becomes
+\begin_inset Formula 
+\begin{equation}
+f(\vec{u})=1-\Re\left[c(u_{x}+\imath u_{y})^{m}\right]-u_{x}^{2}-u_{y}^{2}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We note that the diffraction integral (12) is a convolution integral of
+ the functions
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{eqnarray}
+J(\vec{u}) & = & \exp\left[\imath kh(1-n)f(\vec{u})\right]\nonumber \\
+K(\vec{u}') & = & \frac{1}{2\pi u_{F}^{2}}\exp\left[\frac{\imath\left|\vec{u}'\right|^{2}}{2u_{F}^{2}}\right]
+\end{eqnarray}
+
+\end_inset
+
+This means that in principle, we can numerically solve the integral using
+ the convolution theorem.
+ Although some aliasing effects are present, we were able to carry out some
+ successful simulations with the choices of 
+\begin_inset Formula $m=8$
+\end_inset
+
+ and 
+\begin_inset Formula $m=15$
+\end_inset
+
+, and 
+\begin_inset Formula $c=0.3$
+\end_inset
+
+.
+ These are shown in Figure 5.
+ Fold and cusp catastrophes are clearly visible, and the caustics form a
+ hypocycloid with 
+\begin_inset Formula $m$
+\end_inset
+
+ cusps, as expected based on the discussion in Berry (1976).
+ Higher order catastrophes could not be reproduced using this simple choice
+ of 
+\begin_inset Formula $g(\zeta)$
+\end_inset
+
+, but more convoluted contours should render them visible, as shown in the
+ next section.
+ Figure 6 shows a magnified cusp catastrophe, obtained from the top panel
+ of Figure 5, which shows a structure that is consistent with expectations.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Plots/Final/cusp.gif
+	scale 30
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Magnified image of one of the cusps from the top panel of Figure 5.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Results from similar experiments
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Plots/Final/Collage3.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Experimental photographs of far field patterns of small irregular water
+ droplets.
+ The bottom right drawing shows the location of swallowtail catastrophes
+ in the picture above.
+ Adapted from Berry (1976).
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Berry (1976) contains a few examples of far field patterns that were obtained
+ experimentally, two of which are shown in Figure 7.
+ The left picture is very similar to the pattern obtained in the simulations
+ of the previous section, only with a larger parameter 
+\begin_inset Formula $m$
+\end_inset
+
+.
+ As in the simulations, only folds and cusps are visible.
+ The picture on the right, on the other hand, shows the pattern of a comparative
+ly more irregular shape, and it is possible to observe swallowtails, whose
+ locations are indicated in the drawing below the picture.
+ It is in principle possible to observe higher order catastrophes depending
+ on the shape of the droplet; however, there is significant uncertainty
+ about whether this will be possible in any given experiment, since this
+ will depend on the specific shape that the droplet adopts, which is not
+ something that can be controlled precisely by the experimenter.
+\end_layout
+
+\begin_layout Standard
+Other similar experiments include Nye (1978), where a microscope is used
+ to study the caustics in the near field, and Nye (1986), which studies
+ larger water droplets where gravity is no longer negligible.
+ He is able to produce catastrophes of higher order than those obtained
+ by Berry (1976).
+\end_layout
+
+\begin_layout Section
+Conclusions
+\end_layout
+
+\begin_layout Standard
+Although largely ignored by most traditional textbooks in optics and electromagn
+etic theory, catastrophe optics is an important area of the field that has
+ found applications in multiple physical disciplines.
+ The purpose of this project was to present the basic ideas behind it, and
+ to show a simple experiment that could be used to illustrate them.
+ We have performed some simulations of the possible results of the experiment
+ for a simplified model of a water droplet, found that it is possible to
+ numerically reproduce some low order catastrophes using this approach,
+ and that the model is surprisingly accurate when compared to the results
+ of actual experimental work.
+ A more sophisticated approach would likely perform even better.
+ More complex experiments can be devised as a straightforward extensions
+ to the one presented here, by increasing the size of the water droplet,
+ exploring the near field pattern with a microscope, using other liquids,
+ placing the droplets on other types of transparent surfaces, and orienting
+ the surface at an angle with respect to the floor.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-1"
+
+\end_inset
+
+Arnol'd, V.
+ I., 1975.
+ Russ.
+ Math.
+ Survs.
+ 30, 1-75.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-2"
+
+\end_inset
+
+Berry, M.
+ V.
+ 1976
+\emph on
+.
+ 
+\emph default
+Adv.
+ Phys.
+ 25, 1-26.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-3"
+
+\end_inset
+
+Berry, M., & Upstill, C.
+ 1980, in Progress in Optics, Vol.
+ 18, {IV} Catastrophe Optics: Morphologies of Caustics and Their Diffraction
+ Patterns, ed.
+ E.
+ Wolf (Elsevier), 257-346.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-4"
+
+\end_inset
+
+Bodenschatz, E., et al., 2016.
+ 
+\emph on
+Modern Experimental Optics Laboratory Manual
+\emph default
+, Cornell University Physics Department.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-5"
+
+\end_inset
+
+Born, M.
+ & Wolf, E.
+ 1999.
+ 
+\emph on
+Principles of Optics, 7th (expanded) edit., 
+\emph default
+Cambridge University Press.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-6"
+
+\end_inset
+
+Clegg, A.
+ W., Fey, A.
+ L., & Lazio, T.
+ J.
+ W.
+ 1998, ApJ, 496, 253-266.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-7"
+
+\end_inset
+
+Cordes, J.
+ M., Wasserman, I., Hessels, J.
+ W.
+ T., et al.
+ 2017, ApJ, 842, 35-45.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-8"
+
+\end_inset
+
+Nye, J.
+ F., 1978, Proc.
+ R.
+ Soc.
+ Lond.
+ 361, 1704, 25-44.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-9"
+
+\end_inset
+
+Nye, J.
+ F., 1986, Proc.
+ R.
+ Soc.
+ Lond.
+ 403, 1824, 1-26.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-10"
+
+\end_inset
+
+Thom, R., 1972.
+ 
+\emph on
+Stabilité structurelle et morphogénèse.
+ 
+\emph default
+Benjamin, Reading, Mass.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-11"
+
+\end_inset
+
+Thorne, K.
+ & Blandford, R.
+ 2017.
+ 
+\emph on
+Modern Classical Physics.
+
+\emph default
+ Princeton University Press.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "12"
+key "key-12"
+
+\end_inset
+
+Zhang, N., Chao, D.
+ F., Yang, W.-J., 2005.
+ Journal of Flow Visualization & Image Processing.
+ 12, 285-300.
+\end_layout
+
+\end_body
+\end_document

@@ -1,0 +1,2583 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+\usepackage{amsmath}
+
+\DeclareMathOperator{\erf}{erf}
+\end_preamble
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 3cm
+\topmargin 3cm
+\rightmargin 3cm
+\bottommargin 5cm
+\headheight 1cm
+\headsep 1cm
+\footskip 2cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Project 4: Interference
+\end_layout
+
+\begin_layout Date
+November 2nd, 2017
+\end_layout
+
+\begin_layout Author
+Gianfranco Grillo
+\end_layout
+
+\begin_layout Abstract
+We present the results of a series of optical experiments performed to illustrat
+e the wave nature of light via the phenomenon of interference.
+ We use interference effects to measure the thickness of a cover glass,
+ estimate the wavelength of the light from a HeNe laser, and measure the
+ frequency separation of the laser's axial modes.
+ We find good agreement between experimental and expected results, especially
+ for the thickness of the cover glass and the frequency separation of the
+ modes.
+ The thickness of the cover glass with a nominal value of 0.43 mm was measured
+ to be 
+\begin_inset Formula $0.451\pm0.013$
+\end_inset
+
+ mm, and obtained a frequency separation of the modes of 
+\begin_inset Formula $1.33\pm0.05$
+\end_inset
+
+ GHz, equivalent to a laser cavity length of 
+\begin_inset Formula $11.2\pm0.4$
+\end_inset
+
+ cm, both of which consistent with the typical values of a tabletop HeNe
+ laser.
+ Although the wavelength of the laser could not be measured very accurately,
+ we were able to verify that it is in the order of the hundreds of nanometers,
+ as expected.
+ Finally, we were able to observe the interference pattern of a Fabry-Perot
+ interferometer, although the way the pattern changed when the incident
+ laser light was filtered by a polarizer at different angles was not totally
+ consistent with expectations.
+\end_layout
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout Standard
+The question of what kind of scientific model is able to most accurately
+ describe the nature of light has a long and illustrious story.
+ For a long time, in part due to the influence of Newton, light was believed
+ to consist in nothing more than a stream of particles, in what was known
+ as the corpuscular theory of light.
+ Robert Hooke, one of Newton's most despised rivals, was a proponent of
+ the theory that light was actually a wave, but his views did not become
+ popular until long after his death, due to the discovery of the phenomena
+ of interference and diffraction in the 19th century, and the development
+ of classical electromagnetism by Maxwell.
+ Although later developments demonstrated that this wave model does not
+ consitute the whole picture, it has a remarkable range of validity, and
+ is the cornerstone of classical optics.
+\end_layout
+
+\begin_layout Standard
+In this project, we use simple experimental setups and laboratory equipment
+ in order to perform a series of experiments illustrating the phenomenon
+ of interference, and use interference effects to measure the thickness
+ of a cover glass and the frequency separation of the axial modes of a laser.
+ We construct two types of classical interferometers, the Michelson interferomet
+er and the Fabry-Perot interferometer, the former of which we use to measure
+ the frequency separation of the modes.
+ Where appropriate, we apply geometrical optics and the thin lens approximation
+ in order to derive our results.
+\end_layout
+
+\begin_layout Standard
+We perform the data analysis using Python and the associated libraries NumPy
+ and SciPy ([1]), as well as the Uncertainty package ([2]).
+\end_layout
+
+\begin_layout Section
+Theoretical background
+\end_layout
+
+\begin_layout Subsection
+Thickness Measurement by Interference
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "45col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename wave addition.png
+	scale 30
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Constructive and destructive interference of two waves.
+ Obtained from [3].
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "45col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename thin film interference.png
+	scale 30
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Interference due to a thin film.
+ Obtained from [3].
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The phenomenon of wave interference can be described mathematically by the
+ addition of two or more sinusoids.
+ Depending on the relative phase of the sinusoids, their addition results
+ in constructive or destructive interference.
+ Figure 1 depicts the two simplest cases of complete constructive interference,
+ which occurs when the waves are exactly in phase, and complete destructive
+ interference, when the waves are exactly out of phase.
+ Any phase difference in between these two extremes will result in partial
+ interference.
+\end_layout
+
+\begin_layout Standard
+A common way to produce interference effects using a single beam of coherent
+ light, like the one produced by a laser, is to divide the beam into two
+ parts and make one part travel a longer path than the other, at which point
+ the beams are recombined and interference effects can be observed because
+ the path length difference results in a phase difference between the two
+ beams.
+ This concept is behind the observed interference due to reflection of a
+ thin film, as illustrated in Figure 2.
+ A wave incident on the film is partially reflected and partially transmitted
+ at the first interface, and the transmitted wavefront is then partially
+ reflected and partially transmitted at the second interface.
+ The reflected component at the second interface, in turn, is then partially
+ reflected and partially transmitted as it hits the first interface from
+ the opposite direction.
+ The transmitted component of this wave then proceeds to interfere with
+ the reflected component of the original wave, which results in the creation
+ of interference fringes at a surface that is placed in the path of propagation
+ of the reflection.
+ For the case of a thin film in air, the location of the bright fringes
+ is given by (using 
+\begin_inset Formula $n_{air}\approx1$
+\end_inset
+
+)
+\begin_inset Formula 
+\begin{equation}
+\cos\theta_{t}=\frac{(2m-1)\lambda_{0}}{4nd}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $\theta_{t}$
+\end_inset
+
+ corresponds to the angle of transmission of the incident light with respect
+ to the surface normal, 
+\begin_inset Formula $\lambda_{0}$
+\end_inset
+
+ corresponds to the wavelength of the light in vacuum, 
+\begin_inset Formula $n$
+\end_inset
+
+ is the refractive index of the film, 
+\begin_inset Formula $d$
+\end_inset
+
+ is the film's thickness, and 
+\begin_inset Formula $m$
+\end_inset
+
+ is an integer that represents the order of the fringe.
+ By Snell's Law, we have that 
+\begin_inset Formula 
+\begin{equation}
+\sin\theta_{i}=n\sin\theta_{t}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Squaring and using the identity 
+\begin_inset Formula $\sin^{2}\theta=1-\cos^{2}\theta$
+\end_inset
+
+, we can write this as
+\begin_inset Formula 
+\begin{equation}
+\cos\theta_{t}=\left(1-\frac{\sin^{2}\theta_{i}}{n^{2}}\right)^{\nicefrac{1}{2}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Combining this with (1) and solving for 
+\begin_inset Formula $\sin^{2}\theta_{i}$
+\end_inset
+
+ yields
+\begin_inset Formula 
+\begin{equation}
+\sin^{2}\theta_{i}=n^{2}-\left[\frac{(2m-1)\lambda_{0}}{4d}\right]^{2}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This equation indicates that it is possible to measure the thickness of
+ a thin film by finding the angles 
+\begin_inset Formula $\theta_{i}$
+\end_inset
+
+ that separate fringes of different orders.
+ We will use this method in experiment 1 in order to measure the thickness
+ of a cover glass.
+\end_layout
+
+\begin_layout Subsection
+Young's Double Slit Experiment and Lloyd's Mirror
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename youngs experiment.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Geometry of Young's double slit experiment.
+ Obtained from [3].
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Perhaps the most famous interference experiment is the one first performed
+ by the English scientist Thomas Young in the beginning of the 19th century.
+ Light from a point source is incident upon a screen with two small apertures
+ separated by a distance 
+\begin_inset Formula $a$
+\end_inset
+
+, essentially dividing the incident wave into two individual point sources
+ with no initial phase difference.
+ Another screen is placed a distance 
+\begin_inset Formula $s$
+\end_inset
+
+ away from the first screen, where it is possible to observe fringes that
+ are produced due to the difference in path length between the light coming
+ from the two sources.
+ The geometry of the experiment is reproduced in Figure 3.
+ If 
+\begin_inset Formula $s\gg a$
+\end_inset
+
+, we can use the small angle approximation 
+\begin_inset Formula $\sin\theta\approx\theta$
+\end_inset
+
+ and express the spacing of the fringes 
+\begin_inset Formula $\Delta y$
+\end_inset
+
+ as
+\begin_inset Formula 
+\begin{equation}
+\Delta y=\frac{s\lambda}{a}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ corresponds to the wavelength of the incident light.
+ This means that if we measure the values of 
+\begin_inset Formula $s,$
+\end_inset
+
+ 
+\begin_inset Formula $a$
+\end_inset
+
+, and 
+\begin_inset Formula $\Delta y$
+\end_inset
+
+, we can determine 
+\begin_inset Formula $\lambda$
+\end_inset
+
+, as (5) can be written as
+\begin_inset Formula 
+\begin{equation}
+\lambda=\frac{a\Delta y}{s}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+An alternative way to reproduce the kind of geometry depicted in Figure
+ 3 is by using a mirror instead of screen with two apertures.
+ This is particularly well suited to the case in which the incident light
+ is from a laser, because the beam width is very small and as such the apertures
+ on the screen would have to be extremely close together in order for the
+ light to actually pass through both of them.
+ Instead, if a mirror is placed in the beam's path at a very small angle,
+ we can recreate Young's experiment as the original, non-reflected beam
+ interferes with the reflected beam in the same way that the two point sources
+ in the original experiment interfere with each other.
+ This arrangement is known as Lloyd's mirror, in honor of the Irish physicist
+ Humphrey Lloyd, who invented it.
+ The main practical difference with respect to the original double slit
+ experiment is that the mirror introduces a phase shift of 
+\begin_inset Formula $180^{\circ}$
+\end_inset
+
+ on the incident light, so the light from the two sources starts out exactly
+ out of phase instead of exactly in phase as it does in the original experiment.
+ This implies that bright fringes in Lloyd's mirror correspond to bright
+ fringes in the double slit configuration, but it does not affect the fringe
+ separation, which is what we rely on in order to measure the light's wavelength.
+ We will construct Lloyd's mirror in experiment 2 of this project and use
+ it to measure the wavelength of a laser's beam.
+\end_layout
+
+\begin_layout Subsection
+Michelson Interferometer
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename michelson interferometer.png
+	scale 20
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Illustration of the setup of a Michelson interferometer.
+ Obtained from [4].
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Another way to get a beam of light to interfere with itself is via the use
+ of a configuration of optical devices commonly known as the Michelson interfero
+meter, after the American physicist Albert A.
+ Michelson.
+ A beam of light is incident on a beam splitter, where it is divided into
+ two beams that travel at right angles with respect to each other.
+ Two flat mirrors that face the beam splitter are placed such that they
+ reflect each of the beams back towards the beam splitter, where they are
+ both transmitted in the same direction.
+ By adjusting the length of each of the arms of the interferometer, one
+ can introduce a phase difference between the two beams that becomes apparent
+ once they recombine.
+ Because one of the beams passes through the beam splitter three times,
+ and the other passes through it only once, it is common practice to introduce
+ a compensating plate made of a transparent material in the propagation
+ path of the second beam, in order to correct for this path difference,
+ and make it depend exclusively on the relative position of each of the
+ mirrors.
+ It is also possible to place a converging lens before the beam stopper
+ in order to bring the two beams into focus.
+ This arrangement is shown in Figure 4.
+ If a photosensor is placed at the beam stopper (P in the figure), the measured
+ intensity is given by
+\begin_inset Formula 
+\begin{equation}
+I=I_{1}+I_{2}+2\sqrt{I_{1}I_{2}}\cos\delta
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $I_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $I_{2}$
+\end_inset
+
+ correspond to the intensity of each of the beams, and 
+\begin_inset Formula $\delta$
+\end_inset
+
+ is the phase difference, which is related to the lengths of each of the
+ arms 
+\begin_inset Formula $l_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $l_{2}$
+\end_inset
+
+ by the equation
+\begin_inset Formula 
+\begin{equation}
+\delta=\frac{4\pi c}{\nu_{0}}(n_{1}l_{1}-n_{2}l_{2})
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $n_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $n_{2}$
+\end_inset
+
+ correspond to the refractive indices of the medium constituting each of
+ the interferometer arms, and 
+\begin_inset Formula $\nu_{0}$
+\end_inset
+
+ corresponds to the frequency of the light in vaccum.
+ For the case of an interferometer that uses a 50/50 beam splitter, and
+ where the beams propagate through air, we can write the intensity as
+\begin_inset Formula 
+\begin{equation}
+I=I_{0}\left[1+\cos\left(\frac{4\pi c}{\nu_{0}}(l_{1}-l_{2})\right)\right]
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Changing the position of either of the mirrors by 
+\begin_inset Formula $\Delta x$
+\end_inset
+
+ results in a change in the intensity given by
+\begin_inset Formula 
+\begin{equation}
+I=I_{0}\left[1+\cos\left(\frac{4\pi c\Delta x}{\nu_{0}}\right)\right]
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For the case of light that is not completely monochromatic, as is the case
+ of laser light, the intensity curve is more complicated, since the different
+ frequencies interfere to produce a beat effect.
+ For the particular case of the laser beam used in this project, we expect
+ there to be two axial modes of equal polarization separated by a frequency
+ 
+\begin_inset Formula $\Delta\nu$
+\end_inset
+
+, that will interfere with each other.
+ In that case, we can derive the intensity measured by the photodetector
+ by regarding the laser light as a superposition of two monochromatic waves,
+ each one corresponding to one of the modes of oscillation.
+ This implies that the interference now happens between four different waves.
+ The electric field at the photosensor is then
+\begin_inset Formula 
+\begin{equation}
+E=E_{1}+E_{2}+E_{3}+E_{4}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The intensity is proportional to the square modulus of this sum,
+\begin_inset Formula 
+\begin{eqnarray}
+\left|E\right|^{2} & = & (E_{1}+E_{2}+E_{3}+E_{4})(E_{1}^{*}+E_{2}^{*}+E_{3}^{*}+E_{4}^{*})\nonumber \\
+ & = & \left|E_{1}\right|^{2}+\left|E_{2}\right|^{2}+\left|E_{3}\right|^{2}+\left|E_{4}\right|^{2}+2Re(E_{1}E_{2}^{*})+2Re(E_{1}E_{3}^{*})\nonumber \\
+ &  & +2Re(E_{1}E_{4}^{*})+2Re(E_{2}E_{3}^{*})+2Re(E_{2}E_{4}^{*})+2Re(E_{3}E_{4}^{*})
+\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Following [5], we can write the time-averaged electric fields as
+\begin_inset Formula 
+\begin{eqnarray}
+E_{1} & = & E_{01}e^{ik_{1}x}\nonumber \\
+E_{2} & = & E_{01}e^{ik_{1}(x+2\Delta x)}\nonumber \\
+E_{3} & = & E_{02}e^{ik_{2}x}\nonumber \\
+E_{4} & = & E_{02}e^{ik_{2}(x+2\Delta x)}
+\end{eqnarray}
+
+\end_inset
+
+where 
+\begin_inset Formula $k=\frac{2\pi}{\lambda}$
+\end_inset
+
+, the wavenumber of the mode.
+ Substituting into (12), and after performing some trigonometric algebra,
+ we get
+\begin_inset Formula 
+\begin{eqnarray}
+\left|E\right|^{2} & = & 2\left[E_{01}^{2}+E_{02}^{2}+E_{01}^{2}\cos(2k_{1}\Delta x)+E_{02}^{2}\cos(2k_{2}\Delta x)\right.\nonumber \\
+ &  & \left.+4E_{01}E_{02}\cos\left(k_{1}\Delta x\right)\cos\left(k_{2}\Delta x\right)\cos\left((k_{1}-k_{2})(\Delta x+2x)\right)\right]
+\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We define 
+\begin_inset Formula $a=\frac{E_{01}}{E_{02}}$
+\end_inset
+
+, and rewrite this as
+\begin_inset Formula 
+\begin{eqnarray}
+I\propto\frac{1}{2}\left|\frac{E}{E_{02}}\right|^{2} & = & 1+a^{2}+a\cos(2k_{1}\Delta x)+\cos(2k_{2}\Delta x)\nonumber \\
+ &  & +4a\cos\left(k_{1}\Delta x\right)\cos\left(k_{2}\Delta x\right)\cos\left((k_{1}-k_{2})(\Delta x+2x)\right)
+\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The 
+\begin_inset Formula $2x$
+\end_inset
+
+ factor in the last term is just an offset that does not affect the shape
+ of the curve, so we can set 
+\begin_inset Formula $x=0$
+\end_inset
+
+.
+ Rewriting in terms of 
+\begin_inset Formula $\nu_{0}$
+\end_inset
+
+ and 
+\begin_inset Formula $\Delta\nu$
+\end_inset
+
+, we have that
+\begin_inset Formula 
+\begin{eqnarray}
+I & \propto & 1+a^{2}+a\cos\left(\frac{4\pi\nu_{0}\Delta x}{c}\right)+\cos\left(\frac{4\pi(\nu_{0}+\Delta\nu)\Delta x}{c}\right)\nonumber \\
+ &  & +4a\cos\left(\frac{2\pi\nu_{0}\Delta x}{c}\right)\cos\left(\frac{2\pi(\nu_{0}+\Delta\nu)\Delta x}{c}\right)\cos\left(\frac{2\pi\Delta\nu\Delta x}{c}\right)
+\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The frequency separation of the laser modes depends on the length 
+\begin_inset Formula $L$
+\end_inset
+
+ of the laser cavity, and is given by the simple expression
+\begin_inset Formula 
+\begin{equation}
+\Delta\nu=\frac{c}{2L}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For an HeNe laser with nominal wavelength 
+\begin_inset Formula $\lambda_{0}=632.8$
+\end_inset
+
+ nm, and cavity length 
+\begin_inset Formula $L=10$
+\end_inset
+
+ cm, we have that 
+\begin_inset Formula $\nu_{0}=4.74\times10^{14}$
+\end_inset
+
+ Hz and 
+\begin_inset Formula $\Delta\nu=\frac{c}{2L}=1.50\times10^{9}$
+\end_inset
+
+ Hz.
+ Figure 5 shows a plot of (16) after normalization, using these values,
+ and 
+\begin_inset Formula $a=1$
+\end_inset
+
+.
+ As can be seen, the distance between the peaks of the modulating sinusoid
+ corresponds to the length of the laser cavity.
+ In practice, it is very difficult to experimentally recreate such a curve,
+ because the high frequency of the light implies that the oscillations in
+ the intensity are extremely sensitive to changes in 
+\begin_inset Formula $\Delta x$
+\end_inset
+
+.
+ For this reason, if the goal is to experimentally determine 
+\begin_inset Formula $\Delta\nu$
+\end_inset
+
+, it is more convenient to do so by constructing a so called visibility
+ curve.
+ The interference effects give rise to a fringe pattern, and a measure of
+ the contrast of this pattern is the visibility, which is defined as
+\begin_inset Formula 
+\begin{equation}
+\mathcal{V}=\frac{I_{max}-I_{min}}{I_{max}+I_{min}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Essentially, this is a measure of the difference in intensity between the
+ contiguous minima and maxima of the intensity curve.
+ Obtaining a general formula for the visibility as a function of 
+\begin_inset Formula $\Delta x$
+\end_inset
+
+ is not as straightforward as obtaining the one for the intensity, especially
+ if the relative intensities of the modes is not known.
+ Figure 6 shows visibility curves for different kinds of quasimonochromatic
+ light.
+ A more detailed treatment of this topic is outside the scope of this work,
+ and can be found in chapter VII of [4].
+ For the purposes of this project, it is enough to say that if the difference
+ in the relative mode intensities is large enough, we expect the visibility
+ curve at some distance away from 
+\begin_inset Formula $\Delta x=0$
+\end_inset
+
+ to be well approximated by a damped sinusoid, that is, 
+\begin_inset Formula 
+\begin{equation}
+\mathcal{V}(\Delta x)\approx\alpha e^{-\beta\Delta x}\sin(\gamma\Delta x+\epsilon)+\eta
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $\alpha$
+\end_inset
+
+, 
+\begin_inset Formula $\beta$
+\end_inset
+
+, 
+\begin_inset Formula $\gamma$
+\end_inset
+
+, 
+\begin_inset Formula $\epsilon$
+\end_inset
+
+, and 
+\begin_inset Formula $\eta$
+\end_inset
+
+ are free parameters that depend on the intensities of the modes and on
+ 
+\begin_inset Formula $\Delta\nu$
+\end_inset
+
+.
+ We explicitly write 
+\begin_inset Formula $\Delta\nu$
+\end_inset
+
+ in terms of 
+\begin_inset Formula $\gamma$
+\end_inset
+
+ as
+\begin_inset Formula 
+\begin{equation}
+\Delta\nu=\frac{c\gamma}{16\pi}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename normalizedint.png
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Intensity curve for the quasimonochromatic Michelson interferometer with
+ 
+\begin_inset Formula $\nu_{0}=4.74\times10^{14}$
+\end_inset
+
+ Hz and 
+\begin_inset Formula $\Delta\nu=1.50\times10^{9}$
+\end_inset
+
+ Hz.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename visibility curves.png
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Visibility curves for two quasimonochromatic sources, with intensity profiles
+ similar to those produced by a laser.
+ Note that the path difference 
+\begin_inset Formula $\Delta x$
+\end_inset
+
+ is represented here as 
+\begin_inset Formula $\Delta\mathscr{S}$
+\end_inset
+
+ instead.
+ Obtained from [4].
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Fabry-Perot Interferometer
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "45col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename fabry perot cavity.png
+	scale 70
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Cavity of a Fabry-Perot interferometer.
+ Obtained from [3].
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "45col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename fabryperotfringesideal.png
+	scale 30
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Fabry-Perot fringes.
+ Obtained from [4].
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The Fabry-Perot interferometer is an example of an interferometer that relies
+ on multiple beam interference.
+ Light that is incident on a parallel configuration of semi-transparent
+ mirrors separated by a distance 
+\begin_inset Formula $d$
+\end_inset
+
+ undergoes multiple reflections as it bounces back and forth between the
+ mirrors, as shown in Figure 7.
+ Placing a viewing screen some distance away from the cavity allows one
+ to observe circular interference fringes that are produced by the interference
+ of the waves that are transmitted by the mirror.
+ And idealized illustration of the fringes is shown in Figure 8.
+ This type of interferometer is very useful for determining the frequency
+ composition of light.
+ Monochromatic light produces fringes like the ones shown in Figure 8.
+ Light composed of different frequencies, on the other hand, shows up as
+ multiple sets of fringes, one set each per frequency component.
+ The interferometer's ability to resolve different frequencies is related
+ to a quantity referred to as the finesse, which is in turn related to the
+ Fabry-Perot interferometer's reflectivity.
+ The finesse is defined as
+\begin_inset Formula 
+\begin{equation}
+\mathcal{F}=\frac{\pi\sqrt{F}}{2}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $F$
+\end_inset
+
+ is known as the coefficient of finesse and is given by
+\begin_inset Formula 
+\begin{equation}
+F=\frac{4R}{(1-R)^{2}}
+\end{equation}
+
+\end_inset
+
+with 
+\begin_inset Formula $R$
+\end_inset
+
+ corresponding to the interferometer's power reflection coefficient.
+ The minimum resolvable frequency separation 
+\begin_inset Formula $(\Delta\nu)_{min}$
+\end_inset
+
+ between light components is then
+\begin_inset Formula 
+\begin{equation}
+(\Delta\nu)_{min}=\frac{c}{2\mathcal{F}nd}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $n$
+\end_inset
+
+ is the refractive index of the medium located in between the parallel mirrors.
+ A related quantity, the free spectral range 
+\begin_inset Formula $(\Delta\nu)_{FSR}$
+\end_inset
+
+, corresponds to the frequency difference at which two sets of circular
+ fringes overlap, and is given by
+\begin_inset Formula 
+\begin{equation}
+(\Delta\nu)_{FSR}=(\Delta\nu)_{min}\mathcal{F}=\frac{c}{2nd}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+A more detailed examination of the properties of the Fabry-Perot interferometer
+ can be found in chapter 9 of [3] and chapter VII of [4].
+\end_layout
+
+\begin_layout Section
+Experimental Set-Up and Results
+\end_layout
+
+\begin_layout Subsection
+Experiment 1
+\end_layout
+
+\begin_layout Subsubsection
+Set-Up
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "45col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename setupA.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Setup for experiment 1.
+ Obtained from [5].
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "45col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename thicknessfringe.png
+	scale 25
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Image of the reflected beam when the dark fringe is at the center.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In this experiment, we measure the thickness of a cover glass by examining
+ its reflection.
+ We start by building a beam expander using 25 and 50 mm lenses, and a pinhole
+ placed 25 mm away from the first lens in order to produce a point source.
+ We now mount the cover glass into a filter holder placed on top of a rotation
+ stage, and locate a beam stopper in a position appropriate to look at the
+ beam reflected off the cover glass.
+ We then rotate the stage until a dark interference fringe can be seen in
+ the center of the reflection (Figure 10).
+ We record the angle at which this occurs, and rotate the stage until we
+ observe the same fringe configuration.
+ We repeat this procedure a number of times to obtain multiple data points.
+\end_layout
+
+\begin_layout Subsubsection
+Results and analysis
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename coverglass.png
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset Formula $\tau$
+\end_inset
+
+ as a function of 
+\begin_inset Formula $m$
+\end_inset
+
+, with experimental measurements and the fit model given in (25).
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We rearrange equation (4) as
+\begin_inset Formula 
+\begin{equation}
+\tau=\frac{\sqrt{n^{2}-\sin^{2}\theta_{i}}}{\lambda_{0}}=\frac{2m+\phi-1}{4d}
+\end{equation}
+
+\end_inset
+
+where we have added an offset 
+\begin_inset Formula $\phi$
+\end_inset
+
+ since the first fringe that appears in our measurements does not correspond
+ to the first order fringe 
+\begin_inset Formula $m=1$
+\end_inset
+
+, but to an unknown order that cannot be calculated a priori.
+ We then fit for the parameters 
+\begin_inset Formula $m$
+\end_inset
+
+ and 
+\begin_inset Formula $d$
+\end_inset
+
+.
+ We calculated the incident angle by using the relationship 
+\begin_inset Formula $\theta_{m}=\pi-2\theta_{i}$
+\end_inset
+
+, where 
+\begin_inset Formula $\theta_{m}$
+\end_inset
+
+ is the angle that was actually measured (see Figure 9).
+ This angle, in turn, was measured by measuring the x and y distances from
+ the cover glass to the location of the spot in the beam stopper, in order
+ to obtain a greater precision.
+ We assume a standard error of 
+\begin_inset Formula $\Delta x=0.3$
+\end_inset
+
+ breadboard holes and 
+\begin_inset Formula $\Delta y=0.1$
+\end_inset
+
+ breadboard holes, where the x error is larger than the y error because
+ the beam stopper was translated along the x-direction but not the y-direction.
+ We obtain a best fit value for the thickness 
+\begin_inset Formula $d=0.451\pm0.013$
+\end_inset
+
+ mm, which is within 5% of the thickness value given by the manufacturer
+ of 
+\begin_inset Formula $d=0.43$
+\end_inset
+
+ mm.
+ The angles separating each fringe order was very small, and became smaller
+ as the order of the fringe increased, with a separation for the last two
+ fringes of less than 
+\begin_inset Formula $0.70^{\circ}$
+\end_inset
+
+, which implies that very small errors in measuring the angles could have
+ large effects on the results.
+ Thus, the agreement with the manufacturer's value is quite remarkable given
+ the simple procedure used to measure the angular separations.
+\end_layout
+
+\begin_layout Subsection
+Experiment 2
+\end_layout
+
+\begin_layout Subsubsection
+Set-Up
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "45col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename setupB.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Setup for experiment 2.
+ Obtained from [5].
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "45col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename croppedlloydfringes.png
+	scale 25
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Image of the interference fringes in the Lloyd's mirror setup.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This experiment uses the Lloyd's mirror technique to recreate Young's double
+ slit experiment without the need to use a screen with two apertures.
+ We set up a spatial filter using a 25 mm lens to focus the laser light
+ into a pinhole located at its focal distance.
+ We now mount a mirror in a rotation stage a small distance away from the
+ spatial filter and rotate it such that the incident light is incident on
+ the mirror at an angle close to 
+\begin_inset Formula $90^{\circ}$
+\end_inset
+
+ with respect to the mirror's surface normal.
+ Careful rotation of the mirror into this position enables the transformation
+ of a single point source into two point sources.
+ Next, we place a 40 cm lens at a distance 
+\begin_inset Formula $d_{o}>40$
+\end_inset
+
+ cm from the mirror, and place a screen at a distance 
+\begin_inset Formula $d_{i}$
+\end_inset
+
+ from the lens corresponding to the mirror's image plane, which is related
+ to 
+\begin_inset Formula $d_{o}$
+\end_inset
+
+ and 
+\begin_inset Formula $f$
+\end_inset
+
+ by the thin lens equation, 
+\begin_inset Formula $\nicefrac{1}{d_{i}}=\nicefrac{1}{f}-\nicefrac{1}{d_{o}}$
+\end_inset
+
+.
+ We now measure the separation 
+\begin_inset Formula $a'$
+\end_inset
+
+ between the two point sources at the screen, and use this to find the source
+ separation 
+\begin_inset Formula $a=\frac{a'd_{0}}{d_{i}}$
+\end_inset
+
+.
+ Finally, we remove the 40 cm lens in order to obtain the interference pattern
+ at the screen and measure the separation of the vertical fringes 
+\begin_inset Formula $\Delta y$
+\end_inset
+
+.
+ A diagram of the setup is shown in Figure 12, and a picture of the interference
+ fringes is shown in Figure 13.
+\end_layout
+
+\begin_layout Subsubsection
+Results and analysis
+\end_layout
+
+\begin_layout Standard
+Based on our description of the procedure above, if we take the screen to
+ be at a distance 
+\begin_inset Formula $s=d_{o}+d_{i}$
+\end_inset
+
+ from the mirror, we can write equation (6) as
+\begin_inset Formula 
+\begin{equation}
+\lambda=\frac{a\Delta y}{s}=\frac{a'\Delta y(d_{o}-f)^{2}}{d_{o}f^{2}+d_{o}f(d_{o}-f)}
+\end{equation}
+
+\end_inset
+
+where we have used the thin lens equation to write 
+\begin_inset Formula $d_{i}$
+\end_inset
+
+ in terms of 
+\begin_inset Formula $d_{o}$
+\end_inset
+
+ and 
+\begin_inset Formula $f$
+\end_inset
+
+, and 
+\begin_inset Formula $a$
+\end_inset
+
+ in terms of 
+\begin_inset Formula $a'$
+\end_inset
+
+, 
+\begin_inset Formula $d_{o}$
+\end_inset
+
+, and 
+\begin_inset Formula $f$
+\end_inset
+
+, in order to write the equation in terms of the experimentally measured
+ quantities.
+ We used a 
+\begin_inset Formula $d_{o}$
+\end_inset
+
+ of 
+\begin_inset Formula $61.5\pm0.5$
+\end_inset
+
+ cm and a focal length 
+\begin_inset Formula $f=40.0\pm0.1$
+\end_inset
+
+ cm, and the measured source separation was 
+\begin_inset Formula $a'=1.0\pm0.5$
+\end_inset
+
+ mm.
+ The fringe separation was measured to be 
+\begin_inset Formula $\Delta y=1.0\pm0.5$
+\end_inset
+
+ mm.
+ This gives a value for the wavelength of 
+\begin_inset Formula $\lambda=306\pm300$
+\end_inset
+
+ nm.
+\end_layout
+
+\begin_layout Standard
+The error between this result and the expected value of the wavelength of
+ 
+\begin_inset Formula $632.8$
+\end_inset
+
+ nm is big, and the standard error of the derived result is big too, on
+ the same order as the nominal value.
+ The reason for this is mainly that the measured values for 
+\begin_inset Formula $a'$
+\end_inset
+
+ and 
+\begin_inset Formula $\Delta y$
+\end_inset
+
+ have a large degree of uncertainty, because the distances were on the order
+ of the minimum scale separation of the intrument used to measure them,
+ a ruler.
+ Slightly altering the value of either 
+\begin_inset Formula $a'$
+\end_inset
+
+ or 
+\begin_inset Formula $\Delta y$
+\end_inset
+
+ results in large changes in the value of 
+\begin_inset Formula $\lambda$
+\end_inset
+
+.
+ For instance, if 
+\begin_inset Formula $a'$
+\end_inset
+
+ where to change from 
+\begin_inset Formula $1.0\pm0.5$
+\end_inset
+
+ mm to 
+\begin_inset Formula $1.5\pm0.5$
+\end_inset
+
+ mm, the value of the wavelength becomes 
+\begin_inset Formula $687\pm460$
+\end_inset
+
+ nm, and reducing the uncertainty in the measurement to 
+\begin_inset Formula $0.1$
+\end_inset
+
+ mm gives 
+\begin_inset Formula $\lambda=687\pm90$
+\end_inset
+
+ nm, which is much closer to the expected value than what we obtain with
+ the measurements actually made.
+ Thus, the derived value for the wavelength using this particular experimental
+ procedure is not to be taken literally, and instead provides an order of
+ magnitude estimate.
+ Much better results can potentially be obtained by measuring 
+\begin_inset Formula $a'$
+\end_inset
+
+ and 
+\begin_inset Formula $\Delta y$
+\end_inset
+
+ using more accurate instrumentation and procedures.
+\end_layout
+
+\begin_layout Subsection
+Experiment 3
+\end_layout
+
+\begin_layout Subsubsection
+Set-Up
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename setupC.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Setup for experiment 3.
+ Obtained from [5].
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In this part of the project, we construct a Michelson interferometer and
+ perform some qualitative observations.
+ We start by constructing a point source and a beam expander, in a similar
+ manner as in experiment 1, but now using a 25 mm lens, a pinhole, and a
+ 40 cm lens.
+ We position a mirror M1 on a translation stage 40 cm away from the second
+ lens, and a beam splitter in between the lens and the mirror at a distance
+ of 15 cm from the mirror.
+ We place another identical mirror M2 at a fixed distance of 15 cm away
+ from the beam splitter at an angle of 
+\begin_inset Formula $90^{\circ}$
+\end_inset
+
+ with respect to M1, and a beam stopper at the other side of the beam splitter
+ opposite M2.
+ A diagram of the setup is shown in Figure 14.
+ We now align our configuration such that interference fringes appear at
+ the beam stopper, and perform some qualitative observations.
+ We look at what happens to the fringes when we move the 40 cm lens towards
+ the first lens, when we blow the Airoduster with its nozzle in one of the
+ interferometer's arms, when we insert a finger into one of the arms close
+ to the propagating beam, and when we push M1, the test mirror.
+\end_layout
+
+\begin_layout Subsubsection
+Results and analysis
+\end_layout
+
+\begin_layout Standard
+In the starting configuration, the combination of the 25 mm lens and the
+ pinhole transforms the laser beam into a point source that is then collimated
+ by the 40 cm lens.
+ If M1 is placed at a 40 cm distance from this lens, the beam achieves its
+ minimum radius at M1.
+ Moving the lens towards the pinhole means that the light that emerges from
+ the mirror is no longer collimated, and the minimum beam radius no longer
+ occurs at M1.
+ This should result in a variation in the spot diameter at the beam stopper.
+ This effect, however, is very hard to detect because the spatial filter
+ creates a very narrow beam.
+ A more noticeable effect is that the fringes that show up at the beam stopper
+ move as the lens changes position.
+ This occurs because the lens introduces a phase shift on the wave front,
+ and moving the lens implies that this shift is introduced at different
+ positions along the path.
+ We can also observe the fringes rounding up as the curvature of the wavefront
+ at the mirror is increased.
+\end_layout
+
+\begin_layout Standard
+Blowing the Airoduster with a nozzle inserted in one of the arms results
+ in a blurring of the interference fringes at the beam stopper.
+ From equation (8), we know that the phase difference between the beams
+ depends in part on the refractive index of the medium constituting the
+ interferometer's arms, and blowing the Airoduster results in variations
+ on one of the refractive indices.
+ Furthermore, the rapid flow of the gas emerging from the Airoduster implies
+ that the refractive index in the arm is rapidly varying, which means that
+ the phase difference is rapidly varying, which in turn results in the blurring
+ of the interference fringes at the beam stop.
+ This is different from shadowgraphy because the change in the structure
+ of the interference fringes is directly sensitive to the value of the refractiv
+e indices in the interferometer's arms, whereas in shadowgraphy the changes
+ in the observed patterns are proportional to either the first or second
+ derivatives of the refractive index, depending on the configuration of
+ the shadowgraph.
+ Inserting a finger into one of the arms close to the path of beam propagation
+ results in a similar effect, as the warm air from the finger alters the
+ refractive index of the arm.
+\end_layout
+
+\begin_layout Standard
+Pushing the test mirror results in the fringes at the beam pattern moving,
+ as the phase shift is altered because of the change in path length of one
+ of the beams.
+ As we explained in section 2.3 and graphically showed in Figure 5, the intensity
+ at the beam stopper is extremely sensitive to very small variations in
+ the path length, so even very small changes in the length of one of the
+ arms result in changes in the interference pattern.
+\end_layout
+
+\begin_layout Subsection
+Experiment 4
+\end_layout
+
+\begin_layout Subsubsection
+Set-Up
+\end_layout
+
+\begin_layout Standard
+We now use the Michelson interferometer to measure the frequency separation
+ between the laser modes by constructing a visibility curve.
+ The setup is mostly the same as in experiment 3, but with the spatial filter
+ and beam expander system removed, and a -25 mm diverging lens inserted
+ in between the beam splitter and the beam stopper in order to magnify the
+ interference fringes.
+ We alter the length of the arm containing M2 by moving the mirror using
+ the translation stage and also moving the translation stage itself in order
+ to acquire data at multiple positions.
+ At each position of M2, we take a picture of the interference fringes using
+ the camera of a Samsung Galaxy S7 smartphone, and analyze the intensities
+ using the Python SciPy library.
+\end_layout
+
+\begin_layout Subsubsection
+Results and analysis
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "45col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename 1.0.png
+	width 4cm
+	height 4cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Fringe pattern at location of maximum visibility.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "45col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename 10.5.png
+	width 4cm
+	height 4cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Fringe pattern at location of minimum visibility.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename visibility.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Visibility curve derived from measurements, plus fit using model given in
+ (19).
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Figures 15 and 16 show digital images of the interference patterns at the
+ locations of maximum visibility (
+\begin_inset Formula $\Delta x=0$
+\end_inset
+
+ cm) and minimum visibility (
+\begin_inset Formula $\Delta x=9.5$
+\end_inset
+
+ cm), respectively.
+ Figure 17 shows the visibility curve obtained and a fit using the model
+ given in (19).
+ Note that we have performed the fit starting at 
+\begin_inset Formula $\Delta x=1.5$
+\end_inset
+
+ cm instead of at 
+\begin_inset Formula $\Delta x=0$
+\end_inset
+
+ cm in order to simplify the fitting model.
+ We assume a standard error for the visibility values of 0.1, and a standard
+ error for 
+\begin_inset Formula $\Delta x$
+\end_inset
+
+ of 0.1 cm, mainly due to the difficulty in locating exactly the location
+ of 
+\begin_inset Formula $\Delta x=0$
+\end_inset
+
+.
+ We find a best fit parameter for the frequency of the sine wave of 
+\begin_inset Formula $\gamma=224\pm8$
+\end_inset
+
+ m
+\begin_inset script superscript
+
+\begin_layout Plain Layout
+-1
+\end_layout
+
+\end_inset
+
+, which by equation (20) gives a value for the frequency separation of the
+ modes of 
+\begin_inset Formula $\Delta\nu=1.33\pm0.05$
+\end_inset
+
+ GHz.
+ This in turn implies a laser cavity length of 
+\begin_inset Formula $L=11.2\pm0.4$
+\end_inset
+
+ cm, which is consistent with our expectations of 
+\begin_inset Formula $L\approx10$
+\end_inset
+
+ cm.
+ This is a remarkably good result, especially due to the approximate fitting
+ model that we have used; more accurate results can be obtained if the ratio
+ of the intensities between the laser modes is known, or by performing a
+ more sophisticated analysis that numerically solves the integral that describes
+ the flux distribution of the laser light for different values of the ratio,
+ in order to fit for both the ratio and the frequency separation at the
+ same time.
+\end_layout
+
+\begin_layout Subsection
+Experiment 5
+\end_layout
+
+\begin_layout Subsubsection
+Set-Up
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename setupD.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Setup for experiment 5.
+ Modified from original obtained from [6].
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In this last experiment, we construct a Fabry-Perot interferometer and study
+ its fringes.
+ We set up a spatial filter with a 25 mm lens and a pinhole, as we did in
+ previous experiments, and then mount two identical flat interference plates
+ at a distance of 
+\begin_inset Formula $d=5\pm0.2$
+\end_inset
+
+ cm from each other, and 
+\begin_inset Formula $\sim7$
+\end_inset
+
+ cm away from the pinhole.
+ We align the orientation of the plates such that it is possible to observe
+ circular fringes at the beam stopper placed some distance away from the
+ cavity.
+ We now observe the behavior of the fringes under different circumstances.
+ We first blow air through the space separating the plates, then bend one
+ of the posts holding one of the interference flats, and introduce a polarizer
+ in between the laser and the 25 mm lens and observe what happens to the
+ fringes when we rotate the polarizer.
+ Finally, we measure the interferometer's power reflection coefficient 
+\begin_inset Formula $R$
+\end_inset
+
+ by using a photosensor to find the ratio of the transmitted intensity to
+ the incident intensity, and then using the relationship 
+\begin_inset Formula $R=1-T$
+\end_inset
+
+.
+ We assume that the interferometer has negligible absorptance.
+\end_layout
+
+\begin_layout Subsubsection
+Results and analysis
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "45col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename fabry perot fringes cropped.png
+	width 4cm
+	height 4cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Fabry-Perot fringes observed during the experiment.
+ The big shadow to the right of the central spot is due to a pencil mark
+ in the beam stopper itself.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "45col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename fabry perot fringes cropped2.png
+	width 4cm
+	height 4cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Another picture of the Fabry-Perot fringes.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Figures 19 and 20 show two different images of the Fabry-Perot fringes that
+ were produced during the experiment.
+ Our measurement of the transmission coefficient yielded a value for the
+ reflection coefficient of 
+\begin_inset Formula $R=0.99827\pm0.00005$
+\end_inset
+
+, which results in a finesse 
+\begin_inset Formula $\mathcal{F}=1820\pm50$
+\end_inset
+
+, a minimum resolvable frequency separation of 
+\begin_inset Formula $(\Delta v)_{min}=1.65\pm0.08$
+\end_inset
+
+ MHz, and a free spectral range 
+\begin_inset Formula $(\Delta\nu)_{FSR}=3.0\pm0.1$
+\end_inset
+
+ GHz.
+ This implies that, in principle, we should be able to observe interference
+ fringes for the each of the laser modes, since the minimum resolvable frequency
+ is three orders of magnitude less than the actual frequency separation
+ 
+\begin_inset Formula $\Delta\nu$
+\end_inset
+
+ that was measured in experiment 4.
+\end_layout
+
+\begin_layout Standard
+Blowing air through the space in between the plates blurs the fringes, because
+ it introduces a variable refractive index that chaotically alters the phase
+ difference of the transmitted waves, much like what happened when we blew
+ the Airoduster in one of the arms of the Michelson interferometer.
+ Bending a post makes the fringes disappear, since it disrupts the the plates
+ alignment, and this type of interferometer is extremely sensitive to misalignme
+nts.
+ In theory, changing the polarization of the incident light should have
+ interesting effects on the fringes.
+ The laser has three modes, but only two of those interfere with each other,
+ because the third mode has a polarization that is perpendicular to that
+ of the other two, and two waves of opposite polarizations cannot mutually
+ interfere.
+ The frequency separation that we measured in experiment 4 was the frequency
+ separation of the two modes with equal polarization.
+ Thus, positioning a polarizer in between the laser and the spatial filter
+ and rotating it such that its transmission axis is perpendicular to the
+ polarization axis of the two modes should, in theory, make two sets of
+ fringes disappear, leaving behind only one set of fringes corresponding
+ to the third mode that has a polarization in the direction of the transmission
+ axis of the polarizer.
+ This effect, however, was not observed.
+ There are two possible reasons for this.
+ The first one is that the resolution at which we were able to observe the
+ fringes was not ideal, as Figures 19 and 20 show.
+ We can observe the fringes produced by the main mode, which has the largest
+ intensity; but the separation between the fringes is small, the fringes
+ have a non-zero width, and the difference in intensity between the modes
+ is supposed to be large, which means that it is very hard to observe the
+ fringes corresponding to the other modes.
+ Instead, what we observed when we rotated the polarizer was that the fringes
+ would blur and become clearer at certain intervals, and nothing else.
+ The same effect was observed during laser warmup, where we know that the
+ intensity transmitted by the polarizer changes rapidly and by large amounts,
+ as we have observed that behavior in previous labs.
+ The other possible reason for the null result is that the laser light is
+ supposed to be randomly polarized.
+ This means that, even if we assume that two modes are always polarized
+ in the same direction, and the other one is always polarized perpendicularly
+ with respect to the other two, there is no reason why we should expect
+ to be able to make two sets of fringes disappear at a certain angle of
+ the polarizer: the polarization of the modes is still expected to randomly
+ vary at very fast intervals, so the angle between the incoming light and
+ the polarizer's transmission axis will never be the same for detectable
+ periods of time.
+ If this weren't the case, it should be possible to block most of the laser
+ light just by setting the polarizer at a specific angle.
+ The transmission of the Fabry-Perot cavity is certainly sensitive to the
+ incoming polarization, but this sensitivity should be small at angles near
+ to normal incidence, so we expect this factor to be negligible in our setup.
+\end_layout
+
+\begin_layout Section
+Conclusions
+\end_layout
+
+\begin_layout Standard
+We have performed a series of experiments to investigate the phenomenon
+ of interference, in the context of classical electromagnetism.
+ We have used interference effects to measure the thickness of a cover glass,
+ estimate the wavelength of laser light, and observe the frequency separation
+ between laser modes.
+ All experiments have been successful to varying degrees.
+ Better results could potentially be obtained by increasing the accuracy
+ of certain measurement procedures.
+ For instance, experiment 1 could produce more accurate results if we used
+ a very large rotation stage in order to measure deflection angles, or performed
+ the experiment in a larger table with holes separated by less distance.
+ In experiment 2, there is plenty of room for improvement in the measurement
+ of the quantities 
+\begin_inset Formula $\Delta y$
+\end_inset
+
+ and 
+\begin_inset Formula $a'$
+\end_inset
+
+, which could potentially be achieved by using a razor blade and a photosensor
+ in a manner similar to what was done in project 3 in order to measure the
+ laser beam's width.
+ Experiment 4's results would be more accurate if more data had been taken
+ for the visibility curve, and a more sophisticated numerical analysis had
+ been performed in order to find a better fitting model.
+ Finally, using a higher resolution camera would have been helpful in order
+ to better analyse the fringes produced by the Fabry-Perot interferometer.
+\end_layout
+
+\begin_layout Section
+Acknowledgements
+\end_layout
+
+\begin_layout Standard
+The author of this work would like to acknowledge the help received from
+ his lab partner, Juliette Fropier, throughout the data gathering process.
+ I would also like to acknowledge the help provided by our professor, Mukund
+ Vengalattore, and our TA, David Moreau, during lab time.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-1"
+
+\end_inset
+
+van der Walt, S., et al.
+ 
+\emph on
+The NumPy Array: A Structure for Efficient Numerical Computation
+\emph default
+, Computing in Science & Engineering, 13, 22-30, 2011.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-2"
+
+\end_inset
+
+Lebigot, E.O.
+ 
+\emph on
+Uncertainties: a Python package for calculations with uncertainties
+\emph default
+, http://pythonhosted.org/uncertainties/
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-3"
+
+\end_inset
+
+Hecht, E.
+ 
+\emph on
+Optics
+\emph default
+, 
+\emph on
+5th edit.
+\emph default
+, Pearson Education Limited, 2017.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "4"
+key "key-4"
+
+\end_inset
+
+Born, M.
+ & Wolf, E.
+ 
+\emph on
+Principles of Optics, 7th (expanded) edit., 
+\emph default
+Cambridge University Press, 1999.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "5"
+key "key-5"
+
+\end_inset
+
+Bodenschatz, E., et al.
+ 
+\emph on
+Modern Experimental Optics Laboratory Manual
+\emph default
+, Cornell University Physics Department 2016.
+\end_layout
+
+\end_body
+\end_document

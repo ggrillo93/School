@@ -1,0 +1,2137 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+\usepackage{amsmath}
+
+\DeclareMathOperator{\sinc}{sinc}
+\end_preamble
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 3cm
+\topmargin 3cm
+\rightmargin 3cm
+\bottommargin 5cm
+\headheight 1cm
+\headsep 1cm
+\footskip 2cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Project 5: Diffraction and Fourier Optics
+\end_layout
+
+\begin_layout Date
+November 13th, 2017
+\end_layout
+
+\begin_layout Author
+Gianfranco Grillo
+\end_layout
+
+\begin_layout Abstract
+We present and discuss the results of a series of basic optical experiments
+ where we have studied the phenomena of diffraction and applied Fourier
+ analysis to optical systems.
+ We study the diffraction patterns of collimated HeNe laser light as it
+ passes through different types of apertures and objects, and examine the
+ deviations from ideal Fraunhofer diffraction patterns.
+ We also measure the wavelength of the laser light by measuring the distances
+ between maxima of the diffraction pattern due to a grating, attempt to
+ reproduce the Talbot effect, and set up a coherent optical computer in
+ order to demonstrate the Fourier transformation properties of lenses.
+ We find good agreement between the observed and expected diffraction patterns
+ for the objects and apertures studied.
+ We measured the laser light's wavelength to be 
+\begin_inset Formula $641\pm6$
+\end_inset
+
+ nm which is very close to the nominal value of 
+\begin_inset Formula $632.8$
+\end_inset
+
+ nm.
+ We were unable to observe the Talbot effect, although we were able to see
+ how the diffraction pattern of the mesh grid changed depending on the position
+ of the image plane.
+ The coherent optical computer worked as expected, and we found agreement
+ between observations and the expected results based on numerical simulations.
+\end_layout
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout Standard
+The wave nature of electromagnetic radiation gives rise to diffraction phenomena
+, whereupon the wavefronts bend and interfere among themselves as the radiation
+ propagates through an aperture or obstacle.
+ The ways in which these interference effects manifest themselves are extremely
+ diverse, and often counterintuitive.
+ Rigorous study of diffraction is in general associated with the utilization
+ of complex mathematical techniques, and in practice there are only a few
+ situations in which physical problems involving diffraction can be solved
+ exactly, so the application of physically reasonable approximations and
+ numerical methods are an essential part of the study of diffraction phenomena.
+\end_layout
+
+\begin_layout Standard
+One of the most important mathematical techniques that can be applied to
+ the resolution of diffraction problems is the Fourier transform, as many
+ of the integrals that arise in the study of diffraction effects have the
+ form of the protoypical Fourier integrals.
+ The study of classical optics from the point of view of Fourier transforms,
+ where the propagating waves are regarded as a superposition of plane waves,
+ is known as Fourier optics.
+ The advent of electronic computers and the development of the Fast Fourier
+ Transform has resulted in Fourier optics becoming an essential tool in
+ the resolution of optical problems involving diffraction.
+\end_layout
+
+\begin_layout Standard
+In this project, we study some of diffractive effects in the near field
+ (Fresnel) and far field (Fraunhofer) regimes, and show how certain optical
+ elements, like lenses, can be regarded as physical manifestations of the
+ Fourier transform.
+\end_layout
+
+\begin_layout Standard
+We perform the data analysis using Python and the associated libraries NumPy
+ and SciPy ([1]), as well as the Uncertainty package ([2]).
+\end_layout
+
+\begin_layout Section
+Theoretical background
+\end_layout
+
+\begin_layout Subsection
+Diffraction patterns in the Fraunhofer limit
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename diffraction geometry.png
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Diffraction geometry.
+ Obtained from [3].
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The analysis of diffractive effects can be separated into two regimes: Fresnel
+ (or near field) diffraction and Fraunhofer (or far field) diffraction.
+ In general, an electromagnetic wave that is radiated by a point source
+ has a non-zero curvature that decreases in a manner directly proportional
+ to the square of the propagated distance.
+ Near field diffraction occurs when the diffractive object or aperture is
+ close enough to the source, and the observer is close enough to the aperture,
+ that the curvature of the incident wave cannot be neglected for the purposes
+ of describing the resulting diffraction pattern.
+ In the Fraunhofer limit, on the other hand, the distances between the source
+ and the aperture and the aperture and the observer are sufficiently large
+ such that it is possible to treat the waves incident on the aperture and
+ the observer as plane waves.
+ More quantitatively, if 
+\begin_inset Formula $b$
+\end_inset
+
+ is the size of the aperture or obstacle, 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ is the wavelength of the radiation, and 
+\begin_inset Formula $R$
+\end_inset
+
+ is the smallest of either the source-aperture distance or the aperture-observer
+ distance, then the Fraunhofer approximation applies when 
+\begin_inset Formula 
+\begin{equation}
+R>\frac{b^{2}}{\lambda}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The first experiment of this project compares expected Fraunhofer diffraction
+ patterns of different apertures and obtacles to ones obtained in the laboratory.
+ We will not derive the pattern for each of the apertures; suffice is to
+ say that they can be obtained by solving the Kirchoff diffraction integral
+ in the Fraunhofer limit.
+ This integral describes the electric field 
+\begin_inset Formula $E$
+\end_inset
+
+ at the observer's position 
+\begin_inset Formula $(Y,Z)$
+\end_inset
+
+, and is given by
+\begin_inset Formula 
+\begin{equation}
+E(Y,Z)=\iintop_{-\infty}^{\infty}\mathcal{A}(y,z)\exp\left[\frac{\imath k(Yy+Zz)}{R}\right]dxdy
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $y$
+\end_inset
+
+ and 
+\begin_inset Formula $z$
+\end_inset
+
+ are the coordinates in a point at the aperture, and 
+\begin_inset Formula $\mathcal{A}=\mathcal{A}_{0}(y,z)e^{\imath\phi(y,z)}$
+\end_inset
+
+ is known as the aperture function, which describes the amplitude of the
+ field over the aperture.
+ The function 
+\begin_inset Formula $\phi(y,z)$
+\end_inset
+
+ describes the variation of the phase in the 
+\begin_inset Formula $yz$
+\end_inset
+
+ plane, and 
+\begin_inset Formula $k=\frac{2\pi}{\lambda}$
+\end_inset
+
+ is the wavenumber.
+ An illustration of the geometry can be found in Figure 1.
+ The limits of the integral in (2) are from 
+\begin_inset Formula $-\infty$
+\end_inset
+
+ to 
+\begin_inset Formula $\infty$
+\end_inset
+
+, because the aperture function can be regarded to be zero everywhere except
+ at the region that corresponds to the aperture.
+ Evaluation of this integral for an appropriate choice of aperture function
+ allows us to find the far field irradiance pattern of a particular kind
+ of aperture.
+ A more detailed analysis can be found in chapter 11 of [3], and chapters
+ VIII and XI of [4].
+\end_layout
+
+\begin_layout Standard
+Table 1 shows the expected irradiance of the diffraction patterns for each
+ of the apertures used in experiment 1.
+ By Babinet's principle, the far field diffraction patterns for an aperture
+ is the same as the far field diffraction patterns for its complementary
+ obstacle.
+ This means irradiance pattern for the circular aperture with radius 
+\begin_inset Formula $r$
+\end_inset
+
+ is the same as the pattern for an opaque circular obstacle of radius 
+\begin_inset Formula $r$
+\end_inset
+
+, and the irradiance pattern of a single slit of width 
+\begin_inset Formula $a$
+\end_inset
+
+ is the same as the pattern for a wire with the same width.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+setlength{
+\backslash
+extrarowheight}{2mm}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="10" columns="3">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top" width="0pt">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Type of aperture
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Normalized irradiance 
+\begin_inset Formula $\nicefrac{I}{I_{0}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Definitions
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell multirow="3" alignment="center" valignment="middle" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Single slit
+\end_layout
+
+\end_inset
+</cell>
+<cell multirow="3" alignment="center" valignment="middle" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\sinc^{2}\left(\frac{a\pi x}{\lambda\sqrt{x^{2}+d^{2}}}\right)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $a=\text{slit width}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell multirow="4" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multirow="4" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $d=\text{slit-screen distance}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell multirow="4" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multirow="4" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $x=$
+\end_inset
+
+screen coordinates
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell multirow="3" alignment="center" valignment="middle" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Multiple slits
+\end_layout
+
+\end_inset
+</cell>
+<cell multirow="3" alignment="center" valignment="middle" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\sinc^{2}\beta\left[\frac{\sin(N\alpha)}{N\sin\alpha}\right]^{2}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\beta=\frac{a\pi x}{\lambda\sqrt{x^{2}+d^{2}}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell multirow="4" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multirow="4" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\alpha=\frac{b\pi x}{\lambda\sqrt{x^{2}+d^{2}}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell multirow="4" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multirow="4" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $b=$
+\end_inset
+
+slit separation
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell multirow="3" alignment="center" valignment="middle" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Circular
+\end_layout
+
+\end_inset
+</cell>
+<cell multirow="3" alignment="center" valignment="middle" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\left[\frac{2J_{1}(\gamma)}{\gamma}\right]^{2}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $J_{1}(\gamma)=\frac{1}{2\pi\imath}\int_{0}^{2\pi}e^{\imath(v+\gamma\cos v)}\,dv$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell multirow="4" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multirow="4" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\gamma=\frac{2\pi rx}{\lambda\sqrt{x^{2}+d^{2}}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell multirow="4" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multirow="4" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $r=$
+\end_inset
+
+aperture radius
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Fraunhofer diffraction irradiance patterns for different apertures.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Diffraction grating maxima
+\end_layout
+
+\begin_layout Standard
+Diffraction gratings are essentially a multiple slits aperture with large
+ 
+\begin_inset Formula $N$
+\end_inset
+
+ and small separation 
+\begin_inset Formula $b>a$
+\end_inset
+
+.
+ The transmission diffraction grating, in fact, is just that.
+ It is possible to determine the wavelength of the light that passes through
+ a diffraction grating in a simple way, by measuring the distance between
+ the positions of the maxima at a screen.
+ Let 
+\begin_inset Formula $s_{m}$
+\end_inset
+
+ be the separation between the zeroth order maximum and the maxima of order
+ 
+\begin_inset Formula $m$
+\end_inset
+
+, and 
+\begin_inset Formula $d$
+\end_inset
+
+ be the distance from the diffraction grating to the screen, and the wavelength
+ of the light will be given by
+\begin_inset Formula 
+\begin{equation}
+\lambda=\frac{bs_{m}}{m\sqrt{s_{m}^{2}+m^{2}d^{2}}}
+\end{equation}
+
+\end_inset
+
+This is known as the grating formula.
+ A complete derivation can be found in chapter 10 of [3].
+ We will make use of this equation in experiment 2 in order to calculate
+ the wavelength of the laser light.
+\end_layout
+
+\begin_layout Subsection
+The Talbot effect
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename carpet.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+The Talbot carpet.
+ Obtained from [6].
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The Talbot effect is the name given to the fractal phenomenon that occurs
+ when a two dimensional diffraction grating is illuminated by a source of
+ coherent, monochromatic light.
+ If a grating with period 
+\begin_inset Formula $a$
+\end_inset
+
+ is illuminated with monochromatic light of wavelength 
+\begin_inset Formula $\lambda$
+\end_inset
+
+, and a movable screen is placed some distance away from the grating, a
+ diffraction pattern will be observed on the screen.
+ If the screen is now moved by a distance 
+\begin_inset Formula $\Delta z$
+\end_inset
+
+, the characteristics of the diffraction pattern at the screen will change.
+ However, after the screen has been moved a distance equal to the Talbot
+ length 
+\begin_inset Formula $z_{T}$
+\end_inset
+
+, the original pattern will become visible again.
+ This characteristic length is given by
+\begin_inset Formula 
+\begin{equation}
+z_{T}=\frac{a^{2}}{\lambda}
+\end{equation}
+
+\end_inset
+
+Figure 2 shows an illustration of this effect, the so-called Talbot carpet.
+ The mathematics underlying this phenomenon are not simple, and a more detailed
+ analysis will not be pursued here.
+ An in-depth overview of the effect can be found in [5].
+ In experiment 3, we will attempt to observe this effect using a laser and
+ a rectangular wire mesh.
+ In order to quantitatively compare the shapes of the obtained diffraction
+ patterns, we will use the structural similarity index.
+ For two images 
+\begin_inset Formula $x$
+\end_inset
+
+ and 
+\begin_inset Formula $y$
+\end_inset
+
+ represented as matrices of size NxN, the index is defined by
+\begin_inset Formula 
+\begin{equation}
+SSIM(x,y)=\frac{(2\mu_{x}\mu_{y}+c_{1})(2\sigma_{xy}+c_{2})}{(\mu_{x}^{2}+\mu_{y}^{2}+c_{1})(\sigma_{x}^{2}+\sigma_{y}^{2}+c_{2})}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $\mu_{x}$
+\end_inset
+
+ and 
+\begin_inset Formula $\mu_{y}$
+\end_inset
+
+ are the average value of each of the matrices, 
+\begin_inset Formula $\sigma_{x}^{2}$
+\end_inset
+
+ and 
+\begin_inset Formula $\sigma_{y}^{2}$
+\end_inset
+
+ their respective variances, 
+\begin_inset Formula $\sigma_{xy}$
+\end_inset
+
+ their covariance, and 
+\begin_inset Formula $c_{1}$
+\end_inset
+
+, 
+\begin_inset Formula $c_{2}$
+\end_inset
+
+ two technical parameters used to stabilize the function when the averages
+ and variances are small.
+ The index is designed in such a way that it is always positive, identical
+ images have an 
+\begin_inset Formula $SSIM=1$
+\end_inset
+
+, and the less similar the images are, the smaller the index becomes.
+ A more detailed analysis of the concept and the reasoning behind it can
+ be found in [7].
+\end_layout
+
+\begin_layout Subsection
+The lens as a Fourier transform and the coherent optical computer
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "45col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename lenstransformer.png
+	scale 35
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+The lens as a Fourier transform.
+ Obtained from [3].
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "45col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename opticalcomputer.png
+	scale 20
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+The coherent optical computer.
+ Obtained from [3].
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The Fourier transform of a function of two variables 
+\begin_inset Formula $f(x,y)$
+\end_inset
+
+ is defined by the double integral
+\begin_inset Formula 
+\begin{equation}
+F(k_{x},k_{y})=\mathcal{F}\left\{ f(x,y)\right\} =\iintop_{-\infty}^{\infty}f(x,y)\exp\left[\imath(k_{x}x+k_{y}y)\right]
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $k_{x}$
+\end_inset
+
+, 
+\begin_inset Formula $k_{y}$
+\end_inset
+
+ are the angular frequencies in each of the axes.
+ A converging lens placed a distance equal to the focal length from a diffractiv
+e object that is being illuminated by collimated light will convert the
+ near field diffraction pattern emerging from the object into a far field
+ diffraction pattern that can be observed if one places a screen at the
+ lens's back focal point (Figure 3).
+ This diffraction pattern can be found by solving the integral in (2), which
+ is nothing more than the Fourier transform of the aperture function.
+ Define 
+\begin_inset Formula $\text{k}_{y}=\frac{kY}{R}$
+\end_inset
+
+, 
+\begin_inset Formula $\text{k}_{z}=\frac{kZ}{R}$
+\end_inset
+
+, and the integral can be written as
+\begin_inset Formula 
+\begin{align}
+E(Y,Z) & =\iintop_{-\infty}^{\infty}\mathcal{A}(y,z)\exp\left[\imath(\text{k}_{y}y+\text{k}_{z}z)\right]dydz\nonumber \\
+ & =\mathcal{F}\left\{ \mathcal{A}(y,z)\right\} 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In such a configuration, then, the lens acts as a Fourier transformer.
+ Conceptually, the Fourier transform maps a function from its space or time
+ domain into its spatial or angular frequency domain.
+ This implies that it is possible to build an optical system that can filter
+ certain spatial frequencies emerging from a diffraction pattern by placing
+ a lens at a focal distance away from a diffractive object, and then placing
+ a filter at the lens back focal point.
+ If one also places another lens at a focal length away from the filter,
+ this lens will act as an inverse Fourier transformer, and the filtered
+ image can be seen at a screen placed a focal distance away from this second
+ lens.
+ This arrangement is shown in Figure 4, and is known as the coherent optical
+ computer.
+ Mathematically, if the irradiance of the diffraction pattern at the screen
+ without a filter is given by 
+\begin_inset Formula $f(y,z)$
+\end_inset
+
+, then the irradiance 
+\begin_inset Formula $I$
+\end_inset
+
+ of the diffraction pattern that one obtains when using a filter with aperture
+ function 
+\begin_inset Formula $\mathcal{A}(y,z)$
+\end_inset
+
+ is given by
+\begin_inset Formula 
+\begin{equation}
+I=\mathcal{F}^{-1}\left[\mathcal{F}\left\{ f(y,z)\right\} \cdot\mathcal{A}(y,z)\right]
+\end{equation}
+
+\end_inset
+
+where the dot corresponds to term by term multiplication when the functions
+ are substantiated as matrices.
+ What this means is that, given an image of the unfiltered pattern, it is
+ possible to numerically recreate what the image should be when one places
+ a filter at the transform plane by applying (8) using an appropriate choice
+ of 
+\begin_inset Formula $\mathcal{A}(y,z)$
+\end_inset
+
+.
+ We will do this in the last experiment of this project.
+ For a more detailed analysis of the coherent optical computer and Fourier
+ optics in general, see chapters 11 and 13 of [3].
+\end_layout
+
+\begin_layout Section
+Experimental Set-Up and Results
+\end_layout
+
+\begin_layout Subsection
+Experiment 1
+\end_layout
+
+\begin_layout Subsubsection
+Set-Up
+\end_layout
+
+\begin_layout Standard
+In this experiment, we measure the diffraction patterns for several different
+ types and obstacles and compare them with the theoretical diffraction patterns
+ in the Fraunhofer limit, which are given in Table 1.
+ We set up a spatial filter using a 25 mm converging lens and a pinhole
+ separated by a distance of 25 mm, and expand the beam using a 50 mm lens
+ placed 50 mm away from the pinhole.
+ We now set up a target assembly a distance 
+\begin_inset Formula $R_{1}$
+\end_inset
+
+ away from the second lens, and a beam stopper a distance 
+\begin_inset Formula $R_{2}$
+\end_inset
+
+ from the target assembly, such that the Fraunhofer criterion (1) is satisfied
+ for all apertures used.
+ We proceed to place a particular aperture at the target assembly and take
+ a picture of its diffraction pattern at the beam stopper using a camera
+ from a Samsung Galaxy S7.
+ We repeat the procedure for different kinds of apertures.
+\end_layout
+
+\begin_layout Subsubsection
+Results and analysis
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename collage2.png
+	width 100text%
+	height 90theight%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Diffraction patterns for single slits and wires.
+ The blue curve is the measured normalized irradiance, and the red curve
+ is the theoretical diffraction curve.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename collage1.png
+	width 100text%
+	height 90theight%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Diffraction patterns for multiple slits and circular apertures.
+ The blue curve is the measured normalized irradiance, and the red curve
+ is the theoretical diffraction curve.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We used distances 
+\begin_inset Formula $R_{1}=38.3\pm0.3$
+\end_inset
+
+ cm and 
+\begin_inset Formula $R_{2}=41.0\pm0.3$
+\end_inset
+
+ cm.
+ For equation (1) to be satisfied, we then need 
+\begin_inset Formula $R_{1}$
+\end_inset
+
+ to be greater than 
+\begin_inset Formula $\frac{b^{2}}{\lambda}$
+\end_inset
+
+, where 
+\begin_inset Formula $b$
+\end_inset
+
+ denotes the size of the aperture.
+ The largest aperture had 
+\begin_inset Formula $b=0.25$
+\end_inset
+
+ mm, and 
+\begin_inset Formula $\lambda=632.8$
+\end_inset
+
+ nm, which gives 
+\begin_inset Formula $\frac{b^{2}}{\lambda}\approx10$
+\end_inset
+
+ cm, which is less than 
+\begin_inset Formula $R_{1}$
+\end_inset
+
+, so we expect the Fraunhofer criterion to apply for all apertures used
+ in the experiment.
+\end_layout
+
+\begin_layout Standard
+Figures 5 and 6 show the (vertically averaged and normalized) intensities
+ of the diffraction patterns for each of the apertures used, as well as
+ colormaps of the diffraction patterns themselves.
+ We used single slits with widths 
+\begin_inset Formula $a$
+\end_inset
+
+ of 0.02 mm, 0.04 mm, and 0.08 mm, multiple slits apertures with 
+\begin_inset Formula $a=0.04$
+\end_inset
+
+ mm and 
+\begin_inset Formula $b=0.125$
+\end_inset
+
+ mm and 
+\begin_inset Formula $N$
+\end_inset
+
+ of 2, 3, 4, and 5, circular apertures with radii 
+\begin_inset Formula $r$
+\end_inset
+
+ of 0.04 mm and 0.05 mm, and single wire obstacles with widths of 0.08, 0.125,
+ and 0.25 mm.
+ Since the pictures were not all taken from the exact same distance, and
+ the beam stopper did not have a scale on it, we determine the x-axis scale
+ by eye depending on how the measured pattern fits with the theoretical
+ one.
+ A more accurate way would be to do it by taking the Fourier transform of
+ both patterns and adjusting the scale such that both transforms overlap,
+ but this was not deemed necessary for the purposes of this project.
+ 
+\end_layout
+
+\begin_layout Standard
+The measured irradiance have the shapes that we expect on theoretical grounds,
+ like the figures show, except for the fact that the central region appears
+ to be elevated, and faint spots are more visible in the experimental patterns
+ than in the theoretical ones.
+ The reason for this is that the brightness of the central spot exceeded
+ the maximum brightness value that could be measured by the camera, so the
+ relative brightness differences are less pronounced than they should be.
+ Using a camera with a larger brightness capacity or filtering the laser
+ intensity would correct this problem, and make the theoretical and measured
+ diffraction patterns look even more similar.
+\end_layout
+
+\begin_layout Standard
+We also measured the diffraction patterns for opaque points of radii 0.125
+ and 0.25 mm (Figure 7).
+ The pattern obtained using these obstacles was originally too faint to
+ be seen, so the setup was modified by removing the pinhole and beam expander,
+ and placing a divergent lens a short distance before the screen.
+ We don't attempt to fit for these patterns because the brightness is too
+ large and the intensity distribution too irregular in order to perform
+ a good fit.
+ Qualitatively, however, the patterns conform to expectations, with circular
+ fringes of diminishing brightness surrounding a bright central spot, just
+ like the case of the circular aperture.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename opaquepoints.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Diffraction patterns for opaque points.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Experiment 2
+\end_layout
+
+\begin_layout Subsubsection
+Set-Up
+\end_layout
+
+\begin_layout Standard
+This experiment uses the grating formula (3) to find the wavelength of the
+ laser light.
+ The setup is as follows.
+ We set up a target assembly with a diffraction grating on it in front of
+ the laser, and place a large piece of paper as a beam stopper a distance
+ 
+\begin_inset Formula $d$
+\end_inset
+
+ away from the assembly.
+ We then measure the distances 
+\begin_inset Formula $s_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $s_{2}$
+\end_inset
+
+ between the zeroth order maximum and the first and second order maxima,
+ respectively.
+ Finally, we turn off the laser and look at the image of a fluorescent lamp
+ through the diffraction grating.
+ All of the distances were measured using a regular ruler.
+\end_layout
+
+\begin_layout Subsubsection
+Results and analysis
+\end_layout
+
+\begin_layout Standard
+For a grating-screen distance of 
+\begin_inset Formula $d=8.5\pm0.1$
+\end_inset
+
+ cm and a difraction grating of 600 lines/mm, we measured 
+\begin_inset Formula $s_{1}=7.0\pm0.1$
+\end_inset
+
+ cm and 
+\begin_inset Formula $s_{2}=20.7\pm0.1$
+\end_inset
+
+ cm, which corresponds to values of the wavelength of 
+\begin_inset Formula $\lambda_{1}=635\pm10$
+\end_inset
+
+ nm and 
+\begin_inset Formula $\lambda_{2}=644\pm3$
+\end_inset
+
+ nm.
+ The weighted average of the two values gives 
+\begin_inset Formula $\bar{\lambda}=641\pm6$
+\end_inset
+
+ nm.
+ This corresponds to a discrepancy of 
+\begin_inset Formula $\sim1.3$
+\end_inset
+
+% with respect to the nominal value of 
+\begin_inset Formula $\lambda=632.8$
+\end_inset
+
+ nm.
+\end_layout
+
+\begin_layout Standard
+Small changes in the measured values of 
+\begin_inset Formula $s_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $d$
+\end_inset
+
+ can lead to noticeable differences in the calculated wavelength.
+ For instance, using 
+\begin_inset Formula $s_{1}=6.9\pm0.1$
+\end_inset
+
+ cm without varying any of the other values gives 
+\begin_inset Formula $\lambda_{1}=626\pm10$
+\end_inset
+
+ nm, which corresponds to a 
+\begin_inset Formula $\Delta\lambda_{1}=9$
+\end_inset
+
+ nm.
+ Using 
+\begin_inset Formula $d=8.3\pm0.1$
+\end_inset
+
+ cm independently gives 
+\begin_inset Formula $\lambda_{1}=641\pm10$
+\end_inset
+
+ nm and 
+\begin_inset Formula $\lambda_{2}=647\pm3$
+\end_inset
+
+ nm, and thus 
+\begin_inset Formula $\Delta\lambda_{1}=\Delta\lambda_{2}=6$
+\end_inset
+
+ nm.
+ On the other hand, the value of 
+\begin_inset Formula $\lambda_{2}$
+\end_inset
+
+ is less sensitive to variations in 
+\begin_inset Formula $s_{2}$
+\end_inset
+
+.
+ Using 
+\begin_inset Formula $s_{2}=20.6\pm0.1$
+\end_inset
+
+ cm gives 
+\begin_inset Formula $\lambda_{2}=643\pm3$
+\end_inset
+
+ nm, and thus 
+\begin_inset Formula $\Delta\lambda_{2}=1$
+\end_inset
+
+ nm.
+ Given these considerations and the relatively low precision of the measuring
+ instrument, it is reasonable that the measured value of the wavelength
+ was not exactly the same as the nominal value.
+\end_layout
+
+\begin_layout Standard
+When we look at the fluorescent lamp through the diffraction grating, we
+ essentially see the light decompose into its respective colors.
+ The formula that describes the irradiance pattern of a multiple slit configurat
+ion is sensitive to the wavelength of the incident light, which implies
+ that polychromatic light passing through a diffraction grating will decompose
+ into its constituent wavelengths.
+\end_layout
+
+\begin_layout Subsection
+Experiment 3
+\end_layout
+
+\begin_layout Subsubsection
+Set-Up
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename setup3.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Setup for experiment 3.
+ Obtained from [8].
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This experiment attempts to reproduce the Talbot effect.
+ We setup a spatial filter using a 25 mm lens and a pinhole located a distance
+ of 25 mm away from each other, and expand the beam by positioning a 100
+ mm lens 100 mm away from the pinhole.
+ We then place a target assembly a small distance away from the 100 mm lens
+ and mount a rectangular wire mesh on it such that the incident light passes
+ through it.
+ We then place a CCD camera at a starting distance of 3 cm from the mesh,
+ and take pictures of the pattern captured by the camera at intervals of
+ 10 cm.
+ This setup is illustrated in Figure 8.
+\end_layout
+
+\begin_layout Subsubsection
+Results and analysis
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename talbotimages.png
+	width 100text%
+	height 90theight%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Colormaps of the diffraction patterns obtained for each of the CCD camera's
+ positions.
+ Pictures were taken at 10 cm intervals.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename talbotssim.png
+	width 100text%
+	height 90theight%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+SSIM comparisons between all images.
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Figures 9 and 10 show the results of the experiment.
+ We used a wire mesh with a period of 
+\begin_inset Formula $a=0.5$
+\end_inset
+
+ mm, which gives a Talbot length 
+\begin_inset Formula $z_{T}\approx39.5$
+\end_inset
+
+ cm, and thus we would expect that patterns separated by 40 cm would be
+ very similar to each other.
+ This, however, is not apparent, either in the quantitative SSIM comparison
+ (Figure 10) or by visual inspection (Figure 9).
+ It appears that the patterns in general are simply more similar to their
+ immediate neighbors, but there does not appear to be any surge in the SSIM
+ index at separation distances of 40 cm.
+ The reasons for this are not immediately apparent.
+ The first three images appear to have a different texture than the other
+ six, which is probably due to automatic adjustments made by the camera
+ software, and variations in the distance from the camera to the screen.
+ It is possible that the period of the wire mesh used was not actually 0.5
+ mm, in which case the Talbot length would be different.
+ A true period of 0.75 mm would imply that 
+\begin_inset Formula $z_{T}\approx90$
+\end_inset
+
+ cm, which would be outside of the sampled range.
+ Periods smaller than 0.3 mm would result in small Talbot lengths that would
+ result in the used sampling rate being less than ideal.
+ Other factors that could have affected the results are the fact that the
+ pictures were cropped manually and artificially resized to matching dimensions.
+ Ideally, this experiment should be repeated using smaller sampling intervals
+ and a larger range, and the diffraction patterns should be transmitted
+ directly from the CCD camera to a computer.
+\end_layout
+
+\begin_layout Subsection
+Experiment 4
+\end_layout
+
+\begin_layout Subsubsection
+Set-Up
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Pics/Fourier/setup4.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Setup for experiment 4.
+ Obtained from [8].
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We now build a coherent optical computer, similar to the one shown in Figure
+ 4.
+ We set up a beam expander using a 25 mm lens and a 400 mm lens at a distance
+ of 425 mm from each other, and position an iris and a target assembly some
+ short distance away from the 400 mm lens, with the iris before the assembly.
+ Then, we set up a second target assembly 400 mm away from the first one,
+ and position a 200 mm lens halfway in between the two.
+ Finally, we set up a CCD camera 200 mm away from the second target assembly,
+ and use a 100 mm lens to bring the light emerging from the second target
+ assembly into focus at the CCD camera by placing it halfway in between
+ the camera and the assembly.
+ Throughout the experiment, we set up different types of apertures at the
+ first target assembly, which constitutes the object plane, and use different
+ types of filters at the second target assembly, whose location corresponds
+ to the Fourier transform plane.
+ The 200 mm lens acts as a Fourier transformer, and the 100 mm lens acts
+ as an inverse Fourier transformer.
+ The setup can is illustrated in Figure 11.
+\end_layout
+
+\begin_layout Subsubsection
+Results and analysis
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Pics/Fourier/Collage.png
+	width 90text%
+	height 70theight%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Unfiltered images of the different types of apertures used.
+ Starting from the top left, the types of apertures are: a rectangular array
+ of circles, a sinusoidal grating, a rectangular wire mesh, and a half-tone
+ image of a duck overlaid with the wire mesh.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement p
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "45col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Pics/Fourier/Collage2.png
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Simulated (left) and observed (right) filtered images of the half-tone duck.
+ From top to bottom, the filters used were a 125 
+\begin_inset Formula $\mu m$
+\end_inset
+
+ wide wire, an opaque dot with 1 mm diameter, and a 0.16 mm single slit.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "45col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename Pics/Fourier/Collage3.png
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Simulated (left) and observed (right) filtered images.
+ From top to bottom: rectangular array of circles filtered by an opaque
+ dot of diameter 0.5 mm, sinusoidal grating filtered by an opaque dot of
+ diameter 0.25 mm, and wire mesh filtered by a 0.04 mm single slit.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Figure 12 shows the unfiltered images for each of the apertures used: a
+ rectangular array of circles, a sinusoidal grating, a rectangular wire
+ mesh, and a half-tone image of a duck overlaid with the wire mesh.
+ Figures 13 and 14 shows some of the obtained filtered images for different
+ apertures and filters.
+ We see excellent qualitative agreement between our simulations, obtained
+ by applying equation (8) to the unfiltered images and using the corresponding
+ aperture functions.
+ We can see from the figures that the single slit filter allows us to obtain
+ horizontal lines, that filtering the image using a wire increases the observed
+ frequency of the mesh, and that the single slit filter can also be used
+ to make the mesh disappear.
+ The unfiltered diffraction pattern of the rectangular array of circles
+ is consistent with the array theorem, which states that the diffraction
+ pattern of an array of identical apertures is equal to the product of the
+ Fraunhofer diffraction pattern of any of the apertures and the Fourier
+ transform of the locations of each of the apertures.
+\end_layout
+
+\begin_layout Section
+Conclusions
+\end_layout
+
+\begin_layout Standard
+This project's goal was to perform a series of experiments illustrating
+ the phenomenon of diffraction and some of the applications of Fourier optics
+ to solving diffraction problems.
+ Three out of the four experiments performed were successful.
+ We were able to match the theoretical and observed diffraction patterns
+ for different apertures in experiment 1, accurately measure the wavelength
+ of laser light in experiment 3, and numerically reconstruct the filtered
+ diffraction patterns of a coherent optical computer.
+ However, we were unable to successfully observe the Talbot effect.
+ As suggested in section 3.3.2, this failure could be due to a series of different
+ factors, and a careful repetition of the experiment could determine which
+ of these factors constitutes the best explanation.
+ Experiment 1 could be improved by using a camera that has a greater saturation
+ threshold.
+ Better results for experiment 2 could be obtained by using more precise
+ instruments in order to determine distances.
+ For experiment 4, a more sophisticated numerical procedure that took into
+ account more factors like the non zero transparency of the obstacles used
+ as filters, and systematically searched for the optimal aperture function
+ parameters, could potentially yield even better results than those obtained.
+ Directly transferring the images from the CCD camera into a computer would
+ also have been useful.
+\end_layout
+
+\begin_layout Section
+Acknowledgements
+\end_layout
+
+\begin_layout Standard
+The author of this work would like to acknowledge the help received from
+ his lab partner, Juliette Fropier, throughout the data gathering process.
+ I would also like to acknowledge the help provided by our professor, Mukund
+ Vengalattore, and our TA, David Moreau, during lab time.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-1"
+
+\end_inset
+
+van der Walt, S., et al.
+ 
+\emph on
+The NumPy Array: A Structure for Efficient Numerical Computation
+\emph default
+, Computing in Science & Engineering, 13, 22-30, 2011.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-2"
+
+\end_inset
+
+Lebigot, E.O.
+ 
+\emph on
+Uncertainties: a Python package for calculations with uncertainties
+\emph default
+, http://pythonhosted.org/uncertainties/
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-3"
+
+\end_inset
+
+Hecht, E.
+ 
+\emph on
+Optics
+\emph default
+, 
+\emph on
+5th edit.
+\emph default
+, Pearson Education Limited, 2017.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "4"
+key "key-4"
+
+\end_inset
+
+Born, M.
+ & Wolf, E.
+ 
+\emph on
+Principles of Optics, 7th (expanded) edit., 
+\emph default
+Cambridge University Press, 1999.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "5"
+key "key-5"
+
+\end_inset
+
+Berry, M.
+ V., & Klein, S.
+ 
+\emph on
+Integer, fractional, and fractal Talbot effects.
+\emph default
+Journal of Modern Optics, 43, 10, 2139, 1996.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "6"
+key "key-6"
+
+\end_inset
+
+Thomae, D., et al.
+ 
+\emph on
+Quantitative analysis of imperfect frequency multiplying in fractional Talbot
+ planes and its effect on high-frequency-grating lithography.
+ 
+\emph default
+J.
+ Opt.
+ Soc.
+ Am.
+ A, 31, 7, 2014.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "7"
+key "key-7"
+
+\end_inset
+
+Wang, Z., et al.
+ 
+\emph on
+Multiscale structural similarity for image quality assessment.
+
+\emph default
+ Conference Record of the Thirty-Seventh Asilomar Conference on Signals,
+ Systems and Computers, 2004.
+ 2: 1398–1402 Vol.2.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+label "8"
+key "key-8"
+
+\end_inset
+
+Bodenschatz, E., et al.
+ 
+\emph on
+Modern Experimental Optics Laboratory Manual
+\emph default
+, Cornell University Physics Department, 2016.
+\end_layout
+
+\end_body
+\end_document
